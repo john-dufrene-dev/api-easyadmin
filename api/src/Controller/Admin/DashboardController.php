@@ -2,7 +2,8 @@
 
 namespace App\Controller\Admin;
 
-use App\Entity\User\Admin;
+use App\Entity\Security\Admin;
+use App\Service\Admin\Permissions\PermissionsAdmin;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -46,7 +47,9 @@ class DashboardController extends AbstractDashboardController
     {
         yield MenuItem::linktoDashboard('Dashboard', 'fa fa-home');
 
-        // MenuItem::linkToCrud('Admins', 'fa fa-users', Admin::class);
+        if ($this->isGranted(PermissionsAdmin::IS_ADMIN) || $this->isGranted(PermissionsAdmin::ROLE_ADMIN_ACTION_INDEX)) {
+            yield MenuItem::linkToCrud('Admins', 'fa fa-users', Admin::class);
+        }
 
         yield MenuItem::linkToLogout('Logout', 'fa fa-sign-out');
     }

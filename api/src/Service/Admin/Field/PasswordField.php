@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin\Field;
+namespace App\Service\Admin\Field;
 
 use EasyCorp\Bundle\EasyAdminBundle\Field\FieldTrait;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
