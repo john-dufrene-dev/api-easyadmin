@@ -2,7 +2,7 @@
 
 namespace App\Security\Admin;
 
-use App\Entity\User\Admin;
+use App\Entity\Security\Admin;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;

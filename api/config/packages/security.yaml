@@ -1,6 +1,6 @@
 security:
     encoders:
-        App\Entity\User\Admin:
+        App\Entity\Security\Admin:
             algorithm: auto
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
@@ -8,7 +8,7 @@ security:
         # used to reload user from session & other features (e.g. switch_user)
         admin_user:
             entity:
-                class: App\Entity\User\Admin
+                class: App\Entity\Security\Admin
                 property: email
     firewalls:
         dev:

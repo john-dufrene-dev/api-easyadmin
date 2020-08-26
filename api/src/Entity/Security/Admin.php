@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Entity\User;
+namespace App\Entity\Security;
 
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\User\AdminRepository;
+use App\Repository\Security\AdminRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -38,6 +38,11 @@ class Admin implements UserInterface
      * @ORM\Column(type="string")
      */
     private $password;
+
+    /**
+     * @var string The plain password
+     */
+    private $plainPassword;
 
     public function getId(): ?int
     {
@@ -108,6 +113,21 @@ class Admin implements UserInterface
     public function setPassword(string $password): self
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getPlainPassword(): ?string
+    {
+        return (string) $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
 
         return $this;
     }
