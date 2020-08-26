@@ -3,7 +3,10 @@
 namespace App\Entity\Security;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use App\Repository\Security\AdminRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use App\Service\Admin\Permissions\PermissionsAdmin;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -44,6 +47,21 @@ class Admin implements UserInterface
      */
     private $plainPassword;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=AdminGroup::class, inversedBy="admins")
+     */
+    private $groups;
+
+    public function __construct()
+    {
+        $this->groups = new ArrayCollection();
+    }
+
+    public function __toString(): string
+    {
+        return $this->getUsername();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -82,6 +100,16 @@ class Admin implements UserInterface
     {
         return (string) $this->email;
     }
+    
+    /**
+     * isSuperAdmin
+     *
+     * @return bool
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->hasRole(PermissionsAdmin::IS_ADMIN);
+    }
 
     /**
      * @see UserInterface
@@ -89,17 +117,40 @@ class Admin implements UserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
 
-        return array_unique($roles);
+        foreach ($this->getGroups() as $group) {
+            $roles = array_merge($roles, $group->getRoles());
+        }
+
+        // guarantee every admin at least has ROLE_ADMIN
+        $roles[] = PermissionsAdmin::DEFAULT;
+
+        return array_values(array_unique($roles));
     }
 
     public function setRoles(array $roles): self
     {
-        $this->roles = $roles;
+        $this->roles = [];
+
+        foreach ($roles as $role) {
+            $this->addRole($role);
+        }
 
         return $this;
+    }
+
+    public function addRole(string $role): void
+    {
+        $role = strtoupper($role);
+
+        if (!\in_array($role, $this->roles, true)) {
+            $this->roles[] = $role;
+        }
+    }
+
+    public function hasRole(string $role): bool
+    {
+        return \in_array(strtoupper($role), $this->getRoles(), true);
     }
 
     /**
@@ -147,5 +198,31 @@ class Admin implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection|AdminGroup[]
+     */
+    public function getGroups(): Collection
+    {
+        return $this->groups;
+    }
+
+    public function addGroup(AdminGroup $group): self
+    {
+        if (!$this->groups->contains($group)) {
+            $this->groups[] = $group;
+        }
+
+        return $this;
+    }
+
+    public function removeGroup(AdminGroup $group): self
+    {
+        if ($this->groups->contains($group)) {
+            $this->groups->removeElement($group);
+        }
+
+        return $this;
     }
 }
