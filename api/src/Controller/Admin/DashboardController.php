@@ -3,9 +3,10 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Security\Admin;
-use App\Service\Admin\Permissions\PermissionsAdmin;
+use App\Entity\Security\AdminGroup;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\Admin\Permissions\PermissionsAdmin;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -17,7 +18,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 class DashboardController extends AbstractDashboardController
 {
     /**
-     * @Route("/admin", name="admin_dashboard")
+     * @Route("/", name="admin_dashboard")
      */
     public function index(): Response
     {
@@ -27,19 +28,10 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            // the name visible to end users
             ->setTitle('Easy-admin-api')
-            // you can include HTML contents too (e.g. to link to an image)
             // ->setTitle('<img src="..."> ACME <span class="text-small">Corp.</span>')
-
-            // the path defined in this method is passed to the Twig asset() function
             // ->setFaviconPath('favicon.svg')
-
-            // the domain used by default is 'messages'
             ->setTranslationDomain('admin')
-
-            // there's no need to define the "text direction" explicitly because
-            // its default value is inferred dynamically from the user locale
             ->setTextDirection('ltr');
     }
 
@@ -47,8 +39,18 @@ class DashboardController extends AbstractDashboardController
     {
         yield MenuItem::linktoDashboard('Dashboard', 'fa fa-home');
 
-        if ($this->isGranted(PermissionsAdmin::IS_ADMIN) || $this->isGranted(PermissionsAdmin::ROLE_ADMIN_ACTION_INDEX)) {
+        if (
+            PermissionsAdmin::checkAdmin($this->getUser())
+            || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'INDEX'))
+        ) {
             yield MenuItem::linkToCrud('Admins', 'fa fa-users', Admin::class);
+        }
+
+        if (
+            PermissionsAdmin::checkAdmin($this->getUser())
+            || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN_GROUP', 'INDEX'))
+        ) {
+            yield MenuItem::linkToCrud('Admin Groups', 'fa fa-users', AdminGroup::class);
         }
 
         yield MenuItem::linkToLogout('Logout', 'fa fa-sign-out');
