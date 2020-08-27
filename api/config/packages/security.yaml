@@ -30,9 +30,12 @@ security:
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 
             # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user:
-            #     provider: admin_user
-            #     role: ROLE_ALLOWED_TO_SWITCH
+            switch_user:
+                provider: admin_user
+                role: ROLE_ALLOWED_TO_SWITCH
+
+    role_hierarchy:
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used

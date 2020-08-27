@@ -1,6 +1,6 @@
 <?php
 
-namespace App\EventSubscriber\Admin\Admin;
+namespace App\EventSubscriber\Admin\Security;
 
 use App\Entity\Security\Admin;
 use Symfony\Component\Uid\Uuid;

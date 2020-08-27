@@ -2,12 +2,14 @@
 
 namespace App\Service\Admin\Actions;
 
+use App\Entity\Security\Admin;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 
 final class CustomizeActions
-{    
+{
+    public const IMPERSONATE = 'impersonate';
     /**
      * all
      *
@@ -25,7 +27,7 @@ final class CustomizeActions
 
         return $actions;
     }
-    
+
     /**
      * reorder
      *
@@ -47,7 +49,7 @@ final class CustomizeActions
 
         return $actions;
     }
-    
+
     /**
      * customize
      *
@@ -111,5 +113,18 @@ final class CustomizeActions
             });
 
         return $actions;
+    }
+
+    public function impersonate()
+    {
+        return Action::new(self::IMPERSONATE, 'Impersonate')
+            ->setIcon('fa fa-fw fa-user-lock')
+            ->setLabel(false)
+            ->linkToRoute('admin_dashboard', function (Admin $e) {
+                return [
+                    'id' => $e->getId(),
+                    '_switch_user' => $e->getEmail()
+                ];
+            });
     }
 }
