@@ -9,7 +9,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityUpdatedEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityPersistedEvent;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class EncodeAdminPasswordSubscriber implements EventSubscriberInterface
+class CreateOrUpdateAdminSubscriber implements EventSubscriberInterface
 {
     private $encoder;
 
@@ -31,6 +31,9 @@ class EncodeAdminPasswordSubscriber implements EventSubscriberInterface
 
         $password = $this->encoder->encodePassword($entity, $entity->getPassword());
         $entity->setPassword($password);
+
+        $entity->setCreatedAt(new \DateTime());
+        $entity->setUpdatedAt(new \DateTime());
     }
 
     public function onBeforeEntityUpdatedEvent(BeforeEntityUpdatedEvent $event)
@@ -45,6 +48,8 @@ class EncodeAdminPasswordSubscriber implements EventSubscriberInterface
             $password = $this->encoder->encodePassword($entity, $entity->getPlainPassword());
             $entity->setPassword($password);
         }
+
+        $entity->setUpdatedAt(new \DateTime());
     }
 
     public static function getSubscribedEvents()

@@ -15,6 +15,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use App\Service\Admin\Permissions\PermissionsAdmin;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
@@ -41,6 +42,13 @@ class AdminCrudController extends AbstractCrudController
     public static function getEntityFqcn(): string
     {
         return Admin::class;
+    }
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            ->setDateFormat('full')
+            ->setTimeFormat('full');
     }
 
     public function configureFilters(Filters $filters): Filters
@@ -111,6 +119,8 @@ class AdminCrudController extends AbstractCrudController
 
             yield TextField::new('uuid');
             yield EmailField::new('email');
+            yield DateField::new('created_at');
+            yield DateField::new('updated_at');
         }
 
         // DETAIL
@@ -140,6 +150,9 @@ class AdminCrudController extends AbstractCrudController
             ) {
                 yield ArrayField::new('groups');
             }
+
+            yield DateField::new('created_at');
+            yield DateField::new('updated_at');
         }
 
         // EDIT

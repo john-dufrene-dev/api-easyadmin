@@ -24,6 +24,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Exception\ForbiddenActionException;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 
 class AdminGroupCrudController extends AbstractCrudController
 {
@@ -51,6 +52,13 @@ class AdminGroupCrudController extends AbstractCrudController
         $filters->add('name');
 
         return $filters;
+    }
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            ->setDateFormat('full')
+            ->setTimeFormat('full');
     }
 
     public function configureActions(Actions $actions): Actions
@@ -98,6 +106,8 @@ class AdminGroupCrudController extends AbstractCrudController
             }
 
             yield TextField::new('name');
+            yield DateField::new('created_at');
+            yield DateField::new('updated_at');
         }
 
         // DETAIL
@@ -126,6 +136,9 @@ class AdminGroupCrudController extends AbstractCrudController
             ) {
                 yield ArrayField::new('admins');
             }
+
+            yield DateField::new('created_at');
+            yield DateField::new('updated_at');
         }
 
         // EDIT
