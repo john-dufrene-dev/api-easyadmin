@@ -2,6 +2,7 @@
 
 namespace App\Entity\Security;
 
+use App\Service\Admin\Traits\Entity\UuidTrait;
 use App\Repository\Security\AdminGroupRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -12,12 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class AdminGroup
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    use UuidTrait;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -26,6 +22,10 @@ class AdminGroup
 
     /**
      * @ORM\ManyToMany(targetEntity=Admin::class, mappedBy="groups")
+     * @ORM\JoinTable(name="admin_admin_group",
+     *      joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="uuid")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="admin_id", referencedColumnName="uuid")}
+     * )
      */
     private $admins;
 
@@ -52,11 +52,6 @@ class AdminGroup
     public function __toString(): string
     {
         return $this->getName();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getName(): ?string

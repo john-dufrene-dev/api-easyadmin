@@ -1,6 +1,6 @@
 <?php
 
-namespace App\EventSubscriber\Admin\Security;
+namespace App\EventSubscriber\Admin\Security\AdminGroup;
 
 use App\Entity\Security\AdminGroup;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;

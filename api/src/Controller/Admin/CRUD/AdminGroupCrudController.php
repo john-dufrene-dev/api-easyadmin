@@ -4,7 +4,6 @@ namespace App\Controller\Admin\CRUD;
 
 use Doctrine\ORM\QueryBuilder;
 use App\Entity\Security\AdminGroup;
-use Symfony\Component\Form\FormInterface;
 use App\Service\Admin\Actions\CustomizeActions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -16,15 +15,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
-use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
-use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Exception\ForbiddenActionException;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 
 class AdminGroupCrudController extends AbstractCrudController
 {
@@ -49,6 +45,7 @@ class AdminGroupCrudController extends AbstractCrudController
             $filters->add('id');
         }
 
+        $filters->add('uuid');
         $filters->add('name');
 
         return $filters;
@@ -57,6 +54,7 @@ class AdminGroupCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
+            ->setDefaultSort(['id' => 'ASC'])
             ->setDateFormat('full')
             ->setTimeFormat('full');
     }
@@ -105,6 +103,7 @@ class AdminGroupCrudController extends AbstractCrudController
                 yield IdField::new('id');
             }
 
+            yield TextField::new('uuid');
             yield TextField::new('name');
             yield DateField::new('created_at');
             yield DateField::new('updated_at');
@@ -119,6 +118,7 @@ class AdminGroupCrudController extends AbstractCrudController
                 yield IdField::new('id');
             }
 
+            yield TextField::new('uuid');
             yield TextField::new('name');
 
             if (
@@ -144,6 +144,9 @@ class AdminGroupCrudController extends AbstractCrudController
         // EDIT
         if (Crud::PAGE_EDIT === $pageName) {
             yield IdField::new('id')->hideOnForm();
+            yield TextField::new('uuid')->setFormTypeOptions([
+                'disabled' => true,
+            ]);
             yield TextField::new('name');
 
             if (
@@ -192,29 +195,5 @@ class AdminGroupCrudController extends AbstractCrudController
             ->andWhere('d.uuid = :uuid')
             ->setParameter('uuid', $this->getUser()->getUuid()) // put your user id connected here
         ;
-    }
-
-    public function createEditForm(EntityDto $entityDto, KeyValueStore $formOptions, AdminContext $context): FormInterface
-    {
-        if (PermissionsAdmin::checkAdmin($this->getUser())) {
-            return parent::createEditFormBuilder($entityDto, $formOptions, $context)->getForm();
-        }
-
-        if (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN_GROUP', 'EDIT')) {
-            foreach ($entityDto->getInstance()->getAdmins() as $admin) {
-                if ($admin->getId() === $this->getUser()->getId()) {
-                    return parent::createEditFormBuilder($entityDto, $formOptions, $context)->getForm();
-                }
-            }
-        }
-
-        if (
-            PermissionsAdmin::checkOwners($this->getUser(), 'ADMIN_GROUP', 'EDIT')
-            && PermissionsAdmin::checkActions($this->getUser(), 'ADMIN_GROUP', 'EDIT')
-        ) {
-            return parent::createEditFormBuilder($entityDto, $formOptions, $context)->getForm();
-        }
-
-        throw new ForbiddenActionException($context);
     }
 }

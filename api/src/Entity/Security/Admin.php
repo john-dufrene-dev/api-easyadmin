@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use App\Repository\Security\AdminRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\Admin\Permissions\PermissionsAdmin;
+use App\Service\Admin\Traits\Entity\UuidTrait;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -14,17 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class Admin implements UserInterface
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
-
-    /**
-     * @ORM\Column(type="string", length=180, unique=true)
-     */
-    private $uuid;
+    use UuidTrait;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
@@ -49,6 +40,10 @@ class Admin implements UserInterface
 
     /**
      * @ORM\ManyToMany(targetEntity=AdminGroup::class, inversedBy="admins")
+     * @ORM\JoinTable(name="admin_admin_group",
+     *      joinColumns={@ORM\JoinColumn(name="admin_id", referencedColumnName="uuid")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="uuid")}
+     * )
      */
     private $groups;
 
@@ -74,23 +69,6 @@ class Admin implements UserInterface
         return $this->getUsername();
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getUuid(): ?string
-    {
-        return $this->uuid;
-    }
-
-    public function setUuid(string $uuid): self
-    {
-        $this->uuid = $uuid;
-
-        return $this;
-    }
-
     public function getEmail(): ?string
     {
         return $this->email;
@@ -112,7 +90,7 @@ class Admin implements UserInterface
     {
         return (string) $this->email;
     }
-    
+
     /**
      * isSuperAdmin
      *
@@ -135,7 +113,8 @@ class Admin implements UserInterface
         }
 
         // guarantee every admin at least has ROLE_ADMIN
-        $roles[] = PermissionsAdmin::DEFAULT;
+        $roles[] = PermissionsAdmin::
+        DEFAULT;
 
         return array_values(array_unique($roles));
     }
@@ -160,7 +139,7 @@ class Admin implements UserInterface
         }
     }
 
-    public function hasRole(string $role): bool
+    public function hasRole(?string $role = null): bool
     {
         return \in_array(strtoupper($role), $this->getRoles(), true);
     }

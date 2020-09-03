@@ -4,7 +4,6 @@ namespace App\Controller\Admin\CRUD;
 
 use App\Entity\Security\Admin;
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\Form\FormInterface;
 use App\Service\Admin\Field\PasswordField;
 use App\Service\Admin\Actions\CustomizeActions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -22,13 +21,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\HiddenField;
-use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
-use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Exception\ForbiddenActionException;
 
 class AdminCrudController extends AbstractCrudController
 {
@@ -47,6 +43,7 @@ class AdminCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
+            ->setDefaultSort(['id' => 'ASC'])
             ->setDateFormat('full')
             ->setTimeFormat('full');
     }
@@ -226,28 +223,5 @@ class AdminCrudController extends AbstractCrudController
             ->andWhere('entity.uuid = :uuid')
             ->setParameter('uuid', $this->getUser()->getUuid()) // put your user id connected here
         ;
-    }
-
-    public function createEditForm(EntityDto $entityDto, KeyValueStore $formOptions, AdminContext $context): FormInterface
-    {
-        if (PermissionsAdmin::checkAdmin($this->getUser())) {
-            return parent::createEditFormBuilder($entityDto, $formOptions, $context)->getForm();
-        }
-
-        if (
-            PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'EDIT')
-            && $entityDto->getInstance()->getId() === $this->getUser()->getId()
-        ) {
-            return parent::createEditFormBuilder($entityDto, $formOptions, $context)->getForm();
-        }
-
-        if (
-            PermissionsAdmin::checkOwners($this->getUser(), 'ADMIN', 'EDIT')
-            && PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'EDIT')
-        ) {
-            return parent::createEditFormBuilder($entityDto, $formOptions, $context)->getForm();
-        }
-
-        throw new ForbiddenActionException($context);
     }
 }

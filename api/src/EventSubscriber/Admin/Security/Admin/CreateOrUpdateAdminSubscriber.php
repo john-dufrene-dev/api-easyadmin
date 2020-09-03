@@ -1,9 +1,8 @@
 <?php
 
-namespace App\EventSubscriber\Admin\Security;
+namespace App\EventSubscriber\Admin\Security\Admin;
 
 use App\Entity\Security\Admin;
-use Symfony\Component\Uid\Uuid;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityUpdatedEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityPersistedEvent;
@@ -25,9 +24,6 @@ class CreateOrUpdateAdminSubscriber implements EventSubscriberInterface
         if (!($entity instanceof Admin)) {
             return;
         }
-
-        $uuid = Uuid::v1();
-        $entity->setUuid($uuid);
 
         $password = $this->encoder->encodePassword($entity, $entity->getPassword());
         $entity->setPassword($password);
