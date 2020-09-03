@@ -31,28 +31,34 @@ class DashboardController extends AbstractDashboardController
             ->setTitle('Easy-admin-api')
             // ->setTitle('<img src="..."> ACME <span class="text-small">Corp.</span>')
             // ->setFaviconPath('favicon.svg')
-            ->setTranslationDomain('admin')
-            ->setTextDirection('ltr');
+            ->setTranslationDomain('admin');
     }
 
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linktoDashboard('Dashboard', 'fa fa-home');
+        yield MenuItem::linkToLogout('Logout', 'fa fa-sign-out');
 
         if (
             PermissionsAdmin::checkAdmin($this->getUser())
-            || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'INDEX'))
+            || PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'INDEX')
+            || PermissionsAdmin::checkActions($this->getUser(), 'ADMIN_GROUP', 'INDEX')
+        ) {
+            yield MenuItem::section('Settings');
+        }
+
+        if (
+            PermissionsAdmin::checkAdmin($this->getUser())
+            || PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'INDEX')
         ) {
             yield MenuItem::linkToCrud('Admins', 'fa fa-users', Admin::class);
         }
 
         if (
             PermissionsAdmin::checkAdmin($this->getUser())
-            || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN_GROUP', 'INDEX'))
+            || PermissionsAdmin::checkActions($this->getUser(), 'ADMIN_GROUP', 'INDEX')
         ) {
             yield MenuItem::linkToCrud('Admin Groups', 'fa fa-users', AdminGroup::class);
         }
-
-        yield MenuItem::linkToLogout('Logout', 'fa fa-sign-out');
     }
 }
