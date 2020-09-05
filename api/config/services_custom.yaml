@@ -1,0 +1,11 @@
+parameters:
+
+    locale: '%env(resolve:APP_LOCALE)%' # Default LOCALE LANGUAGE value
+    mailer_user: '%env(resolve:MAILER_USER)%' # Default MAIL value
+
+services:
+    # Service email notifications for Admin
+    app.service.admin_mailer:
+        class: App\Service\Admin\Email\AdminMailer
+        arguments: ['@mailer.mailer', '@parameter_bag', '@doctrine.orm.default_entity_manager']
+        

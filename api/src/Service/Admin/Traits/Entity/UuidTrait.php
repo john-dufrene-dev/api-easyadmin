@@ -13,8 +13,8 @@ trait UuidTrait
      *
      * @var int|null
      *
-     * @ORM\Column(type="integer", columnDefinition="INT AUTO_INCREMENT UNIQUE")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="integer", columnDefinition="INT AUTO_INCREMENT NOT NULL", unique=true)
+     * @ORM\GeneratedValue()
      */
     private $id;
 
