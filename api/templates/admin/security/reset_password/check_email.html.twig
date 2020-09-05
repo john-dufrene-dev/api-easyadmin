@@ -1,0 +1,32 @@
+{% extends '@!EasyAdmin/page/login_minimal.html.twig' %}
+{% trans_default_domain 'admin' %}
+
+{% block head_stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/easyadmin/app.css') }}">
+{% endblock %}
+
+{% block body_class 'page-login' %}
+
+{% block page_title %} Password Reset Email Sent {% endblock %}
+
+{% block wrapper_wrapper %}
+    <div class="login-wrapper">
+        
+        <h6 class="mb-4">An email has been sent that contains a link that you can click to reset your password. 
+            This link will expire in {{ tokenLifetime|date('g') }} hour(s)
+        </h6>
+
+        <div class="alert alert-dark" role="alert">If you don't receive an email please check your spam folder or
+            <a href="{{ path('admin_forgot_password_request') }}">try again</a>
+        </div>
+
+        <section class="content">
+            <div class="form-group field-button">
+                <a class="btn btn-primary btn-lg btn-block" href="{{ path('admin_dashboard') }}">
+                    {{'admin.error.return'|trans}}
+                </a>
+            </div>
+        </section>
+
+    </div>
+{% endblock %}

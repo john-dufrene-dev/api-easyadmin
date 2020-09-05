@@ -1,0 +1,30 @@
+{% extends '@!EasyAdmin/page/login_minimal.html.twig' %}
+{% trans_default_domain 'admin' %}
+
+{% block head_stylesheets %}
+    <link rel="stylesheet" href="{{ asset('bundles/easyadmin/app.css') }}">
+{% endblock %}
+
+{% block body_class 'page-login' %}
+
+{% block page_title %} Reset your password {% endblock %}
+
+{% block wrapper_wrapper %}
+
+    <div class="login-wrapper">
+
+        <header class="main-header">
+            <h1> Reset your password </h1>
+        </header>
+
+        <section class="content">
+            {{ form_start(resetForm) }}
+            {{ form_row(resetForm.plainPassword) }}
+            <div class="form-group field-button">
+                <button class="btn btn-primary btn-lg btn-block">Reset password</button>
+                {{ form_end(resetForm) }}
+            </div>      
+        </section>
+        
+    </div>
+{% endblock %}
