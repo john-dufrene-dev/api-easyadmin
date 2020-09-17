@@ -44,7 +44,7 @@ class DashboardController extends AbstractDashboardController
             || PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'INDEX')
             || PermissionsAdmin::checkActions($this->getUser(), 'ADMIN_GROUP', 'INDEX')
         ) {
-            yield MenuItem::section('Settings');
+            yield MenuItem::section('Administration');
         }
 
         if (

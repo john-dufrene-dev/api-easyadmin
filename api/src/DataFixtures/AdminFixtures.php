@@ -24,6 +24,7 @@ class AdminFixtures extends Fixture
         $password = $this->encoder->encodePassword($admin, 'admin'); // don't forget to change password
         $admin->setPassword($password);
         $admin->setRoles(['ROLE_ADMIN', 'ROLE_SUPER_ADMIN']);
+        $admin->setIsAdmin(1);
         $admin->setCreatedAt(new \DateTime());
         $admin->setUpdatedAt(new \DateTime());
 

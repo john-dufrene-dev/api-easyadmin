@@ -39,6 +39,11 @@ class Admin implements UserInterface
     private $plainPassword;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    private $is_admin;
+
+    /**
      * @ORM\ManyToMany(targetEntity=AdminGroup::class, inversedBy="admins")
      * @ORM\JoinTable(name="admin_admin_group",
      *      joinColumns={@ORM\JoinColumn(name="admin_id", referencedColumnName="uuid")},
@@ -59,6 +64,7 @@ class Admin implements UserInterface
 
     public function __construct()
     {
+        $this->is_admin = 0;
         $this->groups = new ArrayCollection();
         $this->created_at = new \DateTime();
         $this->updated_at = new \DateTime();
@@ -191,6 +197,18 @@ class Admin implements UserInterface
         // $this->plainPassword = null;
     }
 
+    public function getIsAdmin(): ?bool
+    {
+        return $this->is_admin;
+    }
+
+    public function setIsAdmin(bool $is_admin): self
+    {
+        $this->is_admin = $is_admin;
+
+        return $this;
+    }
+    
     /**
      * @return Collection|AdminGroup[]
      */
