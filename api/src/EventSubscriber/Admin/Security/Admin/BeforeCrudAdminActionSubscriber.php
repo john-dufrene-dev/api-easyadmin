@@ -23,6 +23,12 @@ class BeforeCrudAdminActionSubscriber implements EventSubscriberInterface
         //DETAIL
         if ($context->getCrud()->getCurrentPage() === Crud::PAGE_DETAIL) {
 
+            if ($context->getEntity()->getInstance()->getIsAdmin()) {
+                if ($context->getUser()->getId() !== $context->getEntity()->getInstance()->getId()) {
+                    throw new ForbiddenActionException($context);
+                }
+            }
+
             if (PermissionsAdmin::checkAdmin($context->getUser())) {
                 return;
             }
@@ -47,6 +53,12 @@ class BeforeCrudAdminActionSubscriber implements EventSubscriberInterface
         //EDIT
         if ($context->getCrud()->getCurrentPage() === Crud::PAGE_EDIT) {
 
+            if ($context->getEntity()->getInstance()->getIsAdmin()) {
+                if ($context->getUser()->getId() !== $context->getEntity()->getInstance()->getId()) {
+                    throw new ForbiddenActionException($context);
+                }
+            }
+
             if (PermissionsAdmin::checkAdmin($context->getUser())) {
                 return;
             }
@@ -70,6 +82,12 @@ class BeforeCrudAdminActionSubscriber implements EventSubscriberInterface
 
         //DELETE
         if ($context->getCrud()->getCurrentAction() === Action::DELETE) {
+
+            if ($context->getEntity()->getInstance()->getIsAdmin()) {
+                if ($context->getUser()->getId() !== $context->getEntity()->getInstance()->getId()) {
+                    throw new ForbiddenActionException($context);
+                }
+            }
 
             if (PermissionsAdmin::checkAdmin($context->getUser())) {
                 return;
