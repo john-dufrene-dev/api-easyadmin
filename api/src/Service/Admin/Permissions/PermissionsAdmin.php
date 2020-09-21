@@ -38,6 +38,14 @@ final class PermissionsAdmin
 
     /**
      * 
+     * Role allowed to edit admins in shop
+     * You can change admins of all Shop with this permissions
+     *
+     */
+    public const ROLE_ALLOWED_TO_EDIT_ADMINS_SHOPS     = 'ROLE_ALLOWED_TO_EDIT_ADMINS_SHOPS';
+
+    /**
+     * 
      * Role allowed to switch
      * You can switch and test other Admin
      *
@@ -67,6 +75,14 @@ final class PermissionsAdmin
     public const ROLE_ADMIN_GROUP_ACTION_NEW          = 'ROLE_ADMIN_GROUP_ACTION_NEW';
     public const ROLE_ADMIN_GROUP_ACTION_DETAIL       = 'ROLE_ADMIN_GROUP_ACTION_DETAIL';
 
+    /*************** -- ROLES ACTIONS FOR SHOP ENTITY -- ***************/
+    public const ROLE_SHOP_ACTION_ALL          = 'ROLE_SHOP_ACTION_ALL';
+    public const ROLE_SHOP_ACTION_INDEX        = 'ROLE_SHOP_ACTION_INDEX';
+    public const ROLE_SHOP_ACTION_EDIT         = 'ROLE_SHOP_ACTION_EDIT';
+    public const ROLE_SHOP_ACTION_DELETE       = 'ROLE_SHOP_ACTION_DELETE';
+    public const ROLE_SHOP_ACTION_NEW          = 'ROLE_SHOP_ACTION_NEW';
+    public const ROLE_SHOP_ACTION_DETAIL       = 'ROLE_SHOP_ACTION_DETAIL';
+
     /**
      * 
      * Roles owners
@@ -90,6 +106,14 @@ final class PermissionsAdmin
     public const ROLE_ADMIN_GROUP_OWNER_NEW           = 'ROLE_ADMIN_GROUP_OWNER_NEW';
     public const ROLE_ADMIN_GROUP_OWNER_DETAIL        = 'ROLE_ADMIN_GROUP_OWNER_DETAIL';
 
+    /*************** -- ROLES OWNERS FOR SHOP ENTITY -- ***************/
+    public const ROLE_SHOP_OWNER_ALL           = 'ROLE_SHOP_OWNER_ALL';
+    public const ROLE_SHOP_OWNER_INDEX         = 'ROLE_SHOP_OWNER_INDEX';
+    public const ROLE_SHOP_OWNER_EDIT          = 'ROLE_SHOP_OWNER_EDIT';
+    public const ROLE_SHOP_OWNER_DELETE        = 'ROLE_SHOP_OWNER_DELETE';
+    public const ROLE_SHOP_OWNER_NEW           = 'ROLE_SHOP_OWNER_NEW';
+    public const ROLE_SHOP_OWNER_DETAIL        = 'ROLE_SHOP_OWNER_DETAIL';
+
     public static function exists(?string $permissionName): bool
     {
         if (null === $permissionName) {
@@ -102,14 +126,17 @@ final class PermissionsAdmin
     public static function getAllRoles()
     {
         return [
-            'permissions.super_admin'                       => self::getSuperAdmin(),
-            'permissions.roles_allowed_to_edit_roles'       => self::getRoleAllowedToEditRoles(),
-            'permissions.roles_allowed_to_edit_groups'      => self::getRoleAllowedToEditGroups(),
-            'permissions.roles_allowed_to_switch'           => self::getRoleAllowedToSwitch(),
-            'permissions.actions.admin'                     => self::getActionsAdminEntity(),
-            'permissions.owners.admin'                      => self::getOwnersAdminEntity(),
-            'permissions.actions.admin_group'               => self::getActionsAdminGroupEntity(),
-            'permissions.owners.admin_group'                => self::getOwnersAdminGroupEntity(),
+            'permissions.super_admin'                           => self::getSuperAdmin(),
+            'permissions.roles_allowed_to_edit_roles'           => self::getRoleAllowedToEditRoles(),
+            'permissions.roles_allowed_to_edit_groups'          => self::getRoleAllowedToEditGroups(),
+            'permissions.roles_allowed_to_edit_admins_shop'     => self::getRoleAllowedToEditAdminsinShop(),
+            'permissions.roles_allowed_to_switch'               => self::getRoleAllowedToSwitch(),
+            'permissions.actions.admin'                         => self::getActionsAdminEntity(),
+            'permissions.owners.admin'                          => self::getOwnersAdminEntity(),
+            'permissions.actions.admin_group'                   => self::getActionsAdminGroupEntity(),
+            'permissions.owners.admin_group'                    => self::getOwnersAdminGroupEntity(),
+            'permissions.actions.shop'                          => self::getActionsShopEntity(),
+            'permissions.owners.shop'                           => self::getOwnersShopEntity(),
         ];
     }
 
@@ -146,6 +173,15 @@ final class PermissionsAdmin
         ];
     }
 
+    public static function getRoleAllowedToEditAdminsinShop()
+    {
+        return [
+            'ROLE_ALLOWED_TO_EDIT_ADMINS_SHOPS' => self::ROLE_ALLOWED_TO_EDIT_ADMINS_SHOPS,
+        ];
+    }
+
+    /// ACTIONS ///
+
     public static function getActionsAdminEntity()
     {
         return [
@@ -170,6 +206,20 @@ final class PermissionsAdmin
         ];
     }
 
+    public static function getActionsShopEntity()
+    {
+        return [
+            'ROLE_SHOP_ACTION_ALL' => self::ROLE_SHOP_ACTION_ALL,
+            'ROLE_SHOP_ACTION_INDEX' => self::ROLE_SHOP_ACTION_INDEX,
+            'ROLE_SHOP_ACTION_EDIT' => self::ROLE_SHOP_ACTION_EDIT,
+            'ROLE_SHOP_ACTION_DELETE' => self::ROLE_SHOP_ACTION_DELETE,
+            'ROLE_SHOP_ACTION_NEW' => self::ROLE_SHOP_ACTION_NEW,
+            'ROLE_SHOP_ACTION_DETAIL' => self::ROLE_SHOP_ACTION_DETAIL,
+        ];
+    }
+
+    /// OWNERS ///
+
     public static function getOwnersAdminEntity()
     {
         return [
@@ -191,6 +241,18 @@ final class PermissionsAdmin
             'ROLE_ADMIN_GROUP_OWNER_DELETE' => self::ROLE_ADMIN_GROUP_OWNER_DELETE,
             'ROLE_ADMIN_GROUP_OWNER_NEW' => self::ROLE_ADMIN_GROUP_OWNER_NEW,
             'ROLE_ADMIN_GROUP_OWNER_DETAIL' => self::ROLE_ADMIN_GROUP_OWNER_DETAIL,
+        ];
+    }
+
+    public static function getOwnersShopEntity()
+    {
+        return [
+            'ROLE_SHOP_OWNER_ALL' => self::ROLE_SHOP_OWNER_ALL,
+            'ROLE_SHOP_OWNER_INDEX' => self::ROLE_SHOP_OWNER_INDEX,
+            'ROLE_SHOP_OWNER_EDIT' => self::ROLE_SHOP_OWNER_EDIT,
+            'ROLE_SHOP_OWNER_DELETE' => self::ROLE_SHOP_OWNER_DELETE,
+            'ROLE_SHOP_OWNER_NEW' => self::ROLE_SHOP_OWNER_NEW,
+            'ROLE_SHOP_OWNER_DETAIL' => self::ROLE_SHOP_OWNER_DETAIL,
         ];
     }
 

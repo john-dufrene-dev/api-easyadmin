@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Controller\Admin\CRUD;
+namespace App\Controller\Admin\CRUD\Security;
 
-use App\Entity\Security\Admin;
 use Doctrine\ORM\QueryBuilder;
-use App\Service\Admin\Field\PasswordField;
+use App\Entity\Security\AdminGroup;
 use App\Service\Admin\Actions\CustomizeActions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -14,19 +13,16 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use App\Service\Admin\Permissions\PermissionsAdmin;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
-use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\HiddenField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
-class AdminCrudController extends AbstractCrudController
+class AdminGroupCrudController extends AbstractCrudController
 {
     protected $actions;
 
@@ -37,7 +33,22 @@ class AdminCrudController extends AbstractCrudController
 
     public static function getEntityFqcn(): string
     {
-        return Admin::class;
+        return AdminGroup::class;
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        if (
+            PermissionsAdmin::checkAdmin($this->getUser())
+            || PermissionsAdmin::checkOwners($this->getUser(), 'ADMIN_GROUP', 'INDEX')
+        ) {
+            $filters->add('id');
+        }
+
+        $filters->add('uuid');
+        $filters->add('name');
+
+        return $filters;
     }
 
     public function configureCrud(Crud $crud): Crud
@@ -48,32 +59,10 @@ class AdminCrudController extends AbstractCrudController
             ->setTimeFormat('full');
     }
 
-    public function configureFilters(Filters $filters): Filters
-    {
-        if (
-            PermissionsAdmin::checkAdmin($this->getUser())
-            || PermissionsAdmin::checkOwners($this->getUser(), 'ADMIN', 'INDEX')
-        ) {
-            $filters->add('id');
-        }
-
-        $filters->add('uuid');
-        $filters->add('email');
-
-        return $filters;
-    }
-
     public function configureActions(Actions $actions): Actions
     {
         // Actions adding by default
         $this->actions->all($actions);
-
-        // Action new impersonation route
-        if ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_SWITCH)) {
-            $switch_user = $this->actions->impersonate($actions);
-            $actions->add(Crud::PAGE_INDEX, $switch_user);
-            $actions->setPermission($this->actions::IMPERSONATE, PermissionsAdmin::ROLE_ALLOWED_TO_SWITCH);
-        }
 
         // Default customize actions
         $this->actions->customize($actions);
@@ -85,37 +74,37 @@ class AdminCrudController extends AbstractCrudController
             return $actions;
         }
 
-        if ($this->isGranted(PermissionsAdmin::ROLE_ADMIN_ACTION_ALL)) {
+        if ($this->isGranted(PermissionsAdmin::ROLE_ADMIN_GROUP_ACTION_ALL)) {
             return $actions;
         }
 
-        $actions->setPermission(Action::NEW, PermissionsAdmin::ROLE_ADMIN_ACTION_NEW);
-        $actions->setPermission(Action::SAVE_AND_ADD_ANOTHER, PermissionsAdmin::ROLE_ADMIN_ACTION_NEW);
-        $actions->setPermission(Action::EDIT, PermissionsAdmin::ROLE_ADMIN_ACTION_EDIT);
-        $actions->setPermission(Action::SAVE_AND_RETURN, PermissionsAdmin::ROLE_ADMIN_ACTION_EDIT);
-        $actions->setPermission(Action::SAVE_AND_CONTINUE, PermissionsAdmin::ROLE_ADMIN_ACTION_EDIT);
-        $actions->setPermission(Action::DELETE, PermissionsAdmin::ROLE_ADMIN_ACTION_DELETE);
-        $actions->setPermission(Action::DETAIL, PermissionsAdmin::ROLE_ADMIN_ACTION_DETAIL);
-        $actions->setPermission(Action::INDEX, PermissionsAdmin::ROLE_ADMIN_ACTION_INDEX);
+        $actions->setPermission(Action::NEW, PermissionsAdmin::ROLE_ADMIN_GROUP_ACTION_NEW);
+        $actions->setPermission(Action::SAVE_AND_ADD_ANOTHER, PermissionsAdmin::ROLE_ADMIN_GROUP_ACTION_NEW);
+        $actions->setPermission(Action::EDIT, PermissionsAdmin::ROLE_ADMIN_GROUP_ACTION_EDIT);
+        $actions->setPermission(Action::SAVE_AND_RETURN, PermissionsAdmin::ROLE_ADMIN_GROUP_ACTION_EDIT);
+        $actions->setPermission(Action::SAVE_AND_CONTINUE, PermissionsAdmin::ROLE_ADMIN_GROUP_ACTION_EDIT);
+        $actions->setPermission(Action::DELETE, PermissionsAdmin::ROLE_ADMIN_GROUP_ACTION_DELETE);
+        $actions->setPermission(Action::DETAIL, PermissionsAdmin::ROLE_ADMIN_GROUP_ACTION_DETAIL);
+        $actions->setPermission(Action::INDEX, PermissionsAdmin::ROLE_ADMIN_GROUP_ACTION_INDEX);
 
         return $actions;
     }
 
     public function configureFields(string $pageName): iterable
     {
-        yield FormField::addPanel('User infos');
+        yield FormField::addPanel('Admin Group infos');
 
         // INDEX
         if (Crud::PAGE_INDEX === $pageName) {
             if (
                 PermissionsAdmin::checkAdmin($this->getUser())
-                || PermissionsAdmin::checkOwners($this->getUser(), 'ADMIN', 'INDEX')
+                || PermissionsAdmin::checkOwners($this->getUser(), 'ADMIN_GROUP', 'INDEX')
             ) {
                 yield IdField::new('id');
             }
 
-            yield TextField::new('uuid');
-            yield EmailField::new('email');
+            yield TextField::new('displayuuid');
+            yield TextField::new('name');
             yield DateField::new('created_at');
             yield DateField::new('updated_at');
         }
@@ -124,28 +113,28 @@ class AdminCrudController extends AbstractCrudController
         if (Crud::PAGE_DETAIL === $pageName) {
             if (
                 PermissionsAdmin::checkAdmin($this->getUser())
-                || PermissionsAdmin::checkOwners($this->getUser(), 'ADMIN', 'DETAIL')
+                || PermissionsAdmin::checkOwners($this->getUser(), 'ADMIN_GROUP', 'DETAIL')
             ) {
                 yield IdField::new('id');
             }
 
-            yield TextField::new('uuid');
-            yield EmailField::new('email');
+            yield TextField::new('displayuuid');
+            yield TextField::new('name');
 
             if (
                 (PermissionsAdmin::checkAdmin($this->getUser()))
-                || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'DETAIL'))
-                && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_ROLES))
+                || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN_GROUP', 'DETAIL'))
+                && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_GROUPS))
             ) {
                 yield ArrayField::new('roles');
             }
 
             if (
                 (PermissionsAdmin::checkAdmin($this->getUser()))
-                || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'DETAIL'))
+                || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN_GROUP', 'DETAIL'))
                 && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_GROUPS))
             ) {
-                yield ArrayField::new('groups');
+                yield ArrayField::new('admins');
             }
 
             yield DateField::new('created_at');
@@ -154,57 +143,36 @@ class AdminCrudController extends AbstractCrudController
 
         // EDIT
         if (Crud::PAGE_EDIT === $pageName) {
-            yield IdField::new('id')->hideOnForm();
-            yield TextField::new('uuid')->setFormTypeOptions([
+            yield TextField::new('displayuuid')->setFormTypeOptions([
                 'disabled' => true,
             ]);
-            yield EmailField::new('email');
-            yield PasswordField::new('plainPassword');
+            yield TextField::new('name');
 
             if (
                 (PermissionsAdmin::checkAdmin($this->getUser()))
-                || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'EDIT'))
-                && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_ROLES))
+                || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN_GROUP', 'EDIT'))
+                && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_GROUPS))
             ) {
                 yield ChoiceField::new('roles')->setChoices(PermissionsAdmin::getAllRoles())
                     ->allowMultipleChoices(true)
                     ->autocomplete(true)
                     ->setRequired(false);
-            }
-
-            if (
-                (PermissionsAdmin::checkAdmin($this->getUser()))
-                || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'EDIT'))
-                && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_GROUPS))
-            ) {
-                yield AssociationField::new('groups');
             }
         }
 
         // NEW
         if (Crud::PAGE_NEW === $pageName) {
-            yield IdField::new('id')->hideOnForm();
-            yield HiddenField::new('uuid');
-            yield EmailField::new('email');
-            yield PasswordField::new('password');
+            yield TextField::new('name');
 
             if (
                 (PermissionsAdmin::checkAdmin($this->getUser()))
-                || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'NEW'))
-                && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_ROLES))
+                || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN_GROUP', 'NEW'))
+                && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_GROUPS))
             ) {
                 yield ChoiceField::new('roles')->setChoices(PermissionsAdmin::getAllRoles())
                     ->allowMultipleChoices(true)
                     ->autocomplete(true)
                     ->setRequired(false);
-            }
-
-            if (
-                (PermissionsAdmin::checkAdmin($this->getUser()))
-                || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'NEW'))
-                && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_GROUPS))
-            ) {
-                yield AssociationField::new('groups');
             }
         }
     }
@@ -215,12 +183,14 @@ class AdminCrudController extends AbstractCrudController
             return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
         }
 
-        if (PermissionsAdmin::checkOwners($this->getUser(), 'ADMIN', 'INDEX')) {
+        if (PermissionsAdmin::checkOwners($this->getUser(), 'ADMIN_GROUP', 'INDEX')) {
             return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
         }
 
         return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters)
-            ->andWhere('entity.uuid = :uuid')
+            ->leftJoin('entity.admins', 'd')
+            ->addSelect('d')
+            ->andWhere('d.uuid = :uuid')
             ->setParameter('uuid', $this->getUser()->getUuid()) // put your user id connected here
         ;
     }

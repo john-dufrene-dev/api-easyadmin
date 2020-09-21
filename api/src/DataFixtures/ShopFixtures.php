@@ -2,24 +2,15 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Client\Shop;
 use App\Entity\Security\Admin;
-use App\Entity\Security\AdminGroup;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 
-class AdminGroupFixtures extends Fixture
+class ShopFixtures extends Fixture
 {
     public const DEFAULT_EMAIL = 'default@default.com';
-
-    public const CLIENT_ROLES = [
-        'ROLE_ADMIN_ACTION_INDEX',
-        'ROLE_ADMIN_ACTION_EDIT',
-        'ROLE_ADMIN_ACTION_DETAIL',
-        'ROLE_SHOP_ACTION_INDEX',
-        'ROLE_SHOP_ACTION_EDIT',
-        'ROLE_SHOP_ACTION_DETAIL',
-    ];
 
     protected $em;
 
@@ -30,23 +21,22 @@ class AdminGroupFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        $group = new AdminGroup();
-        $group->setName('clients');
+        $shop = new Shop();
+        $shop->setEmail('shop@shop.com');
 
-        $group->setRoles(self::CLIENT_ROLES);
-
-        $group->setCreatedAt(new \DateTime());
-        $group->setUpdatedAt(new \DateTime());
+        $shop->setName('shop test');
+        $shop->setCreatedAt(new \DateTime());
+        $shop->setUpdatedAt(new \DateTime());
 
         $admins = $this->em->getRepository(Admin::class)->findAll();
 
         foreach ($admins as $admin) {
             if ($admin->getEmail() === self::DEFAULT_EMAIL) {
-                $group->addAdmin($admin);
+                $shop->addAdmin($admin);
             }
         }
 
-        $manager->persist($group);
+        $manager->persist($shop);
         $manager->flush();
     }
 }
