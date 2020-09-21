@@ -2,12 +2,13 @@
 
 namespace App\Entity\Security;
 
+use App\Entity\Client\Shop;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use App\Repository\Security\AdminRepository;
+use App\Service\Admin\Traits\Entity\UuidTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\Admin\Permissions\PermissionsAdmin;
-use App\Service\Admin\Traits\Entity\UuidTrait;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -53,6 +54,15 @@ class Admin implements UserInterface
     private $groups;
 
     /**
+     * @ORM\ManyToMany(targetEntity=Shop::class, mappedBy="admins", cascade={"persist", "remove"})
+     * * @ORM\JoinTable(name="shop_admin",
+     *      joinColumns={@ORM\JoinColumn(name="admin_id", referencedColumnName="uuid", onDelete="cascade")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="shop_id", referencedColumnName="uuid", onDelete="cascade")}
+     * )
+     */
+    private $shops;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $created_at;
@@ -68,6 +78,7 @@ class Admin implements UserInterface
         $this->groups = new ArrayCollection();
         $this->created_at = new \DateTime();
         $this->updated_at = new \DateTime();
+        $this->shops = new ArrayCollection();
     }
 
     public function __toString(): string
@@ -208,7 +219,7 @@ class Admin implements UserInterface
 
         return $this;
     }
-    
+
     /**
      * @return Collection|AdminGroup[]
      */
@@ -255,6 +266,34 @@ class Admin implements UserInterface
     public function setUpdatedAt(\DateTimeInterface $updated_at): self
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Shop[]
+     */
+    public function getShops(): Collection
+    {
+        return $this->shops;
+    }
+
+    public function addShop(Shop $shop): self
+    {
+        if (!$this->shops->contains($shop)) {
+            $this->shops[] = $shop;
+            $shop->addAdmin($this);
+        }
+
+        return $this;
+    }
+
+    public function removeShop(Shop $shop): self
+    {
+        if ($this->shops->contains($shop)) {
+            $this->shops->removeElement($shop);
+            $shop->removeAdmin($this);
+        }
 
         return $this;
     }
