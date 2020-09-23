@@ -23,7 +23,7 @@ return [
     'admin.dashboard.menu.groups' => 'Groups',
 
     // Shop Admin Page
-    'Shop' => 'Shops',
+    'Shop' => 'Shop',
     'admin.shop.title' => 'Information Shop',
     'admin.shop.field.id' => 'ID',
     'admin.shop.field.displayuuid' => 'Identifiant',
@@ -32,5 +32,16 @@ return [
     'admin.shop.field.admins' => 'Administrateurs',
     'admin.shop.field.created_at' => 'Crée le',
     'admin.shop.field.updated_at' => 'Mis à jour le',
+
+    // Group Admin Page
+    'AdminGroup' => 'Group',
+    'admin.group.title' => 'Information Group',
+    'admin.group.field.id' => 'ID',
+    'admin.group.field.displayuuid' => 'Identifiant',
+    'admin.group.field.name' => 'Nom',
+    'admin.group.field.roles' => 'Rôles',
+    'admin.group.field.admins' => 'Administrateurs',
+    'admin.group.field.created_at' => 'Crée le',
+    'admin.group.field.updated_at' => 'Mis à jour le',
 
 ];

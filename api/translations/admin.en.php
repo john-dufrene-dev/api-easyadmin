@@ -33,4 +33,15 @@ return [
     'admin.shop.field.created_at' => 'Created at',
     'admin.shop.field.updated_at' => 'Updated at',
 
+    // Group Admin Page
+    'AdminGroup' => 'Group',
+    'admin.group.title' => 'Group Informations',
+    'admin.group.field.id' => 'ID',
+    'admin.group.field.displayuuid' => 'Username',
+    'admin.group.field.name' => 'Name',
+    'admin.group.field.roles' => 'Roles',
+    'admin.group.field.admins' => 'Admins',
+    'admin.group.field.created_at' => 'Created at',
+    'admin.group.field.updated_at' => 'Updated at',
+
 ];
