@@ -17,7 +17,7 @@
         <header class="main-header mb-4">
             <div class="error-message">
                 <h1><i class="fa fa-fw fa-exclamation-circle"></i> 
-                    {{'admin.error.get_error_title'|trans}} {{exception.getStatusCode}}
+                    {{'error.get_error_title'|trans}} {{exception.getStatusCode}}
                 </h1>
                 {{exception.getStatusText|trans}}
             </div>
@@ -26,7 +26,7 @@
         <section class="content">
             <div class="form-group field-button">
                 <a class="btn btn-primary btn-lg btn-block" href="{{ path('admin_dashboard') }}">
-                    {{'admin.error.return'|trans}}
+                    {{'error.return'|trans}}
                 </a>
             </div>
         </section>

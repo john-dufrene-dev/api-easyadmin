@@ -31,28 +31,29 @@ class DashboardController extends AbstractDashboardController
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
-            ->setTitle('Easy-admin-api')
+            ->setTranslationDomain('admin')
+            // @Todo : Dynamic Title in admin
+            ->setTitle('Easy-Admin-Api')
             // ->setTitle('<img src="..."> Easy <span class="text-small">Admin.</span>')
-            ->setFaviconPath('favicon.ico')
-            ->setTranslationDomain('admin');
+            ->setFaviconPath('favicon.ico');
     }
 
     public function configureMenuItems(): iterable
     {
         /*************** -- DEFAULT LINK -- ***************/
-        yield MenuItem::linktoDashboard('Dashboard', 'fa fa-home');
-        yield MenuItem::linkToLogout('Logout', 'fa fa-sign-out');
+        yield MenuItem::linktoDashboard('admin.dashboard.home', 'fa fa-home');
+        yield MenuItem::linkToLogout('admin.dashboard.logout', 'fa fa-sign-out');
 
         /*************** -- SHOP LINK -- ***************/
         if (PermissionsAdmin::checkAdmin($this->getUser()) || PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'INDEX')) {
-            yield MenuItem::section('Shop Management');
+            yield MenuItem::section('admin.dashboard.menu.shop');
         }
 
         if (
             PermissionsAdmin::checkAdmin($this->getUser())
             || PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'INDEX')
         ) {
-            yield MenuItem::linkToCrud('Shops', 'fas fa-cart-plus', Shop::class);
+            yield MenuItem::linkToCrud('admin.dashboard.menu.shops', 'fas fa-cart-plus', Shop::class);
         }
 
         /*************** -- ADMIN LINK -- ***************/
@@ -61,21 +62,21 @@ class DashboardController extends AbstractDashboardController
             || PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'INDEX')
             || PermissionsAdmin::checkActions($this->getUser(), 'ADMIN_GROUP', 'INDEX')
         ) {
-            yield MenuItem::section('Admin Management');
+            yield MenuItem::section('admin.dashboard.menu.admin');
         }
 
         if (
             PermissionsAdmin::checkAdmin($this->getUser())
             || PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'INDEX')
         ) {
-            yield MenuItem::linkToCrud('Admins', 'fas fa-users-cog', Admin::class);
+            yield MenuItem::linkToCrud('admin.dashboard.menu.admins', 'fas fa-users-cog', Admin::class);
         }
 
         if (
             PermissionsAdmin::checkAdmin($this->getUser())
             || PermissionsAdmin::checkActions($this->getUser(), 'ADMIN_GROUP', 'INDEX')
         ) {
-            yield MenuItem::linkToCrud('Admin Groups', 'fas fa-users', AdminGroup::class);
+            yield MenuItem::linkToCrud('admin.dashboard.menu.groups', 'fas fa-users', AdminGroup::class);
         }
     }
 
@@ -85,7 +86,7 @@ class DashboardController extends AbstractDashboardController
             ->setName($user->getUsername())
             ->displayUserName(true)
             ->addMenuItems([
-                MenuItem::linkToCrud('My Profile', 'fa fa-id-card', Admin::class)
+                MenuItem::linkToCrud('admin.dashboard.my_profile', 'fa fa-id-card', Admin::class)
                     ->setAction('edit')
                     ->setEntityId($this->getUser()->getUuid()->toString()),
             ]);

@@ -94,7 +94,7 @@ class ShopCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield FormField::addPanel('Shops infos');
+        yield FormField::addPanel('admin.shop.title');
 
         // INDEX
         if (Crud::PAGE_INDEX === $pageName) {
@@ -102,14 +102,14 @@ class ShopCrudController extends AbstractCrudController
                 PermissionsAdmin::checkAdmin($this->getUser())
                 || PermissionsAdmin::checkOwners($this->getUser(), 'SHOP', 'INDEX')
             ) {
-                yield IdField::new('id');
+                yield IdField::new('id')->setLabel('admin.shop.field.id');
             }
 
-            yield TextField::new('displayuuid');
-            yield TextField::new('name');
-            yield EmailField::new('email');
-            yield DateField::new('created_at');
-            yield DateField::new('updated_at');
+            yield TextField::new('displayuuid')->setLabel('admin.shop.field.displayuuid');
+            yield TextField::new('name')->setLabel('admin.shop.field.name');
+            yield EmailField::new('email')->setLabel('admin.shop.field.email');
+            yield DateField::new('created_at')->setLabel('admin.shop.field.created_at');
+            yield DateField::new('updated_at')->setLabel('admin.shop.field.updated_at');
         }
 
         // DETAIL
@@ -118,53 +118,53 @@ class ShopCrudController extends AbstractCrudController
                 PermissionsAdmin::checkAdmin($this->getUser())
                 || PermissionsAdmin::checkOwners($this->getUser(), 'SHOP', 'DETAIL')
             ) {
-                yield IdField::new('id');
+                yield IdField::new('id')->setLabel('admin.shop.field.id');
             }
 
-            yield TextField::new('displayuuid');
-            yield TextField::new('name');
-            yield EmailField::new('email');
+            yield TextField::new('displayuuid')->setLabel('admin.shop.field.displayuuid');
+            yield TextField::new('name')->setLabel('admin.shop.field.name');
+            yield EmailField::new('email')->setLabel('admin.shop.field.email');
 
             if (
                 (PermissionsAdmin::checkAdmin($this->getUser()))
                 || (PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'DETAIL'))
                 && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_ADMINS_SHOPS))
             ) {
-                yield ArrayField::new('admins');
+                yield ArrayField::new('admins')->setLabel('admin.shop.field.admins');
             }
 
-            yield DateField::new('created_at');
-            yield DateField::new('updated_at');
+            yield DateField::new('created_at')->setLabel('admin.shop.field.created_at');
+            yield DateField::new('updated_at')->setLabel('admin.shop.field.updated_at');
         }
 
         // EDIT
         if (Crud::PAGE_EDIT === $pageName) {
             yield TextField::new('displayuuid')->setFormTypeOptions([
                 'disabled' => true,
-            ]);
-            yield TextField::new('name');
-            yield EmailField::new('email');
+            ])->setLabel('admin.shop.field.displayuuid');
+            yield TextField::new('name')->setLabel('admin.shop.field.name');
+            yield EmailField::new('email')->setLabel('admin.shop.field.email');
 
             if (
                 (PermissionsAdmin::checkAdmin($this->getUser()))
                 || (PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'EDIT'))
                 && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_ADMINS_SHOPS))
             ) {
-                yield AssociationField::new('admins');
+                yield AssociationField::new('admins')->setLabel('admin.shop.field.admins');
             }
         }
 
         // NEW
         if (Crud::PAGE_NEW === $pageName) {
-            yield TextField::new('name');
-            yield EmailField::new('email');
+            yield TextField::new('name')->setLabel('admin.shop.field.name');
+            yield EmailField::new('email')->setLabel('admin.shop.field.email');
 
             if (
                 (PermissionsAdmin::checkAdmin($this->getUser()))
                 || (PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'NEW'))
                 && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_ADMINS_SHOPS))
             ) {
-                yield AssociationField::new('admins');
+                yield AssociationField::new('admins')->setLabel('admin.shop.field.admins');
             }
         }
     }
