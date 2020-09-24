@@ -11,7 +11,7 @@ return [
     /* ADMIN */
 
     // Configuration User Menu
-    'admin.dashboard.my_profile' => 'My profile',
+    'admin.dashboard.my_profile' => 'Mon profil',
 
     // Dashboard Admin Page
     'admin.dashboard.home' => 'Tableau de bord',
@@ -22,26 +22,34 @@ return [
     'admin.dashboard.menu.admins' => 'Admins',
     'admin.dashboard.menu.groups' => 'Groups',
 
+    // Configuration general field informations
+    'admin.field.id' => 'ID',
+    'admin.field.displayuuid' => 'Identifiant',
+    'admin.field.created_at' => 'Crée le',
+    'admin.field.updated_at' => 'Mis à jour le',
+
     // Shop Admin Page
     'Shop' => 'Shop',
     'admin.shop.title' => 'Information Shop',
-    'admin.shop.field.id' => 'ID',
-    'admin.shop.field.displayuuid' => 'Identifiant',
     'admin.shop.field.name' => 'Nom',
     'admin.shop.field.email' => 'Email',
     'admin.shop.field.admins' => 'Administrateurs',
-    'admin.shop.field.created_at' => 'Crée le',
-    'admin.shop.field.updated_at' => 'Mis à jour le',
+
+    // Admin Admin Page
+    'Admin' => 'Admin',
+    'admin.admin.title' => 'Admin Informations',
+    'admin.admin.field.email' => 'Email',
+    'admin.admin.field.roles' => 'Roles',
+    'admin.admin.field.groups' => 'Groups',
+    'admin.admin.field.shops' => 'Shops',
+    'admin.admin.field.password' => 'Mot de passe',
+    'admin.admin.field.plain_password' => 'Mot de passe',
 
     // Group Admin Page
     'AdminGroup' => 'Group',
     'admin.group.title' => 'Information Group',
-    'admin.group.field.id' => 'ID',
-    'admin.group.field.displayuuid' => 'Identifiant',
     'admin.group.field.name' => 'Nom',
     'admin.group.field.roles' => 'Rôles',
     'admin.group.field.admins' => 'Administrateurs',
-    'admin.group.field.created_at' => 'Crée le',
-    'admin.group.field.updated_at' => 'Mis à jour le',
 
 ];
