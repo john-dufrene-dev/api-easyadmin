@@ -6,31 +6,50 @@ use Ramsey\Uuid\UuidInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use ApiPlatform\Core\Annotation\ApiProperty;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
+/**
+ * @ORM\Entity(repositoryClass=ShopRepository::class)
+ *
+ * @UniqueEntity(
+ *     fields={"id", "uuid"},
+ *     message="asserts.entity.unique"
+ * )
+ */
 trait UuidTrait
 {
     /**
-     * The unique auto incremented primary key.
+     * id
      *
      * @var int|null
      *
      * @ORM\Column(type="integer", columnDefinition="INT AUTO_INCREMENT NOT NULL", unique=true)
      * @ORM\GeneratedValue()
+     *
      * @ApiProperty(identifier=false)
      */
     private $id;
 
     /**
+     * The unique auto incremented primary key.
+     * 
      * @var \Ramsey\Uuid\UuidInterface
+     * Todo : Change to uuidGenerator default symfony when release symfony 5.2
+     * Todo : Change to assert \Uuid when release symfony 5.2
      *
      * @ORM\Id()
-     * @ApiProperty(identifier=true)
      * @ORM\Column(type="uuid", unique=true)
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
+     *
+     * @Assert\Type("Ramsey\Uuid\UuidInterface")
+     *
+     * @ApiProperty(identifier=true)
+     * 
      */
     private $uuid;
-    
+
     /**
      * getId
      *
@@ -40,7 +59,7 @@ trait UuidTrait
     {
         return $this->id;
     }
-    
+
     /**
      * getUuid
      *
