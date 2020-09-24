@@ -129,15 +129,16 @@ final class CustomizeActions
                 });
             })
             ->update(Crud::PAGE_DETAIL, Action::DELETE, function (Action $a) {
-                return $a->setIcon('fa fa-trash')->setLabel(false)->setCssClass('btn btn-danger')->displayIf(function ($e) {
-                    if ($e instanceof Admin) {
-                        if ($this->security->getUser()->getId() === $e->getId()) {
-                            return false;
+                return $a->setIcon('fa fa-trash')->setLabel(false)->setCssClass('action-delete btn btn-danger')
+                    ->displayIf(function ($e) {
+                        if ($e instanceof Admin) {
+                            if ($this->security->getUser()->getId() === $e->getId()) {
+                                return false;
+                            }
+                            return $e->getIsAdmin() !== true;
                         }
-                        return $e->getIsAdmin() !== true;
-                    }
-                    return true;
-                });
+                        return true;
+                    });
             });
 
         $actions
@@ -179,15 +180,16 @@ final class CustomizeActions
                 });
             })
             ->update(Crud::PAGE_EDIT, Action::DELETE, function (Action $a) {
-                return $a->setIcon('fa fa-trash')->setLabel(false)->setCssClass('btn btn-danger')->displayIf(function ($e) {
-                    if ($e instanceof Admin) {
-                        if ($this->security->getUser()->getId() === $e->getId()) {
-                            return false;
+                return $a->setIcon('fa fa-trash')->setLabel(false)->setCssClass('action-delete btn btn-danger')
+                    ->displayIf(function ($e) {
+                        if ($e instanceof Admin) {
+                            if ($this->security->getUser()->getId() === $e->getId()) {
+                                return false;
+                            }
+                            return $e->getIsAdmin() !== true;
                         }
-                        return $e->getIsAdmin() !== true;
-                    }
-                    return true;
-                });
+                        return true;
+                    });
             });
 
         $actions
