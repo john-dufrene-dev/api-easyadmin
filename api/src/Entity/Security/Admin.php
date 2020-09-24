@@ -9,42 +9,84 @@ use App\Repository\Security\AdminRepository;
 use App\Service\Admin\Traits\Entity\UuidTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\Admin\Permissions\PermissionsAdmin;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=AdminRepository::class)
+ *
+ * @UniqueEntity(
+ *     fields={"email"},
+ *     message="asserts.admin.unique"
+ * )
  */
 class Admin implements UserInterface
 {
     use UuidTrait;
 
     /**
+     * email
+     *
+     * @var string|null
+     *
      * @ORM\Column(type="string", length=180, unique=true)
+     *
+     * @Assert\NotNull(message="asserts.entity.email.not_null")
+     * @Assert\Email(message ="asserts.entity.email.not_valid")
+     * @Assert\Length(
+     *      min = 6,
+     *      max = 180,
+     *      minMessage = "asserts.entity.min_length",
+     *      maxMessage = "asserts.entity.max_length",
+     *      allowEmptyString = false
+     * )
      */
     private $email;
 
     /**
+     * roles
+     *
+     * @var array
+     *
      * @ORM\Column(type="json")
      */
     private $roles = [];
 
     /**
+     * password
+     *
      * @var string The hashed password
+     *
      * @ORM\Column(type="string")
+     *
+     * @Assert\NotCompromisedPassword(message="asserts.admin.password.not_compromise")
      */
     private $password;
 
     /**
+     * plainPassword
+     *
      * @var string The plain password
+     *
+     * @Assert\NotCompromisedPassword(message="asserts.admin.password.not_compromise")
      */
     private $plainPassword;
 
     /**
+     * is_admin
+     *
+     * @var bool
+     *
      * @ORM\Column(type="boolean")
      */
     private $is_admin;
 
     /**
+     * groups
+     *
+     * @var Collection|AdminGroup[]
+     *
      * @ORM\ManyToMany(targetEntity=AdminGroup::class, inversedBy="admins")
      * @ORM\JoinTable(name="admin_admin_group",
      *      joinColumns={@ORM\JoinColumn(name="admin_id", referencedColumnName="uuid")},
@@ -54,24 +96,54 @@ class Admin implements UserInterface
     private $groups;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Shop::class, mappedBy="admins", cascade={"persist", "remove"})
-     * * @ORM\JoinTable(name="shop_admin",
-     *      joinColumns={@ORM\JoinColumn(name="admin_id", referencedColumnName="uuid", onDelete="cascade")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="shop_id", referencedColumnName="uuid", onDelete="cascade")}
+     * shops
+     *
+     * @var Collection|Shop[]
+     *
+     * @ORM\ManyToMany(targetEntity=Shop::class, mappedBy="admins")
+     * @ORM\JoinTable(name="shop_admin",
+     *      joinColumns={@ORM\JoinColumn(name="admin_id", referencedColumnName="uuid")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="shop_id", referencedColumnName="uuid")}
      * )
      */
     private $shops;
 
     /**
+     * reset_password
+     *
+     * @var mixed
+     *
+     * @ORM\OneToMany(targetEntity=AdminResetPassword::class, mappedBy="user", cascade={"remove"})
+     */
+    private $reset_password;
+
+    /**
+     * created_at
+     *
+     * @var DateTimeInterface|null
+     *
      * @ORM\Column(type="datetime")
+     *
+     * @Assert\NotNull(message="asserts.entity.created_at.not_null")
      */
     private $created_at;
 
     /**
+     * updated_at
+     *
+     * @var DateTimeInterface|null
+     *
      * @ORM\Column(type="datetime")
+     *
+     * @Assert\NotNull(message="asserts.entity.updated_at.not_null")
      */
     private $updated_at;
 
+    /**
+     * __construct
+     *
+     * @return void
+     */
     public function __construct()
     {
         $this->is_admin = 0;
@@ -79,19 +151,36 @@ class Admin implements UserInterface
         $this->created_at = new \DateTime();
         $this->updated_at = new \DateTime();
         $this->shops = new ArrayCollection();
+        $this->reset_password = new ArrayCollection();
     }
 
+    /**
+     * __toString
+     *
+     * @return string
+     */
     public function __toString(): string
     {
         return $this->getUsername();
     }
 
+    /**
+     * getEmail
+     *
+     * @return string
+     */
     public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    /**
+     * setEmail
+     *
+     * @param  mixed $email
+     * @return self
+     */
+    public function setEmail(?string $email): self
     {
         $this->email = $email;
 
@@ -99,8 +188,10 @@ class Admin implements UserInterface
     }
 
     /**
+     * getUsername
      * A visual identifier that represents this user.
      *
+     * @return string
      * @see UserInterface
      */
     public function getUsername(): string
@@ -119,6 +210,9 @@ class Admin implements UserInterface
     }
 
     /**
+     * getRoles
+     *
+     * @return array
      * @see UserInterface
      */
     public function getRoles(): array
@@ -130,13 +224,18 @@ class Admin implements UserInterface
         }
 
         // guarantee every admin at least has ROLE_ADMIN
-        $roles[] = PermissionsAdmin::
-        DEFAULT;
+        $roles[] = PermissionsAdmin::DEFAULT;
 
         return array_values(array_unique($roles));
     }
-
-    public function setRoles(array $roles): self
+    
+    /**
+     * setRoles
+     *
+     * @param  mixed $roles
+     * @return self
+     */
+    public function setRoles(?array $roles): self
     {
         $this->roles = [];
 
@@ -146,7 +245,13 @@ class Admin implements UserInterface
 
         return $this;
     }
-
+    
+    /**
+     * addRole
+     *
+     * @param  mixed $role
+     * @return void
+     */
     public function addRole(string $role): void
     {
         $role = strtoupper($role);
@@ -155,20 +260,35 @@ class Admin implements UserInterface
             $this->roles[] = $role;
         }
     }
-
+    
+    /**
+     * hasRole
+     *
+     * @param  string|null
+     * @return bool
+     */
     public function hasRole(?string $role = null): bool
     {
         return \in_array(strtoupper($role), $this->getRoles(), true);
     }
 
     /**
+     * getPassword
+     *
+     * @return string
      * @see UserInterface
      */
     public function getPassword(): string
     {
         return (string) $this->password;
     }
-
+    
+    /**
+     * setPassword
+     *
+     * @param  mixed $password
+     * @return self
+     */
     public function setPassword(string $password): self
     {
         $this->password = $password;
@@ -177,13 +297,22 @@ class Admin implements UserInterface
     }
 
     /**
+     * getPlainPassword
+     *
+     * @return string
      * @see UserInterface
      */
     public function getPlainPassword(): ?string
     {
         return (string) $this->plainPassword;
     }
-
+    
+    /**
+     * setPlainPassword
+     *
+     * @param  mixed $plainPassword
+     * @return self
+     */
     public function setPlainPassword(?string $plainPassword): self
     {
         $this->plainPassword = $plainPassword;
@@ -192,6 +321,7 @@ class Admin implements UserInterface
     }
 
     /**
+     * @return void
      * @see UserInterface
      */
     public function getSalt()
@@ -200,6 +330,7 @@ class Admin implements UserInterface
     }
 
     /**
+     * @return void
      * @see UserInterface
      */
     public function eraseCredentials()
@@ -207,12 +338,23 @@ class Admin implements UserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
-
+    
+    /**
+     * getIsAdmin
+     *
+     * @return bool
+     */
     public function getIsAdmin(): ?bool
     {
         return $this->is_admin;
     }
-
+    
+    /**
+     * setIsAdmin
+     *
+     * @param  mixed $is_admin
+     * @return self
+     */
     public function setIsAdmin(bool $is_admin): self
     {
         $this->is_admin = $is_admin;
@@ -221,13 +363,21 @@ class Admin implements UserInterface
     }
 
     /**
+     * getGroups
+     * 
      * @return Collection|AdminGroup[]
      */
     public function getGroups(): Collection
     {
         return $this->groups;
     }
-
+    
+    /**
+     * addGroup
+     *
+     * @param  mixed $group
+     * @return self
+     */
     public function addGroup(AdminGroup $group): self
     {
         if (!$this->groups->contains($group)) {
@@ -236,7 +386,13 @@ class Admin implements UserInterface
 
         return $this;
     }
-
+    
+    /**
+     * removeGroup
+     *
+     * @param  mixed $group
+     * @return self
+     */
     public function removeGroup(AdminGroup $group): self
     {
         if ($this->groups->contains($group)) {
@@ -245,24 +401,46 @@ class Admin implements UserInterface
 
         return $this;
     }
-
+    
+    /**
+     * getCreatedAt
+     *
+     * @return DateTimeInterface
+     */
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->created_at;
     }
-
+    
+    /**
+     * setCreatedAt
+     *
+     * @param  mixed $created_at
+     * @return self
+     */
     public function setCreatedAt(\DateTimeInterface $created_at): self
     {
         $this->created_at = $created_at;
 
         return $this;
     }
-
+    
+    /**
+     * getUpdatedAt
+     *
+     * @return DateTimeInterface
+     */
     public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updated_at;
     }
-
+    
+    /**
+     * setUpdatedAt
+     *
+     * @param  mixed $updated_at
+     * @return self
+     */
     public function setUpdatedAt(\DateTimeInterface $updated_at): self
     {
         $this->updated_at = $updated_at;
@@ -271,13 +449,21 @@ class Admin implements UserInterface
     }
 
     /**
+     * getShops
+     *
      * @return Collection|Shop[]
      */
     public function getShops(): Collection
     {
         return $this->shops;
     }
-
+    
+    /**
+     * addShop
+     *
+     * @param  mixed $shop
+     * @return self
+     */
     public function addShop(Shop $shop): self
     {
         if (!$this->shops->contains($shop)) {
@@ -287,7 +473,13 @@ class Admin implements UserInterface
 
         return $this;
     }
-
+    
+    /**
+     * removeShop
+     *
+     * @param  mixed $shop
+     * @return self
+     */
     public function removeShop(Shop $shop): self
     {
         if ($this->shops->contains($shop)) {

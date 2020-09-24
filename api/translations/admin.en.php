@@ -22,26 +22,34 @@ return [
     'admin.dashboard.menu.admins' => 'Admins',
     'admin.dashboard.menu.groups' => 'Groups',
 
+    // Configuration general field informations
+    'admin.field.id' => 'ID',
+    'admin.field.displayuuid' => 'Username',
+    'admin.field.created_at' => 'Created at',
+    'admin.field.updated_at' => 'Updated at',
+
     // Shop Admin Page
     'Shop' => 'Shop',
     'admin.shop.title' => 'Shop Informations',
-    'admin.shop.field.id' => 'ID',
-    'admin.shop.field.displayuuid' => 'Username',
     'admin.shop.field.name' => 'Name',
     'admin.shop.field.email' => 'Email',
     'admin.shop.field.admins' => 'Admins',
-    'admin.shop.field.created_at' => 'Created at',
-    'admin.shop.field.updated_at' => 'Updated at',
+
+    // Admin Admin Page
+    'Admin' => 'Admin',
+    'admin.admin.title' => 'Admin Informations',
+    'admin.admin.field.email' => 'Email',
+    'admin.admin.field.roles' => 'Roles',
+    'admin.admin.field.groups' => 'Groups',
+    'admin.admin.field.shops' => 'Shops',
+    'admin.admin.field.password' => 'Password',
+    'admin.admin.field.plain_password' => 'Plain Password',
 
     // Group Admin Page
     'AdminGroup' => 'Group',
     'admin.group.title' => 'Group Informations',
-    'admin.group.field.id' => 'ID',
-    'admin.group.field.displayuuid' => 'Username',
     'admin.group.field.name' => 'Name',
     'admin.group.field.roles' => 'Roles',
     'admin.group.field.admins' => 'Admins',
-    'admin.group.field.created_at' => 'Created at',
-    'admin.group.field.updated_at' => 'Updated at',
 
 ];

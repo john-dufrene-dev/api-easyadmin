@@ -3,19 +3,23 @@
 namespace App\Entity\Security;
 
 use App\Entity\Security\Admin;
-use App\Repository\Security\AdminResetPasswordRepository;
 use Doctrine\ORM\Mapping as ORM;
-use SymfonyCasts\Bundle\ResetPassword\Model\ResetPasswordRequestInterface;
+use App\Repository\Security\AdminResetPasswordRepository;
 use SymfonyCasts\Bundle\ResetPassword\Model\ResetPasswordRequestTrait;
+use SymfonyCasts\Bundle\ResetPassword\Model\ResetPasswordRequestInterface;
 
 /**
- * @ORM\Entity(repositoryClass=ResetPasswordRequestRepository::class)
+ * @ORM\Entity(repositoryClass=AdminResetPasswordRepository::class)
  */
 class AdminResetPassword implements ResetPasswordRequestInterface
 {
     use ResetPasswordRequestTrait;
 
     /**
+     * id
+     *
+     * @var int
+     *
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
@@ -23,22 +27,45 @@ class AdminResetPassword implements ResetPasswordRequestInterface
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Admin::class)
+     * user
+     *
+     * @var object
+     *
+     * @ORM\ManyToOne(targetEntity=Admin::class, inversedBy="reset_password")
      * @ORM\JoinColumn(name="admin_id", referencedColumnName="uuid"), nullable=false}
      */
     private $user;
-
+    
+    /**
+     * __construct
+     *
+     * @param  mixed $user
+     * @param  mixed $expiresAt
+     * @param  mixed $selector
+     * @param  mixed $hashedToken
+     * @return void
+     */
     public function __construct(object $user, \DateTimeInterface $expiresAt, string $selector, string $hashedToken)
     {
         $this->user = $user;
         $this->initialize($expiresAt, $selector, $hashedToken);
     }
-
+    
+    /**
+     * getId
+     *
+     * @return int
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
-
+    
+    /**
+     * getUser
+     *
+     * @return object
+     */
     public function getUser(): object
     {
         return $this->user;

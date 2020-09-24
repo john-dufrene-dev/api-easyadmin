@@ -52,9 +52,9 @@ class ShopCrudController extends AbstractCrudController
             || PermissionsAdmin::checkOwners($this->getUser(), 'SHOP', 'INDEX')
         ) {
             $filters->add('id');
+            $filters->add('uuid');
         }
 
-        $filters->add('uuid');
         $filters->add('name');
         $filters->add('email');
 
@@ -102,14 +102,14 @@ class ShopCrudController extends AbstractCrudController
                 PermissionsAdmin::checkAdmin($this->getUser())
                 || PermissionsAdmin::checkOwners($this->getUser(), 'SHOP', 'INDEX')
             ) {
-                yield IdField::new('id')->setLabel('admin.shop.field.id');
+                yield IdField::new('id')->setLabel('admin.field.id');
             }
 
-            yield TextField::new('displayuuid')->setLabel('admin.shop.field.displayuuid');
+            yield TextField::new('displayuuid')->setLabel('admin.field.displayuuid');
             yield TextField::new('name')->setLabel('admin.shop.field.name');
             yield EmailField::new('email')->setLabel('admin.shop.field.email');
-            yield DateField::new('created_at')->setLabel('admin.shop.field.created_at');
-            yield DateField::new('updated_at')->setLabel('admin.shop.field.updated_at');
+            yield DateField::new('created_at')->setLabel('admin.field.created_at');
+            yield DateField::new('updated_at')->setLabel('admin.field.updated_at');
         }
 
         // DETAIL
@@ -118,10 +118,10 @@ class ShopCrudController extends AbstractCrudController
                 PermissionsAdmin::checkAdmin($this->getUser())
                 || PermissionsAdmin::checkOwners($this->getUser(), 'SHOP', 'DETAIL')
             ) {
-                yield IdField::new('id')->setLabel('admin.shop.field.id');
+                yield IdField::new('id')->setLabel('admin.field.id');
             }
 
-            yield TextField::new('displayuuid')->setLabel('admin.shop.field.displayuuid');
+            yield TextField::new('displayuuid')->setLabel('admin.field.displayuuid');
             yield TextField::new('name')->setLabel('admin.shop.field.name');
             yield EmailField::new('email')->setLabel('admin.shop.field.email');
 
@@ -133,15 +133,15 @@ class ShopCrudController extends AbstractCrudController
                 yield ArrayField::new('admins')->setLabel('admin.shop.field.admins');
             }
 
-            yield DateField::new('created_at')->setLabel('admin.shop.field.created_at');
-            yield DateField::new('updated_at')->setLabel('admin.shop.field.updated_at');
+            yield DateField::new('created_at')->setLabel('admin.field.created_at');
+            yield DateField::new('updated_at')->setLabel('admin.field.updated_at');
         }
 
         // EDIT
         if (Crud::PAGE_EDIT === $pageName) {
             yield TextField::new('displayuuid')->setFormTypeOptions([
                 'disabled' => true,
-            ])->setLabel('admin.shop.field.displayuuid');
+            ])->setLabel('admin.field.displayuuid');
             yield TextField::new('name')->setLabel('admin.shop.field.name');
             yield EmailField::new('email')->setLabel('admin.shop.field.email');
 
