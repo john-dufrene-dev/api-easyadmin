@@ -54,9 +54,9 @@ class AdminCrudController extends AbstractCrudController
             || PermissionsAdmin::checkOwners($this->getUser(), 'ADMIN', 'INDEX')
         ) {
             $filters->add('id');
+            $filters->add('uuid');
         }
 
-        $filters->add('uuid');
         $filters->add('email');
 
         return $filters;
@@ -102,7 +102,7 @@ class AdminCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield FormField::addPanel('User infos');
+        yield FormField::addPanel('admin.admin.title');
 
         // INDEX
         if (Crud::PAGE_INDEX === $pageName) {
@@ -110,13 +110,13 @@ class AdminCrudController extends AbstractCrudController
                 PermissionsAdmin::checkAdmin($this->getUser())
                 || PermissionsAdmin::checkOwners($this->getUser(), 'ADMIN', 'INDEX')
             ) {
-                yield IdField::new('id');
+                yield IdField::new('id')->setLabel('admin.field.id');
             }
 
-            yield TextField::new('displayuuid');
-            yield EmailField::new('email');
-            yield DateField::new('created_at');
-            yield DateField::new('updated_at');
+            yield TextField::new('displayuuid')->setLabel('admin.field.displayuuid');
+            yield EmailField::new('email')->setLabel('admin.admin.field.email');
+            yield DateField::new('created_at')->setLabel('admin.field.created_at');
+            yield DateField::new('updated_at')->setLabel('admin.field.updated_at');
         }
 
         // DETAIL
@@ -125,18 +125,18 @@ class AdminCrudController extends AbstractCrudController
                 PermissionsAdmin::checkAdmin($this->getUser())
                 || PermissionsAdmin::checkOwners($this->getUser(), 'ADMIN', 'DETAIL')
             ) {
-                yield IdField::new('id');
+                yield IdField::new('id')->setLabel('admin.field.id');
             }
 
-            yield TextField::new('displayuuid');
-            yield EmailField::new('email');
+            yield TextField::new('displayuuid')->setLabel('admin.field.displayuuid');
+            yield EmailField::new('email')->setLabel('admin.admin.field.email');
 
             if (
                 (PermissionsAdmin::checkAdmin($this->getUser()))
                 || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'DETAIL'))
                 && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_ROLES))
             ) {
-                yield ArrayField::new('roles');
+                yield ArrayField::new('roles')->setLabel('admin.admin.field.roles');
             }
 
             if (
@@ -144,7 +144,7 @@ class AdminCrudController extends AbstractCrudController
                 || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'DETAIL'))
                 && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_GROUPS))
             ) {
-                yield ArrayField::new('groups');
+                yield ArrayField::new('groups')->setLabel('admin.admin.field.groups');
             }
 
             if (
@@ -152,20 +152,20 @@ class AdminCrudController extends AbstractCrudController
                 || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'DETAIL'))
                 && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_ADMINS_SHOPS))
             ) {
-                yield ArrayField::new('shops');
+                yield ArrayField::new('shops')->setLabel('admin.admin.field.shops');
             }
 
-            yield DateField::new('created_at');
-            yield DateField::new('updated_at');
+            yield DateField::new('created_at')->setLabel('admin.field.created_at');
+            yield DateField::new('updated_at')->setLabel('admin.field.updated_at');
         }
 
         // EDIT
         if (Crud::PAGE_EDIT === $pageName) {
             yield TextField::new('displayuuid')->setFormTypeOptions([
                 'disabled' => true,
-            ]);
-            yield EmailField::new('email');
-            yield PasswordField::new('plainPassword');
+            ])->setLabel('admin.field.displayuuid');
+            yield EmailField::new('email')->setLabel('admin.admin.field.email');
+            yield PasswordField::new('plainPassword')->setLabel('admin.admin.field.plain_password');
 
             if (
                 (PermissionsAdmin::checkAdmin($this->getUser()))
@@ -175,7 +175,8 @@ class AdminCrudController extends AbstractCrudController
                 yield ChoiceField::new('roles')->setChoices(PermissionsAdmin::getAllRoles())
                     ->allowMultipleChoices(true)
                     ->autocomplete(true)
-                    ->setRequired(false);
+                    ->setRequired(false)
+                    ->setLabel('admin.admin.field.roles');
             }
 
             if (
@@ -183,14 +184,14 @@ class AdminCrudController extends AbstractCrudController
                 || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'EDIT'))
                 && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_GROUPS))
             ) {
-                yield AssociationField::new('groups');
+                yield AssociationField::new('groups')->setLabel('admin.admin.field.groups');
             }
         }
 
         // NEW
         if (Crud::PAGE_NEW === $pageName) {
-            yield EmailField::new('email');
-            yield PasswordField::new('password');
+            yield EmailField::new('email')->setLabel('admin.admin.field.email');
+            yield PasswordField::new('password')->setLabel('admin.admin.field.password');
 
             if (
                 (PermissionsAdmin::checkAdmin($this->getUser()))
@@ -200,7 +201,8 @@ class AdminCrudController extends AbstractCrudController
                 yield ChoiceField::new('roles')->setChoices(PermissionsAdmin::getAllRoles())
                     ->allowMultipleChoices(true)
                     ->autocomplete(true)
-                    ->setRequired(false);
+                    ->setRequired(false)
+                    ->setLabel('admin.admin.field.roles');
             }
 
             if (
@@ -208,7 +210,7 @@ class AdminCrudController extends AbstractCrudController
                 || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'NEW'))
                 && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_GROUPS))
             ) {
-                yield AssociationField::new('groups');
+                yield AssociationField::new('groups')->setLabel('admin.admin.field.groups');
             }
         }
     }
