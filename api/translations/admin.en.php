@@ -8,7 +8,19 @@ return [
     'error.get_error_title' => 'Error',
     'error.return' => 'Return',
 
-    /* ADMIN */
+    /* LOGIN PAGE */
+
+    //@Todo
+
+    /* RESET PAGE */
+
+    // Request password page
+    'request.title.password' => 'Reset your password',
+    'request.text.password' => 'Enter your email address and we we will send you a link to reset your password',
+    'request.submit.password' => 'Send',
+    'request.login.password' => 'Login',
+
+    /* ADMIN PAGES */
 
     // Configuration User Menu
     'admin.dashboard.my_profile' => 'My profile',
