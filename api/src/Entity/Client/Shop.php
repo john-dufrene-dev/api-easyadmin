@@ -76,7 +76,7 @@ class Shop
     /**
      * created_at
      *
-     * @var DateTimeInterface|null
+     * @var \DateTimeInterface|null
      *
      * @ORM\Column(type="datetime")
      *
@@ -87,7 +87,7 @@ class Shop
     /**
      * updated_at
      *
-     * @var DateTimeInterface|null
+     * @var \DateTimeInterface|null
      *
      * @ORM\Column(type="datetime")
      *
@@ -206,7 +206,7 @@ class Shop
     /**
      * getCreatedAt
      *
-     * @return DateTimeInterface
+     * @return \DateTimeInterface
      */
     public function getCreatedAt(): ?\DateTimeInterface
     {
@@ -229,7 +229,7 @@ class Shop
     /**
      * getUpdatedAt
      *
-     * @return DateTimeInterface
+     * @return \DateTimeInterface
      */
     public function getUpdatedAt(): ?\DateTimeInterface
     {
