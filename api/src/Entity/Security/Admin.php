@@ -120,7 +120,7 @@ class Admin implements UserInterface
     /**
      * created_at
      *
-     * @var DateTimeInterface|null
+     * @var \DateTimeInterface|null
      *
      * @ORM\Column(type="datetime")
      *
@@ -131,7 +131,7 @@ class Admin implements UserInterface
     /**
      * updated_at
      *
-     * @var DateTimeInterface|null
+     * @var \DateTimeInterface|null
      *
      * @ORM\Column(type="datetime")
      *
@@ -405,7 +405,7 @@ class Admin implements UserInterface
     /**
      * getCreatedAt
      *
-     * @return DateTimeInterface
+     * @return \DateTimeInterface
      */
     public function getCreatedAt(): ?\DateTimeInterface
     {
@@ -428,7 +428,7 @@ class Admin implements UserInterface
     /**
      * getUpdatedAt
      *
-     * @return DateTimeInterface
+     * @return \DateTimeInterface
      */
     public function getUpdatedAt(): ?\DateTimeInterface
     {

@@ -16,11 +16,10 @@ class ResetPasswordRequestFormType extends AbstractType
             ->add('email', EmailType::class, [
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter your email',
+                        'message' => 'asserts.entity.email.not_null',
                     ]),
                 ],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

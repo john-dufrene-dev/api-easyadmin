@@ -65,7 +65,7 @@ class AdminGroup
     /**
      * created_at
      *
-     * @var DateTimeInterface|null
+     * @var \DateTimeInterface|null
      * 
      * @ORM\Column(type="datetime")
      *
@@ -76,7 +76,7 @@ class AdminGroup
     /**
      * updated_at
      *
-     * @var DateTimeInterface|null
+     * @var \DateTimeInterface|null
      *
      * @ORM\Column(type="datetime")
      * 
@@ -195,7 +195,7 @@ class AdminGroup
     /**
      * getCreatedAt
      *
-     * @return DateTimeInterface
+     * @return \DateTimeInterface
      */
     public function getCreatedAt(): ?\DateTimeInterface
     {
@@ -218,7 +218,7 @@ class AdminGroup
     /**
      * getUpdatedAt
      *
-     * @return DateTimeInterface
+     * @return \DateTimeInterface
      */
     public function getUpdatedAt(): ?\DateTimeInterface
     {
