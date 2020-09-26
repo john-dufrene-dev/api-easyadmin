@@ -71,7 +71,7 @@ class AdminAuthenticator extends AbstractFormLoginAuthenticator implements Passw
 
         if (!$user) {
             // fail authentication with a custom error
-            throw new CustomUserMessageAuthenticationException('Email could not be found.');
+            throw new CustomUserMessageAuthenticationException('login.email.not_be_found');
         }
 
         return $user;
@@ -97,7 +97,6 @@ class AdminAuthenticator extends AbstractFormLoginAuthenticator implements Passw
         }
 
         return new RedirectResponse($this->urlGenerator->generate('admin_dashboard'));
-        // throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 
     protected function getLoginUrl()

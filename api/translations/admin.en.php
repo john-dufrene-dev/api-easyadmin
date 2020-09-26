@@ -10,15 +10,35 @@ return [
 
     /* LOGIN PAGE */
 
-    //@Todo
+    'login.username_label' => 'Your username',
+    'login.password_label' => 'Your password',
+    'login.log_in' => 'Log in',
+    'login.forget_password' => 'Forget password ?',
+    'login.intercept.logout' => 'This method can be blank - it will be intercepted by the logout key on your firewall',
 
-    /* RESET PAGE */
+    /* RESET PAGES */
 
     // Request password page
     'request.title.password' => 'Reset your password',
     'request.text.password' => 'Enter your email address and we we will send you a link to reset your password',
     'request.submit.password' => 'Send',
     'request.login.password' => 'Login',
+
+    // check email page
+    'check.email.title' => 'Password Reset Email Sent',
+    'check.email.info_1' => 'An email has been sent that contains a link that you can click to reset your password.',
+    'check.email.info_2' => 'This link will expire in',
+    'check.email.hour' => 'hour',
+    'check.email.alert' => 'If you don\'t receive an email please check your spam folder or',
+    'check.email.try_again' => 'try again',
+
+    // reset password (token) page
+    'reset.title.password' => 'Reset your password',
+    'reset.new_password.placeholder' => 'New password',
+    'reset.repeat_password.placeholder' => 'Repeat password',
+    'reset.return.error.validating' => 'There was a problem validating your reset request',
+    'reset.return.error.problem' => 'There was a problem handling your password reset request',
+    'reset.return.error.not_found' => 'No reset password token found in the URL or in the session',
 
     /* ADMIN PAGES */
 
