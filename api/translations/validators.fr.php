@@ -16,6 +16,11 @@ return [
     'asserts.entity.min_length' => '{{ value }} doit au moins contenir {{ limit }} caractères',
     'asserts.entity.max_length' => '{{ value }} ne peux pas avoir plus de {{ limit }} caractères',
 
+    // Form change password
+    'asserts.change_password.require' => 'Veuillez entrer un mot de passe',
+    'asserts.change_password.min_length' => 'Votre mot de passe doit comporter au moins {{ limit }} caractères',
+    'asserts.change_password.match' => 'Les champs du mot de passe doivent correspondre',
+
     // Shop Entity
     'asserts.shop.unique' => 'L\'adresse email {{ value }} existe déjà',
 

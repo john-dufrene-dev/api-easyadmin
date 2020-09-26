@@ -4,6 +4,7 @@ namespace App\Controller\Admin\Security;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
@@ -12,6 +13,13 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
  */
 class SecurityLoginController extends AbstractController
 {
+    protected $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
     /**
      * @Route("/login", name="admin_login")
      */
@@ -33,9 +41,9 @@ class SecurityLoginController extends AbstractController
             'page_title' => 'EASY-ADMIN-API login',
             'csrf_token_intention' => 'authenticate',
             'target_path' => $this->generateUrl('admin_dashboard'),
-            'username_label' => 'Your username',
-            'password_label' => 'Your password',
-            'sign_in_label' => 'Log in',
+            'username_label' => 'login.username_label',
+            'password_label' => 'login.password_label',
+            'sign_in_label' => 'login.log_in',
             'username_parameter' => 'email',
             'password_parameter' => 'password',
         ]);
@@ -46,6 +54,6 @@ class SecurityLoginController extends AbstractController
      */
     public function logout()
     {
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
+        throw new \LogicException($this->translator->trans('', [], 'admin'));
     }
 }

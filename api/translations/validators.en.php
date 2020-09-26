@@ -16,6 +16,11 @@ return [
     'asserts.entity.min_length' => '{{ value }} must be at least {{ limit }} characters long',
     'asserts.entity.max_length' => '{{ value }} cannot be longer than {{ limit }} characters',
 
+    // Form change password
+    'asserts.change_password.require' => 'Please enter a password',
+    'asserts.change_password.min_length' => 'Your password should be at least {{ limit }} characters',
+    'asserts.change_password.match' => 'The password fields must match',
+
     // Shop Entity
     'asserts.shop.unique' => 'Shop email {{ value }} already exist',
 

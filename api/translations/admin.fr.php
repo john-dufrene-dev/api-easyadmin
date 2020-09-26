@@ -10,15 +10,35 @@ return [
 
     /* LOGIN PAGE */
 
-    //@Todo
+    'login.username_label' => 'Votre identifiant',
+    'login.password_label' => 'Votre mot de passe',
+    'login.log_in' => 'Connexion',
+    'login.forget_password' => 'Mot de passe oublié ?',
+    'login.intercept.logout' => 'Cette méthode peut être vide, elle sera interceptée lors de votre déconnexion',
 
-    /* RESET PAGE */
+    /* RESET PAGES */
 
     // Request password page
     'request.title.password' => 'Réinitialiser votre mot de passe',
     'request.text.password' => 'Entrez votre adresse email pour réinitialiser votre mot de passe',
     'request.submit.password' => 'Réinitialiser votre mot de passe',
     'request.login.password' => 'Connexion',
+
+    // check email page
+    'check.email.title' => 'Email de réinitialisation du mot de passe envoyé',
+    'check.email.info_1' => 'Un email a été envoyé contenant un lien sur lequel vous pouvez cliquer pour réinitialiser votre mot de passe.',
+    'check.email.info_2' => 'Ce lien expirera dans',
+    'check.email.hour' => 'heure',
+    'check.email.alert' => 'Si vous ne recevez pas d\'email, veuillez vérifier votre dossier spam ou ',
+    'check.email.try_again' => 'réessayer',
+
+    // reset password (token) page
+    'reset.title.password' => 'Réinitialiser votre mot de passe',
+    'reset.new_password.placeholder' => 'Nouveau mot de passe',
+    'reset.repeat_password.placeholder' => 'Confirmation de mot de passe',
+    'reset.return.error.validating' => 'Un problème est survenu lors de la validation de votre demande de réinitialisation',
+    'reset.return.error.problem' => 'Un problème est survenu lors du traitement de votre demande de réinitialisation de mot de passe',
+    'reset.return.error.not_found' => 'Aucun token de réinitialisation du mot de passe trouvé dans l\'URL ou dans la session',
 
     /* ADMIN PAGES */
 

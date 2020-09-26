@@ -7,17 +7,18 @@
 
 {% block body_class 'page-login' %}
 
-{% block page_title %} Password Reset Email Sent {% endblock %}
+{% block page_title %} {{ 'check.email.title'|trans }} {% endblock %}
 
 {% block wrapper_wrapper %}
     <div class="login-wrapper">
         
-        <h6 class="mb-4">An email has been sent that contains a link that you can click to reset your password. 
-            This link will expire in {{ tokenLifetime|date('g') }} hour(s)
+        <h6 class="mb-4"> {{ 'check.email.info_1'|trans }}
+            {{ 'check.email.info_2'|trans }} {{ tokenLifetime|date('g') }} {{ 'check.email.hour'|trans }}
         </h6>
 
-        <div class="alert alert-dark" role="alert">If you don't receive an email please check your spam folder or
-            <a href="{{ path('admin_forgot_password_request') }}">try again</a>
+        <div class="alert alert-dark" role="alert">
+            {{ 'check.email.alert'|trans }}
+            <a href="{{ path('admin_forgot_password_request') }}">{{ 'check.email.try_again'|trans }}</a>
         </div>
 
         <section class="content">

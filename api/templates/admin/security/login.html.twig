@@ -1,4 +1,5 @@
 {% extends '@!EasyAdmin/page/login.html.twig' %}
+{% trans_default_domain 'admin' %}
 
 {% block wrapper_wrapper %}
     {% set page_title = block('page_title') %}
@@ -59,7 +60,7 @@
                     <button type="submit" class="btn btn-primary btn-lg btn-block" onclick="this.form.submit(); this.disabled=true;">{{ _sign_in_label }}</button>
                 </div>
             </form>
-            <h5><a href="{{ path('admin_forgot_password_request') }}">Mot de passe oublié ?</a></h5>
+            <h5><a href="{{ path('admin_forgot_password_request') }}">{{ 'login.forget_password'|trans }}</a></h5>
         </section>
     </div>
 {% endblock %}

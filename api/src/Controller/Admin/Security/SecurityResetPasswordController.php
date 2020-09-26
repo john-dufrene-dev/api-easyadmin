@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Form\Admin\Security\ChangePasswordFormType;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Form\Admin\Security\ResetPasswordRequestFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,12 +25,18 @@ class SecurityResetPasswordController extends AbstractController
 {
     use ResetPasswordControllerTrait;
 
+    private $translator;
+
     private $resetPasswordHelper;
 
     private $params;
 
-    public function __construct(ParameterBagInterface $params, ResetPasswordHelperInterface $resetPasswordHelper)
-    {
+    public function __construct(
+        TranslatorInterface $translator,
+        ParameterBagInterface $params,
+        ResetPasswordHelperInterface $resetPasswordHelper
+    ) {
+        $this->translator = $translator;
         $this->resetPasswordHelper = $resetPasswordHelper;
         $this->params = $params;
     }
@@ -90,15 +97,16 @@ class SecurityResetPasswordController extends AbstractController
 
         $token = $this->getTokenFromSession();
         if (null === $token) {
-            throw $this->createNotFoundException('No reset password token found in the URL or in the session.');
+            throw $this->createNotFoundException($this->translator->trans('reset.return.error.not_found', [], 'admin'));
         }
 
         try {
             $user = $this->resetPasswordHelper->validateTokenAndFetchUser($token);
         } catch (ResetPasswordExceptionInterface $e) {
             $this->addFlash('reset_password_error', sprintf(
-                'There was a problem validating your reset request - %s',
-                $e->getReason()
+                $this->translator->trans('reset.return.error.validating', [], 'admin')
+                // . ' - %s ',
+                // $e->getReason()
             ));
 
             return $this->redirectToRoute('admin_forgot_password_request');
@@ -154,8 +162,9 @@ class SecurityResetPasswordController extends AbstractController
             // Caution: This may reveal if a admin is registered or not.
             //
             $this->addFlash('reset_password_error', sprintf(
-                'There was a problem handling your password reset request - %s',
-                $e->getReason()
+                $this->translator->trans('reset.return.error.problem', [], 'admin')
+                // . ' - %s ',
+                // $e->getReason()
             ));
 
             return $this->redirectToRoute('admin_check_email');
@@ -166,7 +175,12 @@ class SecurityResetPasswordController extends AbstractController
             && $this->params->get('mailer_user') != 'domain@domain.com'
         ) {
             // Send email reset password to admin
-            $mailer->ResetPassword($admin, $resetToken, $this->resetPasswordHelper->getTokenLifetime());
+            $mailer->ResetPassword(
+                $admin,
+                $resetToken,
+                $this->resetPasswordHelper->getTokenLifetime(),
+                $this->translator->trans('email.reset_password.header', [], 'email')
+            );
         }
 
         return $this->redirectToRoute('admin_check_email');
