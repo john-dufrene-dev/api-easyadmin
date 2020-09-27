@@ -13,9 +13,10 @@ class AdminGroupFixtures extends Fixture
     public const DEFAULT_EMAIL = 'default@default.com';
 
     public const CLIENT_ROLES = [
-        'ROLE_ADMIN_ACTION_INDEX',
+        //Add Admin Role
         'ROLE_ADMIN_ACTION_EDIT',
         'ROLE_ADMIN_ACTION_DETAIL',
+        //Add Shop Role
         'ROLE_SHOP_ACTION_INDEX',
         'ROLE_SHOP_ACTION_EDIT',
         'ROLE_SHOP_ACTION_DETAIL',
