@@ -22,6 +22,11 @@ class AdminGroupFixtures extends Fixture
         'ROLE_SHOP_ACTION_DETAIL',
     ];
 
+    public const API_ROLES = [
+        //Add Api documentation Role
+        'ROLE_API_DOCUMENTATION',
+    ];
+
     protected $em;
 
     public function __construct(EntityManagerInterface $em)
@@ -31,23 +36,36 @@ class AdminGroupFixtures extends Fixture
 
     public function load(ObjectManager $manager)
     {
-        $group = new AdminGroup();
-        $group->setName('clients');
+        // Add clients group
+        $client = new AdminGroup();
+        $client->setName('clients');
 
-        $group->setRoles(self::CLIENT_ROLES);
+        $client->setRoles(self::CLIENT_ROLES);
 
-        $group->setCreatedAt(new \DateTime());
-        $group->setUpdatedAt(new \DateTime());
+        $client->setCreatedAt(new \DateTime());
+        $client->setUpdatedAt(new \DateTime());
 
+        // Add api group
+        $api = new AdminGroup();
+        $api->setName('api');
+
+        $api->setRoles(self::API_ROLES);
+
+        $api->setCreatedAt(new \DateTime());
+        $api->setUpdatedAt(new \DateTime());
+
+        $manager->persist($client);
+        $manager->persist($api);
+
+        //Association default Admin to clients group
         $admins = $this->em->getRepository(Admin::class)->findAll();
 
         foreach ($admins as $admin) {
             if ($admin->getEmail() === self::DEFAULT_EMAIL) {
-                $group->addAdmin($admin);
+                $client->addAdmin($admin);
             }
         }
 
-        $manager->persist($group);
         $manager->flush();
     }
 }

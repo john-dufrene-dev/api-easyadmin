@@ -1,7 +1,56 @@
 api_platform:
+
+    # The title of the API.
+    title: 'API title'
+
+    # The description of the API.
+    description: 'API description'
+
+    # The version of the API.
+    version: '1.0.0'
+
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
+
     patch_formats:
         json: ['application/merge-patch+json']
+
     swagger:
         versions: [3]
+
+    # Enable the data collector and the WebProfilerBundle integration.
+    enable_profiler: true
+
+    # Enable the Swagger documentation and export.
+    enable_swagger: true
+
+    # Enable Swagger ui.
+    enable_swagger_ui: true
+
+    # Enable ReDoc.
+    enable_re_doc: true
+
+    # Enable the entrypoint => Disable url /api by default, you need to use /api/docs to see documentation
+    enable_entrypoint: false
+
+    # Enable the docs.
+    enable_docs: true
+
+    # The list of enabled formats. The first one will be the default.
+    formats:
+        jsonld:
+            mime_types: ['application/ld+json']
+
+        json:
+            mime_types: ['application/json']
+
+        html:
+            mime_types: ['text/html']
+
+    # The list of enabled error formats. The first one will be the default.
+    error_formats:
+        jsonproblem:
+            mime_types: ['application/problem+json']
+
+        jsonld:
+            mime_types: ['application/ld+json']
