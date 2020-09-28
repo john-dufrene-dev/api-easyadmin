@@ -26,7 +26,7 @@ class Admin implements UserInterface
     use UuidTrait;
 
     /**
-     * email
+     * email - The email of the Admin
      *
      * @var string|null
      *
@@ -45,7 +45,7 @@ class Admin implements UserInterface
     private $email;
 
     /**
-     * roles
+     * roles - Roles of the Admin
      *
      * @var array
      *
@@ -54,7 +54,7 @@ class Admin implements UserInterface
     private $roles = [];
 
     /**
-     * password
+     * password - Password of the Admin
      *
      * @var string The hashed password
      *
@@ -65,7 +65,7 @@ class Admin implements UserInterface
     private $password;
 
     /**
-     * plainPassword
+     * plainPassword - Verify if password is correct
      *
      * @var string The plain password
      *
@@ -74,7 +74,7 @@ class Admin implements UserInterface
     private $plainPassword;
 
     /**
-     * is_admin
+     * is_admin - Verify if is the default Admin
      *
      * @var bool
      *
@@ -83,7 +83,7 @@ class Admin implements UserInterface
     private $is_admin;
 
     /**
-     * groups
+     * groups - Groups of the Admin
      *
      * @var Collection|AdminGroup[]
      *
@@ -96,7 +96,7 @@ class Admin implements UserInterface
     private $groups;
 
     /**
-     * shops
+     * shops - Shops associated to the Admin
      *
      * @var Collection|Shop[]
      *
@@ -109,7 +109,7 @@ class Admin implements UserInterface
     private $shops;
 
     /**
-     * reset_password
+     * reset_password - The Admin who want to reset password
      *
      * @var mixed
      *
@@ -118,7 +118,7 @@ class Admin implements UserInterface
     private $reset_password;
 
     /**
-     * created_at
+     * created_at - Date of created Admin
      *
      * @var \DateTimeInterface|null
      *
@@ -129,7 +129,7 @@ class Admin implements UserInterface
     private $created_at;
 
     /**
-     * updated_at
+     * updated_at - Date of updated Admin
      *
      * @var \DateTimeInterface|null
      *

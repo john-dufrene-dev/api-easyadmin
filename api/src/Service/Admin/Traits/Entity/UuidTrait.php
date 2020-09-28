@@ -20,7 +20,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 trait UuidTrait
 {
     /**
-     * id
+     * id - The unique auto incremented id (not the primary key)
      *
      * @var int|null
      *
@@ -32,7 +32,7 @@ trait UuidTrait
     private $id;
 
     /**
-     * The unique auto incremented primary key.
+     * uuid - The unique auto incremented primary key
      * 
      * @var \Ramsey\Uuid\UuidInterface
      * Todo : Change to uuidGenerator default symfony when release symfony 5.2
