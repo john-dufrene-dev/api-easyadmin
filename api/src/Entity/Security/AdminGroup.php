@@ -23,7 +23,7 @@ class AdminGroup
     use UuidTrait;
 
     /**
-     * name
+     * name - The name of the AdminGroup
      *
      * @var string|null
      *
@@ -41,7 +41,7 @@ class AdminGroup
     private $name;
 
     /**
-     * admins
+     * admins - The Admins associated to the groups
      *
      * @var Collection|Admin[]
      * 
@@ -54,7 +54,7 @@ class AdminGroup
     private $admins;
 
     /**
-     * roles
+     * roles - Roles of the Admin
      *
      * @var array
      * 
@@ -63,7 +63,7 @@ class AdminGroup
     private $roles = [];
 
     /**
-     * created_at
+     * created_at - Date of created AdminGroup
      *
      * @var \DateTimeInterface|null
      * 
@@ -74,7 +74,7 @@ class AdminGroup
     private $created_at;
 
     /**
-     * updated_at
+     * updated_at - Date of updated AdminGroup
      *
      * @var \DateTimeInterface|null
      *

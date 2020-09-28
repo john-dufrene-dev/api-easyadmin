@@ -1,6 +1,8 @@
 {
+    "name": "jddev/easy-admin-demo",
     "type": "project",
     "license": "proprietary",
+    "description": "Easyadmin api Demo",
     "require": {
         "php": ">=7.3",
         "ext-ctype": "*",

@@ -24,7 +24,7 @@ class Shop
     use UuidTrait;
 
     /**
-     * name
+     * name - The name of the Shop
      *
      * @var string|null
      *
@@ -42,7 +42,7 @@ class Shop
     private $name;
 
     /**
-     * email
+     * email - The email of the Shop
      *
      * @var string|null
      *
@@ -61,7 +61,7 @@ class Shop
     private $email;
 
     /**
-     * admins
+     * admins - The Admins associated to the Shops
      *
      * @var Collection|Admin[]
      * 
@@ -74,7 +74,7 @@ class Shop
     private $admins;
 
     /**
-     * created_at
+     * created_at - Date of created Shop
      *
      * @var \DateTimeInterface|null
      *
@@ -85,7 +85,7 @@ class Shop
     private $created_at;
 
     /**
-     * updated_at
+     * updated_at - Date of updated Shop
      *
      * @var \DateTimeInterface|null
      *

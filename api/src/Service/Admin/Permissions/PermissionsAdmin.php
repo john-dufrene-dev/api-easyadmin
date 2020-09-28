@@ -10,8 +10,8 @@ final class PermissionsAdmin
      * You can do everythinks you want with this role
      *
      */
-    public const
-        DEFAULT = 'ROLE_ADMIN';
+    public const DEFAULT = 'ROLE_ADMIN';
+
     /**
      * 
      * Role super admin
@@ -51,6 +51,14 @@ final class PermissionsAdmin
      *
      */
     public const ROLE_ALLOWED_TO_SWITCH     = 'ROLE_ALLOWED_TO_SWITCH';
+
+    /**
+     * 
+     * Role for api documentation
+     * You can try and use the swagger UI documentation
+     *
+     */
+    public const ROLE_API_DOCUMENTATION     = 'ROLE_API_DOCUMENTATION';
 
     /**
      * 
@@ -131,6 +139,7 @@ final class PermissionsAdmin
             'permissions.roles_allowed_to_edit_groups'          => self::getRoleAllowedToEditGroups(),
             'permissions.roles_allowed_to_edit_admins_shop'     => self::getRoleAllowedToEditAdminsinShop(),
             'permissions.roles_allowed_to_switch'               => self::getRoleAllowedToSwitch(),
+            'permissions.roles_allowed_to_read_api_doc'         => self::getRoleAllowedReadApiDocumentation(),
             'permissions.actions.admin'                         => self::getActionsAdminEntity(),
             'permissions.owners.admin'                          => self::getOwnersAdminEntity(),
             'permissions.actions.admin_group'                   => self::getActionsAdminGroupEntity(),
@@ -170,6 +179,13 @@ final class PermissionsAdmin
     {
         return [
             'ROLE_ALLOWED_TO_SWITCH' => self::ROLE_ALLOWED_TO_SWITCH,
+        ];
+    }
+
+    public static function getRoleAllowedReadApiDocumentation()
+    {
+        return [
+            'ROLE_API_DOCUMENTATION' => self::ROLE_API_DOCUMENTATION,
         ];
     }
 

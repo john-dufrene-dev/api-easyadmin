@@ -16,7 +16,7 @@ class AdminResetPassword implements ResetPasswordRequestInterface
     use ResetPasswordRequestTrait;
 
     /**
-     * id
+     * id - The unique auto incremented primary key
      *
      * @var int
      *
@@ -27,7 +27,7 @@ class AdminResetPassword implements ResetPasswordRequestInterface
     private $id;
 
     /**
-     * user
+     * user - Represent the Admin who want's to reset password
      *
      * @var object
      *

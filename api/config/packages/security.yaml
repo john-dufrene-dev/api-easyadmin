@@ -35,12 +35,12 @@ security:
                 role: ROLE_ALLOWED_TO_SWITCH
 
     role_hierarchy:
-        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH, ROLE_API_DOCUMENTATION]
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/api/docs.*, roles: ROLE_API_DOCUMENTATION }
         # - { path: ^/profile, roles: ROLE_USER }
 
     access_decision_manager:
