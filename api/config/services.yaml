@@ -30,6 +30,14 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
+    #  You must add your api-platform service here
+
+    # Add api token user auth in swagger
+    App\Swagger\User\AuthenticationTokenSwaggerDecorator:
+        decorates: 'api_platform.swagger.normalizer.documentation'
+        arguments: ['@App\Swagger\User\AuthenticationTokenSwaggerDecorator.inner']
+        autoconfigure: false
+
 imports:
     - { resource: 'services_custom.yaml' } # Custom services
     
