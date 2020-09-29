@@ -17,6 +17,10 @@ api_platform:
 
     swagger:
         versions: [3]
+        api_keys:
+            apiKey:
+                name: Authorization
+                type: header
 
     # Enable the data collector and the WebProfilerBundle integration.
     enable_profiler: true
@@ -38,14 +42,14 @@ api_platform:
 
     # The list of enabled formats. The first one will be the default.
     formats:
-        jsonld:
-            mime_types: ['application/ld+json']
-
         json:
             mime_types: ['application/json']
 
         html:
             mime_types: ['text/html']
+            
+        # jsonld:
+        #     mime_types: ['application/ld+json']
 
     # The list of enabled error formats. The first one will be the default.
     error_formats:
