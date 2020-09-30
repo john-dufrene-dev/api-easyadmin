@@ -17,5 +17,13 @@ return [
     'email.reset_password.hour' => 'heure(s)',
     'email.reset_password.cheers' => 'Bien à vous !',
 
-];
+    /* USER EMAIL */
+    'email.email_confirmation.header' => 'Confirmation de votre email utilisateur',
+    'email.email_confirmation.welcome' => 'Salut ! Veuillez confirmer votre email !',
+    'email.email_confirmation.message' => 'Veuillez confirmer votre adresse e-mail en cliquant sur le lien suivant : ',
+    'email.email_confirmation.confirm' => 'Confirmer mon email',
+    'email.email_confirmation.expire' => 'Ce lien expire dans',
+    'email.email_confirmation.hour' => 'heure(s)',
+    'email.email_confirmation.cheers' => 'Bien à vous !',
 
+];

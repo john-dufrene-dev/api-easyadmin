@@ -5,12 +5,16 @@ namespace App\Entity\Customer;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\Customer\UserRepository;
 use App\Service\Admin\Traits\Entity\UuidTrait;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
-
-// TODO : Add Asserts
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
+ * 
+ * @UniqueEntity(
+ *      fields={"email"}, 
+ *      message="asserts.user.unique")
  */
 class User implements UserInterface
 {
@@ -22,6 +26,16 @@ class User implements UserInterface
      * @var string|null
      * 
      * @ORM\Column(type="string", length=180, unique=true)
+     * 
+     * @Assert\NotNull(message="asserts.entity.email.not_null")
+     * @Assert\Email(message ="asserts.entity.email.not_valid")
+     * @Assert\Length(
+     *      min = 6,
+     *      max = 180,
+     *      minMessage = "asserts.entity.min_length",
+     *      maxMessage = "asserts.entity.max_length",
+     *      allowEmptyString = false
+     * )
      */
     private $email;
 
@@ -40,6 +54,8 @@ class User implements UserInterface
      * @var string The hashed password
      *
      * @ORM\Column(type="string")
+     * 
+     * @Assert\NotCompromisedPassword(message="asserts.user.password.not_compromise")
      */
     private $password;
 
@@ -47,17 +63,28 @@ class User implements UserInterface
      * plainPassword - Verify if password is correct
      *
      * @var string The plain password
+     * 
+     * @Assert\NotCompromisedPassword(message="asserts.user.password.not_compromise")
      */
     private $plainPassword;
 
     /**
      * is_active - The active status of the User
      * 
-     * @return bool
+     * @var bool
      * 
      * @ORM\Column(type="boolean")
      */
-    private $is_active;
+    private $is_active = false;
+
+    /**
+     * is_verified - The verified status of the User
+     * 
+     * @var bool
+     * 
+     * @ORM\Column(type="boolean")
+     */
+    private $is_verified = false;
 
     /**
      * created_at - Date of created User
@@ -65,6 +92,8 @@ class User implements UserInterface
      * @var \DateTimeInterface|null
      *
      * @ORM\Column(type="datetime")
+     * 
+     * @Assert\NotNull(message="asserts.entity.created_at.not_null")
      */
     private $created_at;
 
@@ -74,6 +103,8 @@ class User implements UserInterface
      * @var \DateTimeInterface|null
      *
      * @ORM\Column(type="datetime")
+     * 
+     * @Assert\NotNull(message="asserts.entity.created_at.not_null")
      */
     private $updated_at;
 
@@ -84,7 +115,6 @@ class User implements UserInterface
      */
     public function __construct()
     {
-        $this->is_active = 0;
         $this->created_at = new \DateTime();
         $this->updated_at = new \DateTime();
     }
@@ -229,7 +259,7 @@ class User implements UserInterface
 
         return $this;
     }
-    
+
     /**
      * getIsActive
      *
@@ -239,7 +269,7 @@ class User implements UserInterface
     {
         return $this->is_active;
     }
-    
+
     /**
      * setIsActive
      *
@@ -249,6 +279,29 @@ class User implements UserInterface
     public function setIsActive(bool $is_active): self
     {
         $this->is_active = $is_active;
+
+        return $this;
+    }
+    
+    /**
+     * isVerified
+     *
+     * @return bool
+     */
+    public function isVerified(): bool
+    {
+        return $this->is_verified;
+    }
+    
+    /**
+     * setIsVerified
+     *
+     * @param  mixed $is_verified
+     * @return self
+     */
+    public function setIsVerified(bool $is_verified): self
+    {
+        $this->is_verified = $is_verified;
 
         return $this;
     }
