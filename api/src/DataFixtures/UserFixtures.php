@@ -26,6 +26,7 @@ class UserFixtures extends Fixture
         $user->setPassword($password);
         $user->setRoles(['ROLE__USER']);
         $user->setIsActive(1);
+        $user->setIsVerified(1);
         $user->setCreatedAt(new \DateTime());
         $user->setUpdatedAt(new \DateTime());
 

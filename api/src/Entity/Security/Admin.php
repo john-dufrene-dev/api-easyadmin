@@ -80,7 +80,7 @@ class Admin implements UserInterface
      *
      * @ORM\Column(type="boolean")
      */
-    private $is_admin;
+    private $is_admin = false;
 
     /**
      * groups - Groups of the Admin
@@ -146,7 +146,6 @@ class Admin implements UserInterface
      */
     public function __construct()
     {
-        $this->is_admin = 0;
         $this->groups = new ArrayCollection();
         $this->created_at = new \DateTime();
         $this->updated_at = new \DateTime();
