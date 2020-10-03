@@ -2,6 +2,7 @@ parameters:
 
     locale: '%env(resolve:APP_LOCALE)%' # Default LOCALE LANGUAGE value
     mailer_user: '%env(resolve:MAILER_USER)%' # Default MAIL value
+    active_confirm_user: '%env(resolve:ACTIVE_CONFIRM_USER)%' # Enable / Disable confirmation User email
 
 services:
     # Service email notifications for Admin

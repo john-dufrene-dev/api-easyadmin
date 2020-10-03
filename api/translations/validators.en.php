@@ -24,6 +24,10 @@ return [
     // Shop Entity
     'asserts.shop.unique' => 'Shop email {{ value }} already exist',
 
+    // User Entity
+    'asserts.user.unique' => 'User email {{ value }} already exist',
+    'asserts.user.password.not_compromise' => 'This password is compromise, please choose a more difficult one',
+
     // Admin Entity
     'asserts.admin.unique' => 'Admin email {{ value }} already exist',
     'asserts.admin.password.not_compromise' => 'This password is compromise, please choose a more difficult one',

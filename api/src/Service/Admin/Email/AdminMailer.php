@@ -58,7 +58,7 @@ class AdminMailer
         $user,
         $token,
         $lifetime,
-        $subject = 'Default password reset request', // Default message without transllation, you can change it
+        $subject = 'Default password reset request', // Default message without translation, you can change it
         $template = 'email/admin/security/reset_password.html.twig'
     ) {
         $email = (new TemplatedEmail())

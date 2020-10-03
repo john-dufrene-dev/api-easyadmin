@@ -30,6 +30,30 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
+    #  You must add your api-platform service here
+
+    ##########################################################
+    ###### SWAGGER CUSTOM DECORATOR MUST BE DEFINE HERE ######
+    ##########################################################
+
+    # Register new User and get JWT token
+    App\Swagger\ComponentsSwaggerDecorator:
+        decorates: 'api_platform.swagger.normalizer.documentation'
+        arguments: ['@App\Swagger\ComponentsSwaggerDecorator.inner']
+        autoconfigure: false
+
+    # Register new User and get JWT token
+    App\Swagger\User\RegisterSwaggerDecorator:
+        decorates: 'api_platform.swagger.normalizer.documentation'
+        arguments: ['@App\Swagger\User\RegisterSwaggerDecorator.inner']
+        autoconfigure: false
+
+    # Add JWT token User auth for api
+    App\Swagger\User\AuthenticationTokenSwaggerDecorator:
+        decorates: 'api_platform.swagger.normalizer.documentation'
+        arguments: ['@App\Swagger\User\AuthenticationTokenSwaggerDecorator.inner']
+        autoconfigure: false
+
 imports:
     - { resource: 'services_custom.yaml' } # Custom services
     

@@ -1,0 +1,12 @@
+{% extends 'email/api/base.html.twig' %}
+{% trans_default_domain 'email' %}
+
+{% block title %} {{ 'email.register.title'|trans }} {% endblock %}
+
+{% block body %}
+
+    <h1>{{ 'email.register.welcome'|trans }} {{ user.email }}</h1>
+
+    <p>{{ 'email.register.cheers'|trans }}</p>
+
+{% endblock %}
