@@ -7,7 +7,7 @@ namespace App\Swagger\User;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-final class AuthenticationTokenSwaggerDecorator implements NormalizerInterface
+final class RegisterSwaggerDecorator implements NormalizerInterface
 {
     private $decorated;
 
@@ -27,13 +27,13 @@ final class AuthenticationTokenSwaggerDecorator implements NormalizerInterface
 
         $tokenDocumentation = [
             'paths' => [
-                '/api/auth/login_check' => [
+                '/api/auth/register' => [
                     'post' => [
                         'tags' => ['Authentication'],
-                        'operationId' => 'postAuthenticationToken',
-                        'summary' => 'Get JWT token to login.',
+                        'operationId' => 'postCredentialsItem',
+                        'summary' => 'Register a new User and get JWT token.',
                         'requestBody' => [
-                            'description' => 'Create new JWT Token',
+                            'description' => 'Create new User and return JWT token',
                             'content' => [
                                 'application/json' => [
                                     'schema' => [
@@ -55,9 +55,6 @@ final class AuthenticationTokenSwaggerDecorator implements NormalizerInterface
                             ],
                             Response::HTTP_BAD_REQUEST => [
                                 'description' => 'Bad Request',
-                            ],
-                            Response::HTTP_UNAUTHORIZED => [
-                                'description' => 'Invalid Credentials',
                             ],
                         ],
                     ],
