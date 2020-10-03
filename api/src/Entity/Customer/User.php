@@ -3,8 +3,8 @@
 namespace App\Entity\Customer;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Service\Traits\Entity\UuidTrait;
 use App\Repository\Customer\UserRepository;
-use App\Service\Admin\Traits\Entity\UuidTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -75,7 +75,7 @@ class User implements UserInterface
      * 
      * @ORM\Column(type="boolean")
      */
-    private $is_active = false;
+    private $is_active = true;
 
     /**
      * is_verified - The verified status of the User

@@ -4,9 +4,9 @@ namespace App\Entity\Security;
 
 use App\Entity\Client\Shop;
 use Doctrine\ORM\Mapping as ORM;
+use App\Service\Traits\Entity\UuidTrait;
 use Doctrine\Common\Collections\Collection;
 use App\Repository\Security\AdminRepository;
-use App\Service\Admin\Traits\Entity\UuidTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\Admin\Permissions\PermissionsAdmin;
 use Symfony\Component\Validator\Constraints as Assert;

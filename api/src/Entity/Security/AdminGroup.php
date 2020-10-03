@@ -3,8 +3,8 @@
 namespace App\Entity\Security;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Service\Traits\Entity\UuidTrait;
 use Doctrine\Common\Collections\Collection;
-use App\Service\Admin\Traits\Entity\UuidTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Repository\Security\AdminGroupRepository;
 use Symfony\Component\Validator\Constraints as Assert;
