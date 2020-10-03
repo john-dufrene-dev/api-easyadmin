@@ -60,6 +60,26 @@ class UserMailer
     }
 
     /**
+     * RegistationApi
+     *
+     * @return void
+     */
+    public function sendRegistationApi(
+        $user,
+        $subject = 'Default registration User', // Default message without translation, you can change it
+        $template = 'email/api/security/register.html.twig'
+    ) {
+        $email = (new TemplatedEmail())
+            ->from(new Address($this->params->get('mailer_user'), $subject))
+            ->to($user->getEmail())
+            ->subject($subject)
+            ->htmlTemplate($template)
+            ->context(['user' => $user]);
+
+        $this->mailer->send($email);
+    }
+
+    /**
      * sendEmailConfirmation
      *
      * @return void
