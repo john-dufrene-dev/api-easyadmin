@@ -3,6 +3,7 @@
 namespace App\Controller\Api\Auth;
 
 use App\Entity\Customer\User;
+use App\Entity\Customer\UserToken;
 use App\Service\Api\Email\UserMailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\Serializer;
@@ -15,6 +16,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Gesdinet\JWTRefreshTokenBundle\Model\RefreshTokenManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
@@ -79,7 +81,8 @@ class RegistrationController extends AbstractController
         Request $request,
         UserPasswordEncoderInterface $passwordEncoder,
         ValidatorInterface $validator,
-        JWTTokenManagerInterface $JWTManager
+        JWTTokenManagerInterface $JWTManager,
+        RefreshTokenManagerInterface $refreshTokenManager
     ): JsonResponse {
 
         $encoders = [new JsonEncoder()];
@@ -110,6 +113,9 @@ class RegistrationController extends AbstractController
         $username = $content->getEmail() ? $content->getEmail() : null;
         $password = $content->getPassword() ? $content->getPassword() : null;
 
+        $datetime = new \DateTime();
+        $datetime->modify('+' . $this->params->get('gesdinet_jwt_refresh_token.ttl') . ' seconds');
+
         // Tcheck if username or password are null
         if (null === $username || null === $password || !isset($username) || !isset($password)) {
 
@@ -119,15 +125,23 @@ class RegistrationController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
 
+        // Create The User Entity
         $user = new User();
         $user->setEmail($username);
         $user->setPlainPassword($password);
         $user->setRoles(['ROLE__USER']);
 
-        $errors = $validator->validate($user);
+        // Create the refresh token User
+        $refreshToken = $refreshTokenManager->create();
+        $refreshToken->setUsername($user->getUsername());
+        $refreshToken->setRefreshToken();
+        $refreshToken->setValid($datetime);
+
+        $errors_user = $validator->validate($user);
+        $errors_token = $validator->validate($user);
 
         // Tcheck validations constraints
-        if (0 === count($errors)) {
+        if (0 === count($errors_user) && 0 === count($errors_token)) {
 
             $user->setPassword($passwordEncoder->encodePassword($user, $password));
 
@@ -160,11 +174,20 @@ class RegistrationController extends AbstractController
                 }
             }
 
-            return $this->json(['token' => $JWTManager->create($user)], Response::HTTP_OK);
+            $refreshTokenManager->save($refreshToken);
+
+            return $this->json([
+                'token' => $JWTManager->create($user),
+                'refresh_token' => $refreshToken->getRefreshToken()
+            ], Response::HTTP_OK);
         } else {
 
             $errs = [];
-            foreach ($errors as $error) {
+            foreach ($errors_user as $error) {
+                $errs = array_merge($errs, [$error->getMessage()]);
+            }
+
+            foreach ($errors_token as $error) {
                 $errs = array_merge($errs, [$error->getMessage()]);
             }
 
@@ -181,7 +204,11 @@ class RegistrationController extends AbstractController
      * @param  mixed $request
      * @return JsonResponse
      */
-    public function logoutApi(Request $request): JsonResponse
+    public function logoutApi(
+        Request $request, 
+        EntityManagerInterface $em,
+        RefreshTokenManagerInterface $refreshTokenManager
+        ): JsonResponse
     {
         // Tcheck if POST Method
         if (!$request->isMethod('POST')) {
@@ -190,6 +217,23 @@ class RegistrationController extends AbstractController
                 "code" => Response::HTTP_METHOD_NOT_ALLOWED,
                 "message" => 'Method Not Allowed (Allow: {POST})'
             ], Response::HTTP_METHOD_NOT_ALLOWED);
+        }
+
+        if (!$this->isGranted('ROLE__USER')) {
+            return $this->json([
+                "code" => Response::HTTP_UNAUTHORIZED,
+                "message" => 'Unauthorized'
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+        
+        $userToken = $em->getRepository(UserToken::class);
+
+        // Remove all refresh token of the User when logout
+        if($refreshs = count($userToken->getAllByUser($this->getUser())) !== 0) {
+            foreach($userToken->getAllByUser($this->getUser()) as $token) {
+                $em->remove($token);
+                $em->flush();
+            }
         }
 
         // Tcheck if it's json contentType

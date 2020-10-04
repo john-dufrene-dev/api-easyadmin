@@ -9,4 +9,9 @@ services:
     app.service.admin_mailer:
         class: App\Service\Admin\Email\AdminMailer
         arguments: ['@mailer.mailer', '@parameter_bag', '@doctrine.orm.default_entity_manager']
+    
+    # Override RefreshTokenManager
+    gesdinet.jwtrefreshtoken.refresh_token_manager:
+        class: App\Doctrine\RefreshTokenManager
+        arguments: [ '@doctrine.orm.default_entity_manager', 'App\Entity\Customer\UserToken']
         
