@@ -92,6 +92,8 @@ class AdminGroup
     public function __construct()
     {
         $this->admins = new ArrayCollection();
+        $this->created_at = new \DateTime();
+        $this->updated_at = new \DateTime();
     }
 
     /**
