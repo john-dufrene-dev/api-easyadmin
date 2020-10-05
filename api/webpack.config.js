@@ -29,6 +29,19 @@ Encore
     //.addEntry('page1', './assets/page1.js')
     //.addEntry('page2', './assets/page2.js')
 
+    .copyFiles({
+        from: './assets/img',
+
+        // optional target path, relative to the output dir
+        //to: 'images/[path][name].[ext]',
+
+        // if versioning is enabled, add the file hash too
+        to: 'img/[path][name].[ext]',
+
+        // only copy files matching this pattern
+        //pattern: /\.(png|jpg|jpeg)$/
+    })
+
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
 
