@@ -3,6 +3,7 @@
 namespace App\Controller\Api\Auth;
 
 use App\Entity\Customer\User;
+use App\Entity\Customer\UserToken;
 use App\Service\Api\Email\UserMailer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\Serializer;
@@ -15,10 +16,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Gesdinet\JWTRefreshTokenBundle\Model\RefreshTokenManagerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class RegistrationController extends AbstractController
 {
@@ -79,7 +84,8 @@ class RegistrationController extends AbstractController
         Request $request,
         UserPasswordEncoderInterface $passwordEncoder,
         ValidatorInterface $validator,
-        JWTTokenManagerInterface $JWTManager
+        JWTTokenManagerInterface $JWTManager,
+        RefreshTokenManagerInterface $refreshTokenManager
     ): JsonResponse {
 
         $encoders = [new JsonEncoder()];
@@ -110,6 +116,9 @@ class RegistrationController extends AbstractController
         $username = $content->getEmail() ? $content->getEmail() : null;
         $password = $content->getPassword() ? $content->getPassword() : null;
 
+        $datetime = new \DateTime();
+        $datetime->modify('+' . $this->params->get('gesdinet_jwt_refresh_token.ttl') . ' seconds');
+
         // Tcheck if username or password are null
         if (null === $username || null === $password || !isset($username) || !isset($password)) {
 
@@ -119,15 +128,23 @@ class RegistrationController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
 
+        // Create The User Entity
         $user = new User();
         $user->setEmail($username);
         $user->setPlainPassword($password);
         $user->setRoles(['ROLE__USER']);
 
-        $errors = $validator->validate($user);
+        // Create the refresh token User
+        $refreshToken = $refreshTokenManager->create();
+        $refreshToken->setUsername($user->getUsername());
+        $refreshToken->setRefreshToken();
+        $refreshToken->setValid($datetime);
+
+        $errors_user = $validator->validate($user);
+        $errors_token = $validator->validate($user);
 
         // Tcheck validations constraints
-        if (0 === count($errors)) {
+        if (0 === count($errors_user) && 0 === count($errors_token)) {
 
             $user->setPassword($passwordEncoder->encodePassword($user, $password));
 
@@ -160,11 +177,20 @@ class RegistrationController extends AbstractController
                 }
             }
 
-            return $this->json(['token' => $JWTManager->create($user)], Response::HTTP_OK);
+            $refreshTokenManager->save($refreshToken);
+
+            return $this->json([
+                'token' => $JWTManager->create($user),
+                'refresh_token' => $refreshToken->getRefreshToken()
+            ], Response::HTTP_OK);
         } else {
 
             $errs = [];
-            foreach ($errors as $error) {
+            foreach ($errors_user as $error) {
+                $errs = array_merge($errs, [$error->getMessage()]);
+            }
+
+            foreach ($errors_token as $error) {
                 $errs = array_merge($errs, [$error->getMessage()]);
             }
 
@@ -181,8 +207,11 @@ class RegistrationController extends AbstractController
      * @param  mixed $request
      * @return JsonResponse
      */
-    public function logoutApi(Request $request): JsonResponse
-    {
+    public function logoutApi(
+        Request $request,
+        EntityManagerInterface $em,
+        RefreshTokenManagerInterface $refreshTokenManager
+    ): JsonResponse {
         // Tcheck if POST Method
         if (!$request->isMethod('POST')) {
 
@@ -190,6 +219,23 @@ class RegistrationController extends AbstractController
                 "code" => Response::HTTP_METHOD_NOT_ALLOWED,
                 "message" => 'Method Not Allowed (Allow: {POST})'
             ], Response::HTTP_METHOD_NOT_ALLOWED);
+        }
+
+        if (!$this->isGranted('ROLE__USER')) {
+            return $this->json([
+                "code" => Response::HTTP_UNAUTHORIZED,
+                "message" => 'Unauthorized'
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        $userToken = $em->getRepository(UserToken::class);
+
+        // Remove all refresh token of the User when logout
+        if ($refreshs = count($userToken->getAllByUser($this->getUser())) !== 0) {
+            foreach ($userToken->getAllByUser($this->getUser()) as $token) {
+                $em->remove($token);
+                $em->flush();
+            }
         }
 
         // Tcheck if it's json contentType
@@ -212,58 +258,53 @@ class RegistrationController extends AbstractController
      * @param  mixed $request
      * @return JsonResponse
      */
-    public function verifyUserEmailApi(Request $request, JWTTokenManagerInterface $JWTManager): JsonResponse
+    public function verifyUserEmailApi(Request $request, JWTTokenManagerInterface $JWTManager): Response
     {
+        // @Todo : Add JWT Token to auth with query parameter
+
         // If confirmation is disabled return 404 Not Found Page
         if ('disable' == $this->params->get('active_confirm_user')) {
-            return $this->json([
-                "code" => Response::HTTP_NOT_FOUND,
-                "message" => '404 Not Found'
-            ], Response::HTTP_NOT_FOUND);
+            throw new NotFoundHttpException('Page doesn\'t exist');
         }
 
         $uuid = (null !== $request->query->get('uuid')) ? $request->query->get('uuid') : null;
 
         if (null === $uuid || !isset($uuid)) {
-
-            return $this->json([
-                "code" => Response::HTTP_BAD_REQUEST,
-                "message" => 'Invalid Informations'
-            ], Response::HTTP_BAD_REQUEST);
+            throw new BadRequestException("Uuid and email is required !");
         }
 
         $user = $this->em->getRepository(User::class)->findOneBy(['uuid' => $uuid]);
 
         if (!$user) {
-
-            return $this->json([
-                "code" => Response::HTTP_BAD_REQUEST,
-                "message" => 'Bad Request, Invalid User'
-            ], Response::HTTP_BAD_REQUEST);
+            throw new NotFoundHttpException('User doesn\'t exist !');
         }
 
         $token = $JWTManager->create($user);
 
         if (!$token) {
-            return $this->json([
-                "code" => Response::HTTP_BAD_REQUEST,
-                "message" => 'Bad Request, Invalid Token'
-            ], Response::HTTP_BAD_REQUEST);
+            throw new BadRequestException('Jwt Token is invalid !');
         }
+
+        // $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         // validate email confirmation link, sets User::isVerified=true and persists
         try {
             $this->mailer->handleEmailConfirmationApi($request, $user);
         } catch (VerifyEmailExceptionInterface $exception) {
 
-            return $this->json([
-                "code" => Response::HTTP_BAD_REQUEST,
-                "message" => 'Bad Request ' . $exception->getReason()
-            ], Response::HTTP_BAD_REQUEST);
+            $this->addFlash('admin_default_flashes', [
+                'message' => $exception->getReason(),
+                'class' => 'danger'
+            ]);
+            return $this->redirectToRoute('admin_default');
         }
 
         // @todo : send email activation Account
 
-        return $this->json(["code" => Response::HTTP_OK, "message" => 'User is now active'], Response::HTTP_OK);
+        $this->addFlash('admin_default_flashes', [
+            'message' => 'Your e-mail address has been verified',
+            'class' => 'success'
+        ]);
+        return $this->redirectToRoute('admin_default');
     }
 }

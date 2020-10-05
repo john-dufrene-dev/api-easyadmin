@@ -84,4 +84,11 @@ return [
     'admin.group.field.roles' => 'Rôles',
     'admin.group.field.admins' => 'Administrateurs',
 
+    /* APP PAGES */
+
+    // Default Page
+    'pages.default.header' => 'Page par défaut',
+    'pages.default.title' => 'Page par défaut',
+    'pages.default.member' => 'Espace Membre',
+
 ];

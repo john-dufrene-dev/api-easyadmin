@@ -19,6 +19,11 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        refresh:
+            pattern:  ^/api/auth/refresh_token
+            stateless: true
+            anonymous: true
+            lazy: true
         customer:
             pattern: ^/(api(?!/docs|/index))
             stateless: true

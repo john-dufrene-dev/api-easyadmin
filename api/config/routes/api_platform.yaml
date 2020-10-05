@@ -6,4 +6,7 @@ api_platform:
 api_login_check:
     path: /api/auth/login_check
     methods: ['POST']
-    
+
+gesdinet_jwt_refresh_token:
+    path: /api/auth/refresh_token
+    controller: gesdinet.jwtrefreshtoken::refresh

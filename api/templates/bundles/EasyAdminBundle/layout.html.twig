@@ -2,10 +2,12 @@
 
 {% block head_stylesheets %}
     {{ parent() }}
+    {{ encore_entry_link_tags('admin') }}
 {% endblock %}
 
 {% block head_javascript %}
     {{ parent() }}
+    {{ encore_entry_script_tags('admin') }}
 {% endblock head_javascript %}
 
 {% block body_javascript %}

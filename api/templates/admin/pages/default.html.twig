@@ -1,0 +1,44 @@
+{% extends 'admin/layout/_default.html.twig' %}
+{% trans_default_domain 'admin' %}
+
+{% block body_class 'page-login' %}
+
+{% block page_title %} {{ 'pages.default.header'|trans }} {% endblock %}
+
+{% block wrapper_wrapper %}
+    <div class="login-wrapper">
+
+        <header class="main-header mb-2">
+            <div id="header-logo"> <h4 class="logo">{{ 'pages.default.title'|trans }}</h4> </div>
+        </header>
+
+        {% for flash in app.flashes('admin_default_flashes') %}
+            <div class="alert alert-{{ flash.class }}" role="alert">{{ flash.message }}</div>
+        {% endfor %}
+
+        <section class="content">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <a href="#">
+                        <img width="120px" src="{{ asset('build/img/apple-store-badge.png') }}" alt="Apple Store">
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a href="#">
+                        <img width="120px" src="{{ asset('build/img/google-play-badge.png') }}" alt="Google Play">
+                    </a>
+                </div>
+            </div>
+
+        </section>
+
+        <div class="col-md-10">
+            <a 
+                href="{{ path('admin_dashboard') }}" 
+                class="btn btn-primary btn-lg btn-block">{{ 'pages.default.member'|trans }}
+            </a>
+        </div>
+
+    </div>
+{% endblock %}

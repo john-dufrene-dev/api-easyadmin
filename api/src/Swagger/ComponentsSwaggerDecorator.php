@@ -32,6 +32,21 @@ final class ComponentsSwaggerDecorator implements NormalizerInterface
                     'type' => 'string',
                     'readOnly' => true,
                 ],
+                'refresh_token' => [
+                    'type' => 'string',
+                    'readOnly' => true,
+                ],
+            ],
+        ];
+
+        // Component Refresh Token
+        $docs['components']['schemas']['RefreshToken'] = [
+            'type' => 'object',
+            'properties' => [
+                'refresh_token' => [
+                    'type' => 'string',
+                    'example' => 'your_refresh_token',
+                ],
             ],
         ];
 
