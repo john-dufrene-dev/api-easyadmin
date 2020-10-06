@@ -50,6 +50,8 @@ class AdminGroup
      *      joinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="uuid")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="admin_id", referencedColumnName="uuid")}
      * )
+     * 
+     * @Assert\Valid
      */
     private $admins;
 
