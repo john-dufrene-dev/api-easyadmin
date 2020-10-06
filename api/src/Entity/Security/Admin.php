@@ -92,6 +92,8 @@ class Admin implements UserInterface
      *      joinColumns={@ORM\JoinColumn(name="admin_id", referencedColumnName="uuid")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="uuid")}
      * )
+     * 
+     * @Assert\Valid
      */
     private $groups;
 
@@ -105,6 +107,8 @@ class Admin implements UserInterface
      *      joinColumns={@ORM\JoinColumn(name="admin_id", referencedColumnName="uuid")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="shop_id", referencedColumnName="uuid")}
      * )
+     * 
+     * @Assert\Valid
      */
     private $shops;
 

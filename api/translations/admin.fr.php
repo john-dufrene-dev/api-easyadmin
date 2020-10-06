@@ -66,6 +66,7 @@ return [
     'admin.shop.field.name' => 'Nom',
     'admin.shop.field.email' => 'Email',
     'admin.shop.field.admins' => 'Administrateurs',
+    'admin.shop.field.country' => 'Pays',
 
     // Admin Admin Page
     'Admin' => 'Admin',

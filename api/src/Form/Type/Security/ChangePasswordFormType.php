@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Admin\Security;
+namespace App\Form\Type\Admin\Security;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

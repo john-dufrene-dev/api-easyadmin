@@ -70,6 +70,8 @@ class Shop
      *      joinColumns={@ORM\JoinColumn(name="shop_id", referencedColumnName="uuid")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="admin_id", referencedColumnName="uuid")}
      * )
+     * 
+     * @Assert\Valid
      */
     private $admins;
 
@@ -94,6 +96,18 @@ class Shop
      * @Assert\NotNull(message="asserts.entity.updated_at.not_null")
      */
     private $updated_at;
+
+    /**
+     * shop_info - Infos of the Shop
+     * 
+     * @ORM\OneToOne(targetEntity=ShopInfo::class, cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="shop_info_uuid", referencedColumnName="uuid")
+     * 
+     * @var ShopInfo|null
+     * 
+     * @Assert\Valid
+     */
+    private $shop_info;
 
     /**
      * __construct
@@ -199,6 +213,29 @@ class Shop
         if ($this->admins->contains($admin)) {
             $this->admins->removeElement($admin);
         }
+
+        return $this;
+    }
+
+    /**
+     * getShopInfo
+     *
+     * @return ShopInfo
+     */
+    public function getShopInfo(): ?ShopInfo
+    {
+        return $this->shop_info;
+    }
+    
+    /**
+     * setShopInfo
+     *
+     * @param  mixed $shop_info
+     * @return self
+     */
+    public function setShopInfo(?ShopInfo $shop_info): self
+    {
+        $this->shop_info = $shop_info;
 
         return $this;
     }

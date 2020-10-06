@@ -14,7 +14,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * 
  * @UniqueEntity(
  *      fields={"email"}, 
- *      message="asserts.user.unique")
+ *      message="asserts.user.unique"
+ * )
  */
 class User implements UserInterface
 {
