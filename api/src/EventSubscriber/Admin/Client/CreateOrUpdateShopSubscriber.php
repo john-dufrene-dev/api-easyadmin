@@ -3,6 +3,7 @@
 namespace App\EventSubscriber\Admin\Client;
 
 use App\Entity\Client\Shop;
+use App\Entity\Client\ShopInfo;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityUpdatedEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityPersistedEvent;
@@ -17,6 +18,9 @@ class CreateOrUpdateShopSubscriber implements EventSubscriberInterface
             return;
         }
 
+        $shop_info = new ShopInfo();
+        
+        $entity->setShopInfo($shop_info);
         $entity->setCreatedAt(new \DateTime());
         $entity->setUpdatedAt(new \DateTime());
     }

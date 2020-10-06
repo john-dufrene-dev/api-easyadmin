@@ -15,6 +15,7 @@ return [
     'asserts.entity.email.not_valid' => 'The email {{ value }} is not a valid email',
     'asserts.entity.min_length' => '{{ value }} must be at least {{ limit }} characters long',
     'asserts.entity.max_length' => '{{ value }} cannot be longer than {{ limit }} characters',
+    'asserts.entity.country' => 'This value is not a valid country',
 
     // Form change password
     'asserts.change_password.require' => 'Please enter a password',
