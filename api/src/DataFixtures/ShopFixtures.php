@@ -8,10 +8,16 @@ use App\Entity\Client\ShopInfo;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use App\Service\Traits\Entity\ShopHourTrait;
 
 class ShopFixtures extends Fixture
 {
+    use ShopHourTrait;
+
     public const DEFAULT_EMAIL = 'default@default.com';
+    public const DEFAULT_SHOP_EMAIL = 'shop@shop.com';
+    public const DEFAULT_SHOP = 'shop test';
+    public const DEFAULT_COUNTRY = 'US';
 
     protected $em;
 
@@ -25,13 +31,14 @@ class ShopFixtures extends Fixture
         $shop = new Shop();
         $shop_info = new ShopInfo();
 
-        $shop->setEmail('shop@shop.com');
+        $shop->setEmail(self::DEFAULT_SHOP_EMAIL);
 
-        $shop->setName('shop test');
+        $shop->setName(self::DEFAULT_SHOP);
         $shop->setCreatedAt(new \DateTime());
         $shop->setUpdatedAt(new \DateTime());
 
-        $shop_info->setCountry('US');
+        $shop_info->setCountry(self::DEFAULT_COUNTRY);
+        $shop_info->setShopHour($this->getShopHourFormattedValues());
         $shop->setShopInfo($shop_info);
 
         $admins = $this->em->getRepository(Admin::class)->findAll();

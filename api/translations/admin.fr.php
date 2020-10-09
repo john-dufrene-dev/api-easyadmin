@@ -42,6 +42,15 @@ return [
 
     /* ADMIN PAGES */
 
+    // Configuration Days
+    'admin.field.monday' => 'Lundi',
+    'admin.field.tuesday' => 'Mardi',
+    'admin.field.wednesday' => 'Mercredi',
+    'admin.field.thursday' => 'Jeudi',
+    'admin.field.friday' => 'Vendredi',
+    'admin.field.saturday' => 'Samedi',
+    'admin.field.sunday' => 'Dimanche',
+
     // Configuration User Menu
     'admin.dashboard.my_profile' => 'Mon profil',
 
@@ -67,6 +76,9 @@ return [
     'admin.shop.field.email' => 'Email',
     'admin.shop.field.admins' => 'Administrateurs',
     'admin.shop.field.country' => 'Pays',
+    'admin.shop.field.shop_hour' => 'Horaires',
+    'admin.shop.field.open' => 'Ouvert',
+    'admin.shop.field.break' => 'Pause',
 
     // Admin Admin Page
     'Admin' => 'Admin',
