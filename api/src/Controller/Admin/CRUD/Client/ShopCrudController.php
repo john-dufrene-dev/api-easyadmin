@@ -8,7 +8,6 @@ use App\Form\Type\Client\ShopHourType;
 use App\Service\Admin\Actions\CustomizeActions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -20,6 +19,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CountryField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -131,6 +131,13 @@ class ShopCrudController extends AbstractCrudController
 
             yield CountryField::new('shop_info.country')->setLabel('admin.shop.field.country');
 
+            yield BooleanField::new('shop_info.shipping_click')
+                ->setCustomOption('renderAsSwitch', false)
+                ->setLabel('admin.shop.field.shipping_click');
+            yield BooleanField::new('shop_info.shipping_delivery')
+                ->setCustomOption('renderAsSwitch', false)
+                ->setLabel('admin.shop.field.shipping_delivery');
+
             // @Todo : transform in array to show shop hour
             // yield ArrayField::new('shop_info.shop_hour');
 
@@ -155,6 +162,14 @@ class ShopCrudController extends AbstractCrudController
             yield EmailField::new('email')->setLabel('admin.shop.field.email');
 
             yield CountryField::new('shop_info.country')->setLabel('admin.shop.field.country');
+
+            yield BooleanField::new('shop_info.shipping_click')
+                ->setCustomOption('renderAsSwitch', false)
+                ->setLabel('admin.shop.field.shipping_click');
+            yield BooleanField::new('shop_info.shipping_delivery')
+                ->setCustomOption('renderAsSwitch', false)
+                ->setLabel('admin.shop.field.shipping_delivery');
+
             // @Todo : Reorder AddPanel()
             yield CollectionField::new('shop_info.shop_hour')->setLabel('admin.shop.field.shop_hour')
                 ->setCustomOption('allowAdd', false) //disable add field

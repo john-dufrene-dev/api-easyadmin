@@ -79,6 +79,8 @@ return [
     'admin.shop.field.shop_hour' => 'Horaires',
     'admin.shop.field.open' => 'Ouvert',
     'admin.shop.field.break' => 'Pause',
+    'admin.shop.field.shipping_click' => 'Livraison Click & Collect',
+    'admin.shop.field.shipping_delivery' => 'Livraison de proxmité',
 
     // Admin Admin Page
     'Admin' => 'Admin',
