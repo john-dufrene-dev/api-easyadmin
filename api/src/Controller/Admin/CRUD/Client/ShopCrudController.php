@@ -4,9 +4,11 @@ namespace App\Controller\Admin\CRUD\Client;
 
 use App\Entity\Client\Shop;
 use Doctrine\ORM\QueryBuilder;
+use App\Form\Type\Client\ShopHourType;
 use App\Service\Admin\Actions\CustomizeActions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -19,6 +21,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CountryField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
@@ -128,6 +131,9 @@ class ShopCrudController extends AbstractCrudController
 
             yield CountryField::new('shop_info.country')->setLabel('admin.shop.field.country');
 
+            // @Todo : transform in array to show shop hour
+            // yield ArrayField::new('shop_info.shop_hour');
+
             if (
                 (PermissionsAdmin::checkAdmin($this->getUser()))
                 || (PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'DETAIL'))
@@ -149,6 +155,18 @@ class ShopCrudController extends AbstractCrudController
             yield EmailField::new('email')->setLabel('admin.shop.field.email');
 
             yield CountryField::new('shop_info.country')->setLabel('admin.shop.field.country');
+            // @Todo : Reorder AddPanel()
+            yield CollectionField::new('shop_info.shop_hour')->setLabel('admin.shop.field.shop_hour')
+                ->setCustomOption('allowAdd', false) //disable add field
+                ->setCustomOption('allowDelete', false) //disable remove field
+                ->setFormTypeOptions([
+                    'entry_type' => ShopHourType::class,
+                    'entry_options' => [
+                        'attr' => [
+                            'class' => 'd-inline-flex p-2',
+                        ],
+                    ],
+                ]);
 
             if (
                 (PermissionsAdmin::checkAdmin($this->getUser()))
