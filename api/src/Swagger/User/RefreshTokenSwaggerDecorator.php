@@ -35,6 +35,11 @@ final class RefreshTokenSwaggerDecorator implements NormalizerInterface
                         'requestBody' => [
                             'description' => 'Create new JWT Token',
                             'content' => [
+                                'application/ld+json' => [
+                                    'schema' => [
+                                        '$ref' => '#/components/schemas/RefreshToken',
+                                    ],
+                                ],
                                 'application/json' => [
                                     'schema' => [
                                         '$ref' => '#/components/schemas/RefreshToken',
@@ -46,6 +51,11 @@ final class RefreshTokenSwaggerDecorator implements NormalizerInterface
                             Response::HTTP_OK => [
                                 'description' => 'Get JWT token',
                                 'content' => [
+                                    'application/ld+json' => [
+                                        'schema' => [
+                                            '$ref' => '#/components/schemas/RefreshToken',
+                                        ],
+                                    ],
                                     'application/json' => [
                                         'schema' => [
                                             '$ref' => '#/components/schemas/RefreshToken',

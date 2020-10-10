@@ -46,6 +46,11 @@ final class RegisterSwaggerDecorator implements NormalizerInterface
                             Response::HTTP_OK => [
                                 'description' => 'Get JWT token',
                                 'content' => [
+                                    'application/ld+json' => [
+                                        'schema' => [
+                                            '$ref' => '#/components/schemas/Token',
+                                        ],
+                                    ],
                                     'application/json' => [
                                         'schema' => [
                                             '$ref' => '#/components/schemas/Token',
