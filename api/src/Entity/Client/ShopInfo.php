@@ -5,6 +5,7 @@ namespace App\Entity\Client;
 use Doctrine\ORM\Mapping as ORM;
 use App\Service\Traits\Entity\UuidTrait;
 use App\Repository\Client\ShopInfoRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -22,6 +23,8 @@ class ShopInfo
      * @ORM\Column(type="string", length=180, nullable=true)
      *
      * @Assert\Country(message="asserts.entity.country")
+     * 
+     * @Groups({"shop:readOne"})
      */
     private $country;
 
@@ -31,6 +34,8 @@ class ShopInfo
      * @var array
      * 
      * @ORM\Column(type="json", nullable=true)
+     * 
+     * @Groups({"shop:readOne"})
      */
     private $shop_hour = [];
 
@@ -42,6 +47,8 @@ class ShopInfo
      * @ORM\Column(type="boolean")
      * 
      * @Assert\Type(type="bool", message="asserts.entity.bool")
+     * 
+     * @Groups({"shop:readOne"})
      */
     private $shipping_click = false;
 
@@ -53,6 +60,8 @@ class ShopInfo
      * @ORM\Column(type="boolean")
      * 
      * @Assert\Type(type="bool", message="asserts.entity.bool")
+     * 
+     * @Groups({"shop:readOne"})
      */
     private $shipping_delivery = false;
 
