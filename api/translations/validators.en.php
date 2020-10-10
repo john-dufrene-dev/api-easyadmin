@@ -16,6 +16,7 @@ return [
     'asserts.entity.min_length' => '{{ value }} must be at least {{ limit }} characters long',
     'asserts.entity.max_length' => '{{ value }} cannot be longer than {{ limit }} characters',
     'asserts.entity.country' => 'This value is not a valid country',
+    'asserts.entity.bool' => 'The value {{ value }} is not a valid',
 
     // Form change password
     'asserts.change_password.require' => 'Please enter a password',

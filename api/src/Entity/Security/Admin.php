@@ -79,6 +79,8 @@ class Admin implements UserInterface
      * @var bool
      *
      * @ORM\Column(type="boolean")
+     * 
+     * @Assert\Type(type="bool", message="asserts.entity.bool")
      */
     private $is_admin = false;
 

@@ -6,6 +6,7 @@ use Ramsey\Uuid\UuidInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use ApiPlatform\Core\Annotation\ApiProperty;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -44,9 +45,10 @@ trait UuidTrait
      * @ORM\CustomIdGenerator(class=UuidGenerator::class)
      *
      * @Assert\Type("Ramsey\Uuid\UuidInterface")
+     * 
+     * @Groups({"shop:readOne", "shop:readAll"})
      *
      * @ApiProperty(identifier=true)
-     * 
      */
     private $uuid;
 

@@ -7,7 +7,10 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Service\Traits\Entity\UuidTrait;
 use App\Repository\Client\ShopRepository;
 use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
@@ -17,6 +20,32 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @UniqueEntity(
  *     fields={"email"},
  *     message="asserts.shop.unique"
+ * )
+ * 
+ * @ApiResource(
+ *    normalizationContext={
+ *        "groups"={
+ *            "shop:readOne",
+ *            "shop:readAll"
+ *         }
+ *    },
+ *    denormalizationContext={
+ *        "groups"={
+ *            "shop:write"
+ *         }
+ *    },
+ *    collectionOperations={
+ *         "get"={
+ *             "method"="GET",
+ *             "normalization_context"={"groups"={"shop:readAll"}}
+ *         }
+ *    },
+ *    itemOperations={
+ *         "get"={
+ *             "method"="GET",
+ *             "normalization_context"={"groups"={"shop:readOne"}}
+ *         }
+ *    }
  * )
  */
 class Shop
@@ -38,6 +67,8 @@ class Shop
      *      maxMessage = "asserts.entity.max_length",
      *      allowEmptyString = false
      * )
+     * 
+     * @Groups({"shop:readOne", "shop:readAll"})
      */
     private $name;
 
@@ -57,6 +88,8 @@ class Shop
      *      maxMessage = "asserts.entity.max_length",
      *      allowEmptyString = false
      * )
+     * 
+     * @Groups({"shop:readOne", "shop:readAll"})
      */
     private $email;
 
@@ -83,6 +116,8 @@ class Shop
      * @ORM\Column(type="datetime")
      *
      * @Assert\NotNull(message="asserts.entity.created_at.not_null")
+     * 
+     * @Groups({"shop:readOne"})
      */
     private $created_at;
 
@@ -94,6 +129,8 @@ class Shop
      * @ORM\Column(type="datetime")
      *
      * @Assert\NotNull(message="asserts.entity.updated_at.not_null")
+     * 
+     * @Groups({"shop:readOne"})
      */
     private $updated_at;
 
@@ -106,6 +143,8 @@ class Shop
      * @var ShopInfo|null
      * 
      * @Assert\Valid
+     * 
+     * @Groups({"shop:readOne"})
      */
     private $shop_info;
 
@@ -226,7 +265,7 @@ class Shop
     {
         return $this->shop_info;
     }
-    
+
     /**
      * setShopInfo
      *

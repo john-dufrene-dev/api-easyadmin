@@ -4,6 +4,10 @@ parameters:
     mailer_user: '%env(resolve:MAILER_USER)%' # Default MAIL value
     active_confirm_user: '%env(resolve:ACTIVE_CONFIRM_USER)%' # Enable / Disable confirmation User email
 
+    router.request_context.scheme: '%env(API_ENTRYPOINT_SCHEME)%'
+    router.request_context.host: '%env(API_ENTRYPOINT_HOST)%'
+    request_listener.https_port: '%env(int:API_ENTRYPOINT_PORT)%'
+
 services:
     # Service email notifications for Admin
     app.service.admin_mailer:
