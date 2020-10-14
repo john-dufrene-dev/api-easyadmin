@@ -72,6 +72,9 @@ return [
     // Shop Admin Page
     'Shop' => 'Shop',
     'admin.shop.title' => 'Information Shop',
+    'admin.shop.panel_shop' => 'Informations d\identité Shop',
+    'admin.shop.panel_shop_info' => 'Informations heures/localisation Shop',
+    'admin.shop.panel_shop_admin' => 'Informations admin Shop',
     'admin.shop.field.name' => 'Nom',
     'admin.shop.field.email' => 'Email',
     'admin.shop.field.admins' => 'Administrateurs',
@@ -105,5 +108,10 @@ return [
     'pages.default.header' => 'Page par défaut',
     'pages.default.title' => 'Page par défaut',
     'pages.default.member' => 'Espace Membre',
+
+    /* Statut Error PAGES */
+
+    'Not Found' => 'Page Introuvable',
+    'Internal Server Error' => 'Une erreur est survenue',
 
 ];

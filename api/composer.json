@@ -40,7 +40,8 @@
         "symfony/webpack-encore-bundle": "^1.7",
         "symfony/yaml": "5.1.*",
         "symfonycasts/reset-password-bundle": "^1.1",
-        "symfonycasts/verify-email-bundle": "^1.0"
+        "symfonycasts/verify-email-bundle": "^1.0",
+        "vich/uploader-bundle": "^1.15"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.3",
