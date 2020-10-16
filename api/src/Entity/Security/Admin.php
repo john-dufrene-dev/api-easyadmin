@@ -494,4 +494,47 @@ class Admin implements UserInterface
 
         return $this;
     }
+
+    /**
+     * @return Collection|AdminResetPassword[]
+     */
+    public function getResetPassword(): Collection
+    {
+        return $this->reset_password;
+    }
+    
+    /**
+     * addResetPassword
+     *
+     * @param  mixed $resetPassword
+     * @return self
+     */
+    public function addResetPassword(AdminResetPassword $resetPassword): self
+    {
+        if (!$this->reset_password->contains($resetPassword)) {
+            $this->reset_password[] = $resetPassword;
+            $resetPassword->setUser($this);
+        }
+
+        return $this;
+    }
+    
+    /**
+     * removeResetPassword
+     *
+     * @param  mixed $resetPassword
+     * @return self
+     */
+    public function removeResetPassword(AdminResetPassword $resetPassword): self
+    {
+        if ($this->reset_password->contains($resetPassword)) {
+            $this->reset_password->removeElement($resetPassword);
+            // set the owning side to null (unless already changed)
+            if ($resetPassword->getUser() === $this) {
+                $resetPassword->setUser(null);
+            }
+        }
+
+        return $this;
+    }
 }

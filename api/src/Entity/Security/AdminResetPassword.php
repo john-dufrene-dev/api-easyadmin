@@ -70,4 +70,17 @@ class AdminResetPassword implements ResetPasswordRequestInterface
     {
         return $this->user;
     }
+    
+    /**
+     * setUser
+     *
+     * @param  mixed $user
+     * @return self
+     */
+    public function setUser(?Admin $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
 }
