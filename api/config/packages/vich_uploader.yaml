@@ -1,13 +1,14 @@
 vich_uploader:
     db_driver: orm
+    storage: flysystem
 
     mappings:
-        # @Todo :Add upload shop system
+        # Uploads for shop
         shop_upload:
-            uri_prefix: /upload/shop
-            upload_destination: '%kernel.project_dir%/datas/upload/shop'
-            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
-
+            uri_prefix: /uploads/clients/shop
+            upload_destination: shop_image_fs
+            namer: app.service.upload.client_unique_namer
+            directory_namer: app.service.upload.client_unique_directory_namer
             inject_on_load: false
             delete_on_update: true
             delete_on_remove: true

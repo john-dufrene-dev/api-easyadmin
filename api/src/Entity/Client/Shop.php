@@ -109,6 +109,33 @@ class Shop
     private $admins;
 
     /**
+     * shop_info - Infos of the Shop
+     * 
+     * @ORM\OneToOne(targetEntity=ShopInfo::class, cascade={"persist", "remove"})
+     * @ORM\JoinColumn(name="shop_info_uuid", referencedColumnName="uuid")
+     * 
+     * @var ShopInfo|null
+     * 
+     * @Assert\Valid
+     * 
+     * @Groups({"shop:readOne"})
+     */
+    private $shop_info;
+
+    /**
+     * shop_files - Files upload of the Shop
+     * 
+     * @ORM\OneToMany(targetEntity=ShopFile::class, mappedBy="shop", cascade={"persist", "remove"}, orphanRemoval=true)
+     * 
+     * @var Collection|ShopFile[]|null
+     * 
+     * @Assert\Valid
+     *
+     * @Groups({"shop:readOne"})
+     */
+    private $shop_files;
+
+    /**
      * created_at - Date of created Shop
      *
      * @var \DateTimeInterface|null
@@ -135,20 +162,6 @@ class Shop
     private $updated_at;
 
     /**
-     * shop_info - Infos of the Shop
-     * 
-     * @ORM\OneToOne(targetEntity=ShopInfo::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="shop_info_uuid", referencedColumnName="uuid")
-     * 
-     * @var ShopInfo|null
-     * 
-     * @Assert\Valid
-     * 
-     * @Groups({"shop:readOne"})
-     */
-    private $shop_info;
-
-    /**
      * __construct
      *
      * @return void
@@ -158,6 +171,7 @@ class Shop
         $this->created_at = new \DateTime();
         $this->updated_at = new \DateTime();
         $this->admins = new ArrayCollection();
+        $this->shop_files = new ArrayCollection();
     }
 
     /**
@@ -275,6 +289,49 @@ class Shop
     public function setShopInfo(?ShopInfo $shop_info): self
     {
         $this->shop_info = $shop_info;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ShopFile[]
+     */
+    public function getShopFiles(): Collection
+    {
+        return $this->shop_files;
+    }
+
+    /**
+     * addShopFile
+     *
+     * @param  mixed $shopFile
+     * @return self
+     */
+    public function addShopFile(ShopFile $shopFile): self
+    {
+        if (!$this->shop_files->contains($shopFile)) {
+            $this->shop_files[] = $shopFile;
+            $shopFile->setShop($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * removeShopFile
+     *
+     * @param  mixed $shopFile
+     * @return self
+     */
+    public function removeShopFile(ShopFile $shopFile): self
+    {
+        if ($this->shop_files->contains($shopFile)) {
+            $this->shop_files->removeElement($shopFile);
+            // set the owning side to null (unless already changed)
+            if ($shopFile->getShop() === $this) {
+                $shopFile->setShop(null);
+            }
+        }
 
         return $this;
     }

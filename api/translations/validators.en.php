@@ -17,6 +17,7 @@ return [
     'asserts.entity.max_length' => '{{ value }} cannot be longer than {{ limit }} characters',
     'asserts.entity.country' => 'This value is not a valid country',
     'asserts.entity.bool' => 'The value {{ value }} is not a valid',
+    'asserts.entity.file.not_null' => 'File Upload could not be null',
 
     // Form change password
     'asserts.change_password.require' => 'Please enter a password',

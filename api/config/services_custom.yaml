@@ -9,13 +9,36 @@ parameters:
     request_listener.https_port: '%env(int:API_ENTRYPOINT_PORT)%'
 
 services:
+
+    ########################
+    ### Mailer Component ###
+    ########################
+
     # Service email notifications for Admin
     app.service.admin_mailer:
         class: App\Service\Admin\Email\AdminMailer
         arguments: ['@mailer.mailer', '@parameter_bag', '@doctrine.orm.default_entity_manager']
+
+    #########################
+    ### JWT Refresh Token ###
+    #########################
     
     # Override RefreshTokenManager
     gesdinet.jwtrefreshtoken.refresh_token_manager:
         class: App\Doctrine\RefreshTokenManager
         arguments: [ '@doctrine.orm.default_entity_manager', 'App\Entity\Customer\UserToken']
+
+    ########################
+    ### VichUploadBundle ###
+    ########################
+
+    # Custom Namer for VichUploadBundle
+    app.service.upload.client_unique_namer:
+        class: App\Service\Admin\Upload\UniqueShopNamer
+        public: true
+
+    # Custom Directory Name for VichUploadBundle
+    app.service.upload.client_unique_directory_namer:
+        class: App\Service\Admin\Upload\UniqueShopDirectoryNamer
+        public: true
         

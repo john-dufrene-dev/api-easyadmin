@@ -293,6 +293,17 @@ class User implements UserInterface
     {
         return $this->is_verified;
     }
+
+        
+    /**
+     * getIsVerified
+     *
+     * @return bool
+     */
+    public function getIsVerified(): ?bool
+    {
+        return $this->is_verified;
+    }
     
     /**
      * setIsVerified

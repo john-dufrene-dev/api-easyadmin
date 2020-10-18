@@ -1,0 +1,16 @@
+# Read the documentation: https://github.com/1up-lab/OneupFlysystemBundle/tree/master/Resources/doc/index.md
+oneup_flysystem:
+    adapters:
+        shop_adapter:
+            local:
+                directory: '%kernel.project_dir%/public/uploads/clients/shop'
+                lazy: ~ # boolean (default "false")
+                writeFlags: ~
+                linkHandling: ~
+                permissions: ~
+    filesystems:
+        shop_filesystem:
+            adapter: shop_adapter
+            mount: shop_image_fs
+            alias: League\Flysystem\Filesystem
+            

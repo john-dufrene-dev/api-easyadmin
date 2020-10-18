@@ -17,6 +17,7 @@ return [
     'asserts.entity.max_length' => '{{ value }} ne peux pas avoir plus de {{ limit }} caractères',
     'asserts.entity.country' => 'Cette valeur n\'est pas un pays valide',
     'asserts.entity.bool' => 'Cette valeur {{ value }} n\'est pas valide',
+    'asserts.entity.file.not_null' => 'Une image est requise',
 
     // Form change password
     'asserts.change_password.require' => 'Veuillez entrer un mot de passe',

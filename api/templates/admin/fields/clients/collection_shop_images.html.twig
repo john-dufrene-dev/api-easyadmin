@@ -1,0 +1,21 @@
+{% trans_default_domain 'admin' %}
+
+<div class="form-widget">
+    {% if field.value.count > 0 %}
+        {% for image in field.value %}
+
+            {# @TODO : Define default image when is not an image (PDF) in detail and edit template #}
+            {% set html_id = 'ea-lightbox-' ~ image.id %}
+            <a href="#" class="ea-lightbox-thumbnail" data-featherlight="#{{ html_id }}" data-featherlight-close-on-click="anywhere">
+                <img src="{{ vich_uploader_asset(image, 'image_file') }}" class="img-fluid" width="80px">
+            </a>
+
+            <div id="{{ html_id }}" class="ea-lightbox">
+                <img src="{{ vich_uploader_asset(image, 'image_file') }}">
+            </div>
+
+        {% endfor %}
+    {% else %}
+        <span> {{ 'admin.shop.field.collection_shop_images.no_files'|trans }} </span>
+    {% endif %}
+</div>

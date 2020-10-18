@@ -249,6 +249,7 @@ class RegistrationController extends AbstractController
 
         // Do something to clear user information or logging
 
+        // @Todo : translation
         return $this->json(["code" => Response::HTTP_OK, "message" => 'Succefully logout'], Response::HTTP_OK);
     }
 
@@ -270,18 +271,21 @@ class RegistrationController extends AbstractController
         $uuid = (null !== $request->query->get('uuid')) ? $request->query->get('uuid') : null;
 
         if (null === $uuid || !isset($uuid)) {
+            // @Todo : translation
             throw new BadRequestException("Uuid and email is required !");
         }
 
         $user = $this->em->getRepository(User::class)->findOneBy(['uuid' => $uuid]);
 
         if (!$user) {
+            // @Todo : translation
             throw new NotFoundHttpException('User doesn\'t exist !');
         }
 
         $token = $JWTManager->create($user);
 
         if (!$token) {
+            // @Todo : translation
             throw new BadRequestException('Jwt Token is invalid !');
         }
 
@@ -301,6 +305,7 @@ class RegistrationController extends AbstractController
 
         // @todo : send email activation Account
 
+        // @Todo : translation
         $this->addFlash('admin_default_flashes', [
             'message' => 'Your e-mail address has been verified',
             'class' => 'success'
