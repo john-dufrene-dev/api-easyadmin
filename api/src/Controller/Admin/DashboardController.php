@@ -40,7 +40,6 @@ class DashboardController extends AbstractDashboardController
     {
         return Dashboard::new()
             ->setTranslationDomain('admin')
-            // @Todo : Dynamic Title in admin
             ->setTitle($this->config->get('CONF_DASHBOARD_TITLE') ?? '')
             // ->setTitle('<img src="..."> Easy <span class="text-small">Admin.</span>')
             ->setFaviconPath('favicon.ico');
@@ -85,6 +84,21 @@ class DashboardController extends AbstractDashboardController
             || PermissionsAdmin::checkActions($this->getUser(), 'ADMIN_GROUP', 'INDEX')
         ) {
             yield MenuItem::linkToCrud('admin.dashboard.menu.groups', 'fas fa-users', AdminGroup::class);
+        }
+
+        /*************** -- SETTINGS CORE LINK -- ***************/
+        // @todo : Add some configurations system
+        if (PermissionsAdmin::checkAdmin($this->getUser())) {
+            yield MenuItem::section('admin.dashboard.menu.settings');
+        }
+
+        /*************** -- DOCUMENTATION LINK -- ***************/
+        if (PermissionsAdmin::checkAdmin($this->getUser()) || $this->isGranted(PermissionsAdmin::ROLE_API_DOCUMENTATION)) {
+            yield MenuItem::section('admin.dashboard.menu.documentation');
+        }
+
+        if (PermissionsAdmin::checkAdmin($this->getUser()) || $this->isGranted(PermissionsAdmin::ROLE_API_DOCUMENTATION)) {
+            yield MenuItem::linkToRoute('admin.dashboard.menu.api_doc', 'fas fa-spider', 'api_doc');
         }
     }
 

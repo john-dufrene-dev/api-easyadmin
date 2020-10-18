@@ -1,7 +1,5 @@
 # TODO
 
   * Translations (IN PROGRESS)
-  * Asserts for Admin
-  * Asserts for AdminGroup
-  * Asserts for Shop
-  * ApiResource for Shop
+  * Asserts for Shop (IN PROGRESS)
+  * ApiResource for Shop (IN PROGRESS)

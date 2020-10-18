@@ -62,6 +62,9 @@ return [
     'admin.dashboard.menu.admin' => 'Admin Management',
     'admin.dashboard.menu.admins' => 'Admins',
     'admin.dashboard.menu.groups' => 'Groups',
+    'admin.dashboard.menu.settings' => 'Paramètres avancées',
+    'admin.dashboard.menu.documentation' => 'Documentation',
+    'admin.dashboard.menu.api_doc' => 'Documentation de l\'API',
 
     // Configuration general field informations
     'admin.field.id' => 'ID',
@@ -71,9 +74,12 @@ return [
 
     // Shop Admin Page
     'Shop' => 'Shop',
+    'Shop Files' => 'Shop Files',
+    'Image file' => 'Image File',
     'admin.shop.title' => 'Information Shop',
     'admin.shop.panel_shop' => 'Informations d\identité Shop',
     'admin.shop.panel_shop_info' => 'Informations heures/localisation Shop',
+    'admin.shop.panel_shop_files' => 'Photos du Shop',
     'admin.shop.panel_shop_admin' => 'Informations admin Shop',
     'admin.shop.field.name' => 'Nom',
     'admin.shop.field.email' => 'Email',
@@ -84,6 +90,7 @@ return [
     'admin.shop.field.break' => 'Pause',
     'admin.shop.field.shipping_click' => 'Livraison Click & Collect',
     'admin.shop.field.shipping_delivery' => 'Livraison de proxmité',
+    'admin.shop.field.collection_shop_images.no_files' => 'Pas de fichiers',
 
     // Admin Admin Page
     'Admin' => 'Admin',
