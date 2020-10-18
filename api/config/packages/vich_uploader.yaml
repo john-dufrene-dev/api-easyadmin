@@ -3,13 +3,12 @@ vich_uploader:
     storage: flysystem
 
     mappings:
+        # Uploads for shop
         shop_upload:
             uri_prefix: /uploads/clients/shop
             upload_destination: shop_image_fs
-            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
-            directory_namer:
-                service: vich_uploader.namer_directory_property
-                options: { property: 'uuid', transliterate: true }
+            namer: app.service.upload.client_unique_namer
+            directory_namer: app.service.upload.client_unique_directory_namer
             inject_on_load: false
             delete_on_update: true
             delete_on_remove: true

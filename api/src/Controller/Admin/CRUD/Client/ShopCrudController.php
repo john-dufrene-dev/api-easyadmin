@@ -4,6 +4,7 @@ namespace App\Controller\Admin\CRUD\Client;
 
 use App\Entity\Client\Shop;
 use Doctrine\ORM\QueryBuilder;
+use App\Form\Type\Client\ShopFileType;
 use App\Form\Type\Client\ShopHourType;
 use App\Service\Admin\Actions\CustomizeActions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -19,6 +20,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CountryField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
@@ -141,6 +143,10 @@ class ShopCrudController extends AbstractCrudController
             // @Todo : transform in array to show shop hour
             // yield ArrayField::new('shop_info.shop_hour');
 
+            yield FormField::addPanel('admin.shop.panel_shop_files');
+            yield CollectionField::new('shop_files')
+                ->setTemplatePath('admin/fields/clients/collection_shop_images.html.twig');
+
             if (
                 (PermissionsAdmin::checkAdmin($this->getUser()))
                 || (PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'DETAIL'))
@@ -187,6 +193,10 @@ class ShopCrudController extends AbstractCrudController
                         ],
                     ],
                 ]);
+            
+            yield FormField::addPanel('admin.shop.panel_shop_files');
+            yield CollectionField::new('shop_files')->setEntryType(ShopFileType::class)
+                ->setFormTypeOption('by_reference', false);
 
             if (
                 (PermissionsAdmin::checkAdmin($this->getUser()))
