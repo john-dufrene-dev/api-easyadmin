@@ -2,11 +2,12 @@
 
 namespace App\Entity\Client;
 
+use Serializable;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\Client\ShopFileRepository;
 use Symfony\Component\HttpFoundation\File\File;
-use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -14,8 +15,10 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  * @ORM\Entity(repositoryClass=ShopFileRepository::class)
  * 
  * @Vich\Uploadable
+ * 
+ * 
  */
-class ShopFile
+class ShopFile implements \Serializable
 {
     /**
      * id - The unique auto incremented primary key
@@ -342,5 +345,26 @@ class ShopFile
         $this->updated_at = $updated_at;
 
         return $this;
+    }
+        
+    /**
+     * serialize
+     *
+     * @return void
+     */
+    public function serialize(): void
+    {
+        $this->image_name = base64_encode($this->image_name);
+    }
+        
+    /**
+     * unserialize
+     *
+     * @param  mixed $serialized
+     * @return void
+     */
+    public function unserialize($serialized): void
+    {
+        $this->image_name = base64_decode($this->image_name);
     }
 }
