@@ -98,7 +98,8 @@ class DashboardController extends AbstractDashboardController
         }
 
         if (PermissionsAdmin::checkAdmin($this->getUser()) || $this->isGranted(PermissionsAdmin::ROLE_API_DOCUMENTATION)) {
-            yield MenuItem::linkToRoute('admin.dashboard.menu.api_doc', 'fas fa-spider', 'api_doc');
+            yield MenuItem::linkToRoute('admin.dashboard.menu.api_doc', 'fas fa-spider', 'api_doc')
+            ->setLinkTarget('_blank');
         }
     }
 
