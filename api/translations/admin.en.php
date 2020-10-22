@@ -91,6 +91,7 @@ return [
     'admin.shop.field.shipping_click' => 'Shipping Click & Collect',
     'admin.shop.field.shipping_delivery' => 'Shipping delivery',
     'admin.shop.field.collection_shop_images.no_files' => 'No files',
+    'admin.shop.field.is_active' => 'Activate',
 
     // Admin Admin Page
     'Admin' => 'Admin',

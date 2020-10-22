@@ -23,6 +23,7 @@ class CreateOrUpdateShopSubscriber implements EventSubscriberInterface
 
         $shop_info = new ShopInfo();
         $shop_info->setShopHour($this->getShopHourFormattedValues());
+        $shop_info->setShop($entity);
 
         $entity->setShopInfo($shop_info);
         $entity->setCreatedAt(new \DateTime());
