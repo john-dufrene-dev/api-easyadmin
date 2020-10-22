@@ -6,12 +6,14 @@ use App\Entity\Security\Admin;
 use Doctrine\ORM\Mapping as ORM;
 use App\Service\Traits\Entity\UuidTrait;
 use App\Repository\Client\ShopRepository;
+use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -47,6 +49,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *         }
  *    }
  * )
+ * 
+ * @ApiFilter(BooleanFilter::class, properties={"is_active"})
  */
 class Shop
 {
@@ -92,6 +96,17 @@ class Shop
      * @Groups({"shop:readOne", "shop:readAll"})
      */
     private $email;
+
+    /**
+     * is_active - The active status of the Shop
+     * 
+     * @var bool
+     * 
+     * @ORM\Column(type="boolean")
+     * 
+     * @Groups({"shop:readOne"})
+     */
+    private $is_active = true;
 
     /**
      * admins - The Admins associated to the Shops
@@ -226,6 +241,29 @@ class Shop
     public function setName(?string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * getIsActive
+     *
+     * @return bool
+     */
+    public function getIsActive(): ?bool
+    {
+        return $this->is_active;
+    }
+
+    /**
+     * setIsActive
+     *
+     * @param  mixed $is_active
+     * @return self
+     */
+    public function setIsActive(bool $is_active): self
+    {
+        $this->is_active = $is_active;
 
         return $this;
     }

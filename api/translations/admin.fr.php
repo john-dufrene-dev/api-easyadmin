@@ -91,6 +91,7 @@ return [
     'admin.shop.field.shipping_click' => 'Livraison Click & Collect',
     'admin.shop.field.shipping_delivery' => 'Livraison de proxmité',
     'admin.shop.field.collection_shop_images.no_files' => 'Pas de fichiers',
+    'admin.shop.field.is_active' => 'Activation',
 
     // Admin Admin Page
     'Admin' => 'Admin',
