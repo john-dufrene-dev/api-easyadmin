@@ -37,6 +37,7 @@ class ShopFixtures extends Fixture
         $shop->setCreatedAt(new \DateTime());
         $shop->setUpdatedAt(new \DateTime());
 
+        $shop_info->setShop($shop);
         $shop_info->setCountry(self::DEFAULT_COUNTRY);
         $shop_info->setShopHour($this->getShopHourFormattedValues());
         $shop->setShopInfo($shop_info);

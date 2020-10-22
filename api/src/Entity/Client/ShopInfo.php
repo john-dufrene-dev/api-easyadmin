@@ -2,8 +2,8 @@
 
 namespace App\Entity\Client;
 
+use App\Entity\Client\Shop;
 use Doctrine\ORM\Mapping as ORM;
-use App\Service\Traits\Entity\UuidTrait;
 use App\Repository\Client\ShopInfoRepository;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -13,7 +13,24 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class ShopInfo
 {
-    use UuidTrait;
+    /**
+     * id - The unique auto incremented primary key
+     *
+     * @var int|null
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
+    private $id;
+
+    /**
+     * shop - Shop related of the images
+     * 
+     * @ORM\OneToOne(targetEntity=Shop::class, inversedBy="shop_info")
+     * @ORM\JoinColumn(referencedColumnName="uuid")
+     */
+    private $shop;
 
     /**
      * country - Country of the Shop
@@ -66,6 +83,17 @@ class ShopInfo
     private $shipping_delivery = false;
 
     /**
+     * __construct
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->created_at = new \DateTime();
+        $this->updated_at = new \DateTime();
+    }
+
+    /**
      * __toString
      *
      * @return string
@@ -73,6 +101,39 @@ class ShopInfo
     public function __toString(): string
     {
         return 'ShopInfo';
+    }
+
+    /**
+     * getId
+     *
+     * @return int
+     */
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    /**
+     * getShop
+     *
+     * @return Shop
+     */
+    public function getShop(): ?Shop
+    {
+        return $this->shop;
+    }
+
+    /**
+     * setShop
+     *
+     * @param  mixed $shop
+     * @return self
+     */
+    public function setShop(?Shop $shop): self
+    {
+        $this->shop = $shop;
+
+        return $this;
     }
 
     /**

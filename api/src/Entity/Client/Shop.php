@@ -126,8 +126,7 @@ class Shop
     /**
      * shop_info - Infos of the Shop
      * 
-     * @ORM\OneToOne(targetEntity=ShopInfo::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(name="shop_info_uuid", referencedColumnName="uuid")
+     * @ORM\OneToOne(targetEntity=ShopInfo::class, mappedBy="shop", cascade={"persist", "remove"})
      * 
      * @var ShopInfo|null
      * 
