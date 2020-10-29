@@ -8,8 +8,12 @@ return [
     'asserts.entity.unique' => 'Id and Uuid {{ value }} already exist',
     'asserts.entity.created_at.not_null' => 'Creation date {{ value }} could not be null',
     'asserts.entity.updated_at.not_null' => 'Updated date {{ value }} could not be null',
+    'asserts.entity.generic.not_null' => 'Value could not be null',
+    'asserts.entity.generic.not_blank' => 'Value could not be empty',
     'asserts.entity.name.not_null' => 'Name value could not be null',
     'asserts.entity.name.not_blank' => 'Name value could not be empty',
+    'asserts.entity.ulid.not_null' => 'Reference value could not be null',
+    'asserts.entity.ulid.not_blank' => 'Reference value could not be empty',
     'asserts.entity.email.not_null' => 'Email value could not be null',
     'asserts.entity.email.not_blank' => 'Email value could not be empty',
     'asserts.entity.email.not_valid' => 'The email {{ value }} is not a valid email',
@@ -18,6 +22,7 @@ return [
     'asserts.entity.country' => 'This value is not a valid country',
     'asserts.entity.bool' => 'The value {{ value }} is not a valid',
     'asserts.entity.file.not_null' => 'File Upload could not be null',
+    'asserts.entity.int.not_valid' => 'The value {{ value }} is not a valid {{ type }}.',
 
     // Form change password
     'asserts.change_password.require' => 'Please enter a password',

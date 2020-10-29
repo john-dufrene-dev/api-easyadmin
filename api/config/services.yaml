@@ -36,7 +36,7 @@ services:
     ###### SWAGGER CUSTOM DECORATOR MUST BE DEFINE HERE ######
     ##########################################################
 
-    # Register new User and get JWT token
+    # Add Swagger components
     App\Swagger\ComponentsSwaggerDecorator:
         decorates: 'api_platform.swagger.normalizer.documentation'
         arguments: ['@App\Swagger\ComponentsSwaggerDecorator.inner']

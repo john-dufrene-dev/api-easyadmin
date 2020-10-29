@@ -8,8 +8,12 @@ return [
     'asserts.entity.unique' => 'Id and Uuid {{ value }} existent déjà',
     'asserts.entity.created_at.not_null' => 'La date de création {{ value }} ne peux pas être nulle',
     'asserts.entity.updated_at.not_null' => 'La date de mise à jour {{ value }} ne peux pas être nulle',
+    'asserts.entity.generic.not_null' => 'La valeur ne peut pas être nulle',
+    'asserts.entity.generic.not_blank' => 'La valeur ne peut pas être vide',
     'asserts.entity.name.not_null' => 'Le nom ne peut pas être nul',
     'asserts.entity.name.not_blank' => 'Le nom ne peut pas être vide',
+    'asserts.entity.ulid.not_null' => 'La reference ne peut pas être nulle',
+    'asserts.entity.ulid.not_blank' => 'La reference ne peut pas être vide',
     'asserts.entity.email.not_null' => 'L\'adresse email ne peut pas être vide',
     'asserts.entity.email.not_blank' => 'L\'adresse email ne peut pas être nulle',
     'asserts.entity.email.not_valid' => 'L\'adresse email {{ value }} n\'est pas valide',
@@ -18,6 +22,7 @@ return [
     'asserts.entity.country' => 'Cette valeur n\'est pas un pays valide',
     'asserts.entity.bool' => 'Cette valeur {{ value }} n\'est pas valide',
     'asserts.entity.file.not_null' => 'Une image est requise',
+    'asserts.entity.int.not_valid' => 'La valeur {{ value }} n\'est pas un {{ type }} valide',
 
     // Form change password
     'asserts.change_password.require' => 'Veuillez entrer un mot de passe',
