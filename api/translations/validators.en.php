@@ -10,6 +10,8 @@ return [
     'asserts.entity.updated_at.not_null' => 'Updated date {{ value }} could not be null',
     'asserts.entity.name.not_null' => 'Name value could not be null',
     'asserts.entity.name.not_blank' => 'Name value could not be empty',
+    'asserts.entity.ulid.not_null' => 'Reference value could not be null',
+    'asserts.entity.ulid.not_blank' => 'Reference value could not be empty',
     'asserts.entity.email.not_null' => 'Email value could not be null',
     'asserts.entity.email.not_blank' => 'Email value could not be empty',
     'asserts.entity.email.not_valid' => 'The email {{ value }} is not a valid email',

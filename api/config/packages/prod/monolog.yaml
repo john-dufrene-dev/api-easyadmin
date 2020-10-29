@@ -1,4 +1,5 @@
 monolog:
+    channels: ["admin"]
     handlers:
         main:
             type: fingers_crossed
@@ -13,4 +14,11 @@ monolog:
         console:
             type: console
             process_psr_3_messages: false
-            channels: ["!event", "!doctrine"]
+            channels: ["!event", "!doctrine", "!admin"]
+        # Logger admin
+        admin:
+            type: stream
+            path: "%kernel.logs_dir%/admin_%kernel.environment%.log"
+            level: debug
+            channels: [admin]
+            

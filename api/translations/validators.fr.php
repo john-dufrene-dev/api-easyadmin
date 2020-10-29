@@ -10,6 +10,8 @@ return [
     'asserts.entity.updated_at.not_null' => 'La date de mise à jour {{ value }} ne peux pas être nulle',
     'asserts.entity.name.not_null' => 'Le nom ne peut pas être nul',
     'asserts.entity.name.not_blank' => 'Le nom ne peut pas être vide',
+    'asserts.entity.ulid.not_null' => 'La reference ne peut pas être nulle',
+    'asserts.entity.ulid.not_blank' => 'La reference ne peut pas être vide',
     'asserts.entity.email.not_null' => 'L\'adresse email ne peut pas être vide',
     'asserts.entity.email.not_blank' => 'L\'adresse email ne peut pas être nulle',
     'asserts.entity.email.not_valid' => 'L\'adresse email {{ value }} n\'est pas valide',
