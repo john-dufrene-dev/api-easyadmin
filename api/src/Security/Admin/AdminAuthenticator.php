@@ -3,6 +3,7 @@
 namespace App\Security\Admin;
 
 use App\Entity\Security\Admin;
+use App\Service\Admin\Log\AdminLogger;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
@@ -14,9 +15,11 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\PasswordAuthenticatedInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 
@@ -24,19 +27,35 @@ class AdminAuthenticator extends AbstractFormLoginAuthenticator implements Passw
 {
     use TargetPathTrait;
 
+    // Default route login ofr admin
     public const LOGIN_ROUTE = 'admin_login';
 
     private $entityManager;
     private $urlGenerator;
     private $csrfTokenManager;
     private $passwordEncoder;
-
-    public function __construct(EntityManagerInterface $entityManager, UrlGeneratorInterface $urlGenerator, CsrfTokenManagerInterface $csrfTokenManager, UserPasswordEncoderInterface $passwordEncoder)
-    {
+    private $params;
+    private $logger;
+    
+    /**
+     * __construct
+     *
+     * @return void
+     */
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        UrlGeneratorInterface $urlGenerator,
+        CsrfTokenManagerInterface $csrfTokenManager,
+        UserPasswordEncoderInterface $passwordEncoder,
+        ParameterBagInterface $params,
+        AdminLogger $adminLogger
+    ) {
         $this->entityManager = $entityManager;
         $this->urlGenerator = $urlGenerator;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->passwordEncoder = $passwordEncoder;
+        $this->params = $params;
+        $this->logger = $adminLogger;
     }
 
     public function supports(Request $request)
@@ -92,11 +111,30 @@ class AdminAuthenticator extends AbstractFormLoginAuthenticator implements Passw
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
+        // Logger for Admin connection informations
+        $this->logger->adminConnection($this->params->get('admin.log.register_in_database'));
+
         if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
             return new RedirectResponse($targetPath);
         }
 
         return new RedirectResponse($this->urlGenerator->generate('admin_dashboard'));
+    }
+
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
+    {
+        parent::onAuthenticationFailure($request, $exception);
+
+        if ($this->params->get('admin.log.register_failure_in_database')) {
+            // Logger for Admin failure connection informations
+            $this->logger->adminConnection(
+                $this->params->get('admin.log.register_in_database'),
+                "ERROR",
+                -1,
+                "Error Admin Connection",
+                ['exception' => $exception->getMessage()]
+            );
+        }
     }
 
     protected function getLoginUrl()

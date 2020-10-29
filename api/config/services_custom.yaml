@@ -8,6 +8,12 @@ parameters:
     router.request_context.host: '%env(API_ENTRYPOINT_HOST)%'
     request_listener.https_port: '%env(int:API_ENTRYPOINT_PORT)%'
 
+    ### CUSTOM VALUE NOT PRESENT IN .env ###
+
+    # Logger for admin
+    admin.log.register_in_database: true # Enable/Disable register in database logger when an Admin connect to back-office
+    admin.log.register_failure_in_database: true # Enable/Disable failure logger in database
+
 services:
 
     ########################
@@ -26,7 +32,7 @@ services:
     # Override RefreshTokenManager
     gesdinet.jwtrefreshtoken.refresh_token_manager:
         class: App\Doctrine\RefreshTokenManager
-        arguments: [ '@doctrine.orm.default_entity_manager', 'App\Entity\Customer\UserToken']
+        arguments: ['@doctrine.orm.default_entity_manager', 'App\Entity\Customer\UserToken']
 
     ########################
     ### VichUploadBundle ###
@@ -41,4 +47,13 @@ services:
     app.service.upload.client_unique_directory_namer:
         class: App\Service\Admin\Upload\UniqueShopDirectoryNamer
         public: true
+
+    #######################
+    #### MonologBundle ####
+    #######################
+
+    # Admin log
+    app.service.admin.log.admin_logger:
+        class: App\Service\Admin\Log\AdminLogger
+        arguments: ['@monolog.logger.admin', '@doctrine.orm.entity_manager', '@request_stack', '@security.helper']
         
