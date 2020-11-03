@@ -69,6 +69,9 @@ final class RefreshTokenSwaggerDecorator implements NormalizerInterface
                             Response::HTTP_BAD_REQUEST => [
                                 'description' => 'Bad Request',
                             ],
+                            Response::HTTP_METHOD_NOT_ALLOWED => [
+                                'description' => 'Method Not Allowed (Allow: {POST})',
+                            ],
                         ],
                     ],
                 ],

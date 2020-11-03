@@ -48,6 +48,12 @@ services:
         arguments: ['@App\Swagger\User\RegisterSwaggerDecorator.inner']
         autoconfigure: false
 
+    # Logout the current User
+    App\Swagger\User\LogoutSwaggerDecorator:
+        decorates: 'api_platform.swagger.normalizer.documentation'
+        arguments: ['@App\Swagger\User\LogoutSwaggerDecorator.inner']
+        autoconfigure: false
+
     # Add JWT token User auth for api
     App\Swagger\User\AuthenticationTokenSwaggerDecorator:
         decorates: 'api_platform.swagger.normalizer.documentation'

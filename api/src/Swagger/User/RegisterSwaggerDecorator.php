@@ -35,6 +35,11 @@ final class RegisterSwaggerDecorator implements NormalizerInterface
                         'requestBody' => [
                             'description' => 'Create new User and return JWT token',
                             'content' => [
+                                'application/ld+json' => [
+                                    'schema' => [
+                                        '$ref' => '#/components/schemas/Credentials',
+                                    ],
+                                ],
                                 'application/json' => [
                                     'schema' => [
                                         '$ref' => '#/components/schemas/Credentials',
@@ -57,6 +62,12 @@ final class RegisterSwaggerDecorator implements NormalizerInterface
                                         ],
                                     ],
                                 ],
+                            ],
+                            Response::HTTP_METHOD_NOT_ALLOWED => [
+                                'description' => 'Method Not Allowed (Allow: {POST})',
+                            ],
+                            Response::HTTP_UNSUPPORTED_MEDIA_TYPE => [
+                                'description' => 'Invalid content type Header (Allow: {application/json && application/ld+json})',
                             ],
                             Response::HTTP_BAD_REQUEST => [
                                 'description' => 'Bad Request',
