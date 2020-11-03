@@ -69,6 +69,9 @@ final class AuthenticationTokenSwaggerDecorator implements NormalizerInterface
                             Response::HTTP_UNAUTHORIZED => [
                                 'description' => 'Invalid Credentials',
                             ],
+                            Response::HTTP_METHOD_NOT_ALLOWED => [
+                                'description' => 'Method Not Allowed (Allow: {POST})',
+                            ],
                         ],
                     ],
                 ],

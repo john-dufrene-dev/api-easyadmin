@@ -17,17 +17,16 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Gesdinet\JWTRefreshTokenBundle\Model\RefreshTokenManagerInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class RegistrationController extends AbstractController
 {
-    public const CONTENT_TYPE = 'application/json';
+    public const CONTENT_TYPE = ['application/json', 'application/ld+json'];
 
     /**
      * mailer
@@ -103,11 +102,11 @@ class RegistrationController extends AbstractController
         }
 
         // Tcheck if it's json contentType
-        if (self::CONTENT_TYPE !== $request->headers->get('content_type')) {
+        if (!\in_array($request->headers->get('content_type'), self::CONTENT_TYPE, true)) {
 
             return $this->json([
                 "code" => Response::HTTP_UNSUPPORTED_MEDIA_TYPE,
-                "message" => 'Invalid content type Header (Allow: {application/json})'
+                "message" => 'Invalid content type Header (Allow: {application/json & application/ld+json})'
             ], Response::HTTP_UNSUPPORTED_MEDIA_TYPE);
         }
 
@@ -209,8 +208,7 @@ class RegistrationController extends AbstractController
      */
     public function logoutApi(
         Request $request,
-        EntityManagerInterface $em,
-        RefreshTokenManagerInterface $refreshTokenManager
+        EntityManagerInterface $em
     ): JsonResponse {
         // Tcheck if POST Method
         if (!$request->isMethod('POST')) {
@@ -239,11 +237,11 @@ class RegistrationController extends AbstractController
         }
 
         // Tcheck if it's json contentType
-        if (self::CONTENT_TYPE !== $request->headers->get('content_type')) {
+        if (!\in_array($request->headers->get('content_type'), self::CONTENT_TYPE, true)) {
 
             return $this->json([
                 "code" => Response::HTTP_UNSUPPORTED_MEDIA_TYPE,
-                "message" => 'Invalid content type Header (Allow: {application/json})'
+                "message" => 'Invalid content type Header (Allow: {application/json & application/ld+json})'
             ], Response::HTTP_UNSUPPORTED_MEDIA_TYPE);
         }
 
