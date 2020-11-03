@@ -10,10 +10,16 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 final class AdminLogger
 {
-    public const ADMIN_CONTEXT_CONNET = 'admin_connection';
-    public const ADMIN_CONTEXT_LEVEL_NAME = 'NOTICE';
-    public const ADMIN_CONTEXT_LEVEL = 1;
-    public const ADMIN_CONTEXT_MESSAGE = 'Admin Connection';
+    public const ADMIN_CONNECTION_CONNET = 'admin_connection';
+    public const ADMIN_CONNECTION_LEVEL_NAME = 'NOTICE';
+    public const ADMIN_CONNECTION_LEVEL = 1;
+    public const ADMIN_CONNECTION_MESSAGE = 'Admin Connection';
+
+    public const ADMIN_ACTION_CONNET = 'admin_action';
+    public const ADMIN_ACTION_ACTION = 'NO ACTION';
+    public const ADMIN_ACTION_LEVEL_NAME = 'NOTICE';
+    public const ADMIN_ACTION_LEVEL = 1;
+    public const ADMIN_ACTION_MESSAGE = '';
 
     /**
      * logger
@@ -66,15 +72,58 @@ final class AdminLogger
      */
     public function adminConnection(
         bool $active = false,
-        string $level_name = self::ADMIN_CONTEXT_LEVEL_NAME,
-        float $level = self::ADMIN_CONTEXT_LEVEL,
-        string $message = self::ADMIN_CONTEXT_MESSAGE,
+        string $level_name = self::ADMIN_CONNECTION_LEVEL_NAME,
+        float $level = self::ADMIN_CONNECTION_LEVEL,
+        string $message = self::ADMIN_CONNECTION_MESSAGE,
         array $extra = [],
-        array $context = [self::ADMIN_CONTEXT_CONNET]
+        array $context = [self::ADMIN_CONNECTION_CONNET]
     ): void {
 
         if (null !== $this->security->getUser()) {
             $message = $message . " - " . $this->security->getUser()->getEmail();
+        }
+
+        if (-1 === $level && isset($extra['exception'])) {
+            $extra['exception'] = $extra['exception'];
+        }
+
+        $extra = $this->processRecord($extra);
+
+        if ($active) {
+
+            $logEntry = new Log();
+
+            $logEntry->setMessage($message);
+            $logEntry->setLevel($level);
+            $logEntry->setLevelName($level_name);
+            $logEntry->setExtra($extra);
+            $logEntry->setContext($context);
+
+            $this->em->persist($logEntry);
+            $this->em->flush();
+        }
+
+        $this->logVerbosity($level, $message, $extra);
+    }
+
+    /**
+     * adminAction
+     *
+     * @return void
+     */
+    public function adminAction(
+        bool $active = false,
+        string $action = self::ADMIN_ACTION_ACTION,
+        ?string $entity = null,
+        string $level_name = self::ADMIN_ACTION_LEVEL_NAME,
+        float $level = self::ADMIN_ACTION_LEVEL,
+        string $message = self::ADMIN_ACTION_MESSAGE,
+        array $extra = [],
+        array $context = [self::ADMIN_ACTION_CONNET]
+    ): void {
+
+        if (null !== $this->security->getUser()) {
+            $message = $action . ' - '  . $entity . ' - '  . $message . $this->security->getUser()->getEmail();
         }
 
         if (-1 === $level && isset($extra['exception'])) {
