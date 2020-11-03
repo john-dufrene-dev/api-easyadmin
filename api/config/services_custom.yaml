@@ -2,13 +2,15 @@ parameters:
 
     locale: '%env(resolve:APP_LOCALE)%' # Default LOCALE LANGUAGE value
     mailer_user: '%env(resolve:MAILER_USER)%' # Default MAIL value
-    active_confirm_user: '%env(resolve:ACTIVE_CONFIRM_USER)%' # Enable / Disable confirmation User email
 
     router.request_context.scheme: '%env(API_ENTRYPOINT_SCHEME)%'
     router.request_context.host: '%env(API_ENTRYPOINT_HOST)%'
     request_listener.https_port: '%env(int:API_ENTRYPOINT_PORT)%'
 
     ### CUSTOM VALUE NOT PRESENT IN .env ###
+
+    # Activation of email confirmation for User
+    active_confirm_user: true # Confirmation User email (if false you don't need to confirm User email)
 
     # Logger for admin connection
     admin.log.register_in_database: true # Enable/Disable register in database logger when an Admin connect to back-office
