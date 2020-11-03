@@ -10,9 +10,12 @@ parameters:
 
     ### CUSTOM VALUE NOT PRESENT IN .env ###
 
-    # Logger for admin
+    # Logger for admin connection
     admin.log.register_in_database: true # Enable/Disable register in database logger when an Admin connect to back-office
     admin.log.register_failure_in_database: true # Enable/Disable failure logger in database
+
+    # Logger for admin Update/create/delete CRUD entity
+    admin.log.persist_actions_entity: true # Enable/Disable Entity CRUD Actions
 
 services:
 
