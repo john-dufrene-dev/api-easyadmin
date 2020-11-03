@@ -147,8 +147,8 @@ class RegistrationController extends AbstractController
 
             $user->setPassword($passwordEncoder->encodePassword($user, $password));
 
-            // Possible value enable/disable
-            if ('disable' == $this->params->get('active_confirm_user')) {
+            // If false the User is already verified
+            if (!$this->params->get('active_confirm_user')) {
                 $user->setIsVerified(true);
             }
 
@@ -166,8 +166,8 @@ class RegistrationController extends AbstractController
                     $this->translator->trans('email.register.header', [], 'email') . $user->getEmail()
                 );
 
-                // Send email confirmation active User if active_confirm_user (.ENV) is egal to 'enable
-                if ('enable' == $this->params->get('active_confirm_user')) {
+                // Send email confirmation active User if active_confirm_user is true
+                if ($this->params->get('active_confirm_user')) {
                     $this->mailer->sendEmailConfirmationApi(
                         'api_verify_email',
                         $user,
@@ -261,8 +261,8 @@ class RegistrationController extends AbstractController
     {
         // @Todo : Add JWT Token to auth with query parameter
 
-        // If confirmation is disabled return 404 Not Found Page
-        if ('disable' == $this->params->get('active_confirm_user')) {
+        // If active_confirm_user is false return 404 Not Found Page
+        if (!$this->params->get('active_confirm_user')) {
             throw new NotFoundHttpException('Page doesn\'t exist');
         }
 
