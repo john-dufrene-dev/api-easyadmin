@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Client\Shop;
+use App\Entity\Monitoring\Log;
 use App\Entity\Security\Admin;
 use App\Entity\Security\AdminGroup;
 use Symfony\Component\HttpFoundation\Response;
@@ -92,6 +93,12 @@ class DashboardController extends AbstractDashboardController
             yield MenuItem::section('admin.dashboard.menu.settings');
         }
 
+        /*************** -- MONITORING LINK -- ***************/
+        if (PermissionsAdmin::checkAdmin($this->getUser())) {
+            yield MenuItem::section('admin.dashboard.menu.monitoring');
+            yield MenuItem::linkToCrud('admin.dashboard.menu.logs', 'fas fa-book-reader', Log::class);
+        }
+
         /*************** -- DOCUMENTATION LINK -- ***************/
         if (PermissionsAdmin::checkAdmin($this->getUser()) || $this->isGranted(PermissionsAdmin::ROLE_API_DOCUMENTATION)) {
             yield MenuItem::section('admin.dashboard.menu.documentation');
@@ -99,7 +106,7 @@ class DashboardController extends AbstractDashboardController
 
         if (PermissionsAdmin::checkAdmin($this->getUser()) || $this->isGranted(PermissionsAdmin::ROLE_API_DOCUMENTATION)) {
             yield MenuItem::linkToRoute('admin.dashboard.menu.api_doc', 'fas fa-spider', 'api_doc')
-            ->setLinkTarget('_blank');
+                ->setLinkTarget('_blank');
         }
     }
 

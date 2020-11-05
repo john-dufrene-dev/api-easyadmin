@@ -65,6 +65,8 @@ return [
     'admin.dashboard.menu.settings' => 'Paramètres avancées',
     'admin.dashboard.menu.documentation' => 'Documentation',
     'admin.dashboard.menu.api_doc' => 'Documentation de l\'API',
+    'admin.dashboard.menu.monitoring' => 'Monitoring',
+    'admin.dashboard.menu.logs' => 'Logs',
 
     // Configuration general field informations
     'admin.field.id' => 'ID',
@@ -109,6 +111,18 @@ return [
     'admin.group.field.name' => 'Nom',
     'admin.group.field.roles' => 'Rôles',
     'admin.group.field.admins' => 'Administrateurs',
+
+    // Log Admin Page
+    'Log' => 'Log',
+    'admin.log.panel_info' => 'Informations d\identité Log',
+    'admin.log.field.message' => 'Message',
+    'admin.log.field.context' => 'Context',
+    'admin.log.field.level' => 'Level',
+    'admin.log.field.level_name' => 'Nom du level',
+    'admin.log.badge__1' => '-1',
+    'admin.log.badge_1' => '1',
+    'admin.log.badge_error' => 'ERREUR',
+    'admin.log.badge_notice' => 'INFORMATION',
 
     /* APP PAGES */
 
