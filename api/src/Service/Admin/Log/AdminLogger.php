@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 final class AdminLogger
 {
+    public const UNKNOWN = '~'; // Define value for Unknown User
+
     public const ADMIN_CONNECTION_CONNET = 'admin_connection';
     public const ADMIN_CONNECTION_LEVEL_NAME = 'NOTICE';
     public const ADMIN_CONNECTION_LEVEL = 1;
@@ -57,12 +59,14 @@ final class AdminLogger
         LoggerInterface $adminLogger,
         EntityManagerInterface $em,
         RequestStack $request,
-        Security $security
+        Security $security,
+        $user = self::UNKNOWN
     ) {
         $this->logger = $adminLogger;
         $this->em = $em;
         $this->request = $request;
         $this->security = $security;
+        $this->user = $user;
     }
 
     /**
@@ -80,7 +84,7 @@ final class AdminLogger
     ): void {
 
         if (null !== $this->security->getUser()) {
-            $message = $message . " - " . $this->security->getUser()->getEmail();
+            $this->user = $this->security->getUser();
         }
 
         if (-1 === $level && isset($extra['exception'])) {
@@ -94,6 +98,7 @@ final class AdminLogger
             $logEntry = new Log();
 
             $logEntry->setMessage($message);
+            $logEntry->setUser($this->user);
             $logEntry->setLevel($level);
             $logEntry->setLevelName($level_name);
             $logEntry->setExtra($extra);
@@ -103,7 +108,7 @@ final class AdminLogger
             $this->em->flush();
         }
 
-        $this->logVerbosity($level, $message, $extra);
+        $this->logVerbosity($level, $message . ' - ' . $this->user, $extra);
     }
 
     /**
@@ -123,7 +128,8 @@ final class AdminLogger
     ): void {
 
         if (null !== $this->security->getUser()) {
-            $message = $action . ' - '  . $entity . ' - '  . $message . $this->security->getUser()->getEmail();
+            $this->user = $this->security->getUser()->getEmail();
+            $message = $action . ' - '  . $entity;
         }
 
         if (-1 === $level && isset($extra['exception'])) {
@@ -137,6 +143,7 @@ final class AdminLogger
             $logEntry = new Log();
 
             $logEntry->setMessage($message);
+            $logEntry->setUser($this->user);
             $logEntry->setLevel($level);
             $logEntry->setLevelName($level_name);
             $logEntry->setExtra($extra);
@@ -146,7 +153,7 @@ final class AdminLogger
             $this->em->flush();
         }
 
-        $this->logVerbosity($level, $message, $extra);
+        $this->logVerbosity($level, $message . ' - ' . $this->user, $extra);
     }
 
     /**

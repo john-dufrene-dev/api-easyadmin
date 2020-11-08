@@ -89,6 +89,7 @@ class LogCrudController extends AbstractCrudController
         if (Crud::PAGE_INDEX === $pageName) {
             yield IdField::new('id')->setLabel('admin.field.id');
             yield TextField::new('message')->setLabel('admin.log.field.message');
+            yield TextField::new('user')->setLabel('admin.log.field.user');
             yield ArrayField::new('context')->setLabel('admin.log.field.context');
             yield ChoiceField::new('level_name')
                 ->setLabel('admin.log.field.level_name')
@@ -122,6 +123,7 @@ class LogCrudController extends AbstractCrudController
             yield IdField::new('id')->setLabel('admin.field.id');
             yield TextField::new('displayuuid')->setLabel('admin.field.displayuuid');
             yield TextField::new('message')->setLabel('admin.log.field.message');
+            yield TextField::new('user')->setLabel('admin.log.field.user');
             yield ArrayField::new('context')->setLabel('admin.log.field.context');
             yield ChoiceField::new('level_name')
                 ->setLabel('admin.log.field.level_name')
