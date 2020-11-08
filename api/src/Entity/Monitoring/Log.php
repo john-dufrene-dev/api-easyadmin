@@ -26,6 +26,17 @@ class Log
     private $message;
 
     /**
+     * user - The user Log
+     * 
+     * @var string
+     * 
+     * @ORM\Column(type="string", length=255)
+     * 
+     * @Assert\NotNull(message="asserts.entity.generic.not_null")
+     */
+    private $user;
+
+    /**
      * context - The context Log
      * 
      * @var array
@@ -113,6 +124,29 @@ class Log
     public function setMessage(?string $message): self
     {
         $this->message = $message;
+
+        return $this;
+    }
+    
+    /**
+     * getUser
+     *
+     * @return string
+     */
+    public function getUser(): ?string
+    {
+        return $this->user;
+    }
+    
+    /**
+     * setUser
+     *
+     * @param  mixed $user
+     * @return self
+     */
+    public function setUser(?string $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }

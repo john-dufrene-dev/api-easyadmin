@@ -116,6 +116,7 @@ return [
     'Log' => 'Log',
     'admin.log.panel_info' => 'Informations d\identité Log',
     'admin.log.field.message' => 'Message',
+    'admin.log.field.user' => 'Admin',
     'admin.log.field.context' => 'Context',
     'admin.log.field.level' => 'Level',
     'admin.log.field.level_name' => 'Nom du level',
