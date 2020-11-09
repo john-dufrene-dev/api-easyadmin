@@ -132,6 +132,10 @@ return [
     'pages.default.title' => 'Page par défaut',
     'pages.default.member' => 'Espace Membre',
 
+    // Callback Page
+    'pages.callback.header' => 'Page de callback',
+    'pages.callback.title' => 'Page de callback',
+
     /* Statut Error PAGES */
 
     'Not Found' => 'Page Introuvable',

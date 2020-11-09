@@ -3,6 +3,7 @@
 namespace App\Controller\Api\Auth;
 
 use App\Entity\Customer\User;
+use Symfony\Component\Uid\Ulid;
 use App\Entity\Customer\UserToken;
 use App\Service\Api\Email\UserMailer;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,6 +25,9 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
+/**
+ * @Route("/api")
+ */
 class RegistrationController extends AbstractController
 {
     public const CONTENT_TYPE = ['application/json', 'application/ld+json'];
@@ -74,7 +78,7 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/api/auth/register", name="api_register")
+     * @Route("/auth/register", name="api_register")
      * 
      * @param  void
      * @return JsonResponse
@@ -201,7 +205,7 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/api/auth/logout", name="api_logout")
+     * @Route("/auth/logout", name="api_logout")
      * 
      * @param  mixed $request
      * @return JsonResponse
@@ -252,7 +256,7 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/api/auth/verify/email", name="api_verify_email")
+     * @Route("/auth/verify/email", name="api_verify_email")
      * 
      * @param  mixed $request
      * @return JsonResponse
@@ -260,6 +264,8 @@ class RegistrationController extends AbstractController
     public function verifyUserEmailApi(Request $request, JWTTokenManagerInterface $JWTManager): Response
     {
         // @Todo : Add JWT Token to auth with query parameter
+
+        $ulid = new Ulid();
 
         // If active_confirm_user is false return 404 Not Found Page
         if (!$this->params->get('active_confirm_user')) {
@@ -298,16 +304,16 @@ class RegistrationController extends AbstractController
                 'message' => $exception->getReason(),
                 'class' => 'danger'
             ]);
-            return $this->redirectToRoute('admin_default');
+            return $this->redirectToRoute('admin_callback', ['token' => $ulid->toBase32()]);
         }
 
         // @todo : send email activation Account
 
         // @Todo : translation
-        $this->addFlash('admin_default_flashes', [
+        $this->addFlash('admin_callback_flashes', [
             'message' => 'Your e-mail address has been verified',
             'class' => 'success'
         ]);
-        return $this->redirectToRoute('admin_default');
+        return $this->redirectToRoute('admin_callback', ['token' => $ulid->toBase32()]);
     }
 }

@@ -132,6 +132,10 @@ return [
     'pages.default.title' => 'Default Page',
     'pages.default.member' => 'Member Space',
 
+    // Callback Page
+    'pages.callback.header' => 'Callback Page',
+    'pages.callback.title' => 'Callback Page',
+
     /* Statut Error PAGES */
 
     'Not Found' => 'Not Found',
