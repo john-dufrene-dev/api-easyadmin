@@ -1,0 +1,27 @@
+{% extends 'admin/layout/_default.html.twig' %}
+{% trans_default_domain 'admin' %}
+
+{% block body_class 'page-login' %}
+
+{% block page_title %} {{ 'pages.callback.header'|trans }} {% endblock %}
+
+{% block wrapper_wrapper %}
+    <div class="login-wrapper">
+
+        <header class="main-header mb-2">
+            <div id="header-logo"> <h4 class="logo">{{ 'pages.callback.title'|trans }}</h4> </div>
+        </header>
+
+        {% for flash in app.flashes('admin_callback_flashes') %}
+            <div class="alert alert-{{ flash.class }}" role="alert">{{ flash.message }}</div>
+        {% endfor %}
+
+        <div class="col-md-10 mt-4">
+            <a 
+                href="{{ path('admin_default') }}" 
+                class="btn btn-primary btn-lg btn-block">{{ 'pages.default.header'|trans }}
+            </a>
+        </div>
+
+    </div>
+{% endblock %}
