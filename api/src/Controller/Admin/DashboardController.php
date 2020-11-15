@@ -8,6 +8,7 @@ use App\Entity\Security\Admin;
 use App\Entity\Security\AdminGroup;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use App\Service\Admin\Builder\ConfigurationBuilder;
 use App\Service\Admin\Permissions\PermissionsAdmin;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -24,6 +25,8 @@ class DashboardController extends AbstractDashboardController
 {
     protected $config;
 
+    public const SET_PAGINATOR_PAGE_SIZE = 15; // Default pagination
+
     public function __construct(ConfigurationBuilder $config)
     {
         $this->config = $config;
@@ -35,6 +38,14 @@ class DashboardController extends AbstractDashboardController
     public function index(): Response
     {
         return parent::index();
+    }
+
+    public function configureCrud(): Crud
+    {
+        return Crud::new()
+            // this defines the pagination size for all CRUD controllers
+            // (each CRUD controller can override this value if needed)
+            ->setPaginatorPageSize(self::SET_PAGINATOR_PAGE_SIZE);
     }
 
     public function configureDashboard(): Dashboard
