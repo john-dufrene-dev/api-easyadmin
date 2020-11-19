@@ -24,6 +24,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CountryField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -180,7 +181,9 @@ class ShopCrudController extends AbstractCrudController
 
             yield FormField::addPanel('admin.shop.panel_shop_info')->renderCollapsed();
 
-            yield CountryField::new('shop_info.country')->setLabel('admin.shop.field.country');
+            yield CountryField::new('shop_info.country')
+                ->setFormType(CountryType::class)
+                ->setLabel('admin.shop.field.country');
 
             yield BooleanField::new('shop_info.shipping_click')
                 ->setCustomOption('renderAsSwitch', false)

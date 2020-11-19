@@ -42,6 +42,10 @@ return [
 
     /* ADMIN PAGES */
 
+    // Configuration general informations
+    'admin.general.title.edit' => 'Edit of - ',
+    'admin.general.title.detail' => 'Detail of - ',
+
     // Configuration Days
     'admin.field.monday' => 'Monday',
     'admin.field.tuesday' => 'Tuesday',

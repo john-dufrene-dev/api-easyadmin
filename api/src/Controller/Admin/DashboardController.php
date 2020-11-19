@@ -52,6 +52,8 @@ class DashboardController extends AbstractDashboardController
             ->overrideTemplates([
                 'layout' => self::SET_DEFAULT_FOLDER_EASYADMIN . 'layout.html.twig',
                 'crud/paginator' => self::SET_DEFAULT_FOLDER_EASYADMIN . 'crud/paginator.html.twig',
+                'crud/detail' => self::SET_DEFAULT_FOLDER_EASYADMIN . 'crud/detail.html.twig',
+                'crud/edit' => self::SET_DEFAULT_FOLDER_EASYADMIN . 'crud/edit.html.twig',
             ]);
     }
 
