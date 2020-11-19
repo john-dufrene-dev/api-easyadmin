@@ -20,7 +20,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CountryField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
@@ -119,7 +118,7 @@ class ShopCrudController extends AbstractCrudController
 
         // DETAIL
         if (Crud::PAGE_DETAIL === $pageName) {
-            yield FormField::addPanel('admin.shop.panel_shop');
+            yield FormField::addPanel('admin.shop.panel_shop')->renderCollapsed(false);
             if (
                 PermissionsAdmin::checkAdmin($this->getUser())
                 || PermissionsAdmin::checkOwners($this->getUser(), 'SHOP', 'DETAIL')
@@ -135,7 +134,7 @@ class ShopCrudController extends AbstractCrudController
                 yield BooleanField::new('is_active')->setLabel('admin.shop.field.is_active');
             }
 
-            yield FormField::addPanel('admin.shop.panel_shop_info');
+            yield FormField::addPanel('admin.shop.panel_shop_info')->renderCollapsed();
             yield CountryField::new('shop_info.country')->setLabel('admin.shop.field.country');
 
             yield BooleanField::new('shop_info.shipping_click')
@@ -148,7 +147,7 @@ class ShopCrudController extends AbstractCrudController
             // @Todo : transform in array to show shop hour
             // yield ArrayField::new('shop_info.shop_hour');
 
-            yield FormField::addPanel('admin.shop.panel_shop_files');
+            yield FormField::addPanel('admin.shop.panel_shop_files')->renderCollapsed();
             yield CollectionField::new('shop_files')
                 ->setTemplatePath('admin/fields/clients/collection_shop_images.html.twig');
 
@@ -157,7 +156,7 @@ class ShopCrudController extends AbstractCrudController
                 || (PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'DETAIL'))
                 && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_ADMINS_SHOPS))
             ) {
-                yield FormField::addPanel('admin.shop.panel_shop_admin');
+                yield FormField::addPanel('admin.shop.panel_shop_admin')->renderCollapsed();
                 yield ArrayField::new('admins')->setLabel('admin.shop.field.admins');
             }
 
@@ -167,7 +166,7 @@ class ShopCrudController extends AbstractCrudController
 
         // EDIT
         if (Crud::PAGE_EDIT === $pageName) {
-            yield FormField::addPanel('admin.shop.panel_shop');
+            yield FormField::addPanel('admin.shop.panel_shop')->renderCollapsed(false);
 
             yield TextField::new('displayuuid')->setFormTypeOptions([
                 'disabled' => true,
@@ -179,7 +178,7 @@ class ShopCrudController extends AbstractCrudController
                 yield BooleanField::new('is_active')->setLabel('admin.shop.field.is_active');
             }
 
-            yield FormField::addPanel('admin.shop.panel_shop_info');
+            yield FormField::addPanel('admin.shop.panel_shop_info')->renderCollapsed();
 
             yield CountryField::new('shop_info.country')->setLabel('admin.shop.field.country');
 
@@ -203,7 +202,7 @@ class ShopCrudController extends AbstractCrudController
                     ],
                 ]);
 
-            yield FormField::addPanel('admin.shop.panel_shop_files');
+            yield FormField::addPanel('admin.shop.panel_shop_files')->renderCollapsed();
             yield CollectionField::new('shop_files')->setEntryType(ShopFileType::class)
                 ->setFormTypeOption('by_reference', false);
 
@@ -212,14 +211,14 @@ class ShopCrudController extends AbstractCrudController
                 || (PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'EDIT'))
                 && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_ADMINS_SHOPS))
             ) {
-                yield FormField::addPanel('admin.shop.panel_shop_admin');
+                yield FormField::addPanel('admin.shop.panel_shop_admin')->renderCollapsed();
                 yield AssociationField::new('admins')->setLabel('admin.shop.field.admins');
             }
         }
 
         // NEW
         if (Crud::PAGE_NEW === $pageName) {
-            yield FormField::addPanel('admin.shop.panel_shop');
+            yield FormField::addPanel('admin.shop.panel_shop')->renderCollapsed(false);
             yield TextField::new('name')->setLabel('admin.shop.field.name');
             yield EmailField::new('email')->setLabel('admin.shop.field.email');
 
@@ -232,6 +231,7 @@ class ShopCrudController extends AbstractCrudController
                 || (PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'NEW'))
                 && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_ADMINS_SHOPS))
             ) {
+                yield FormField::addPanel('admin.shop.panel_shop_admin')->renderCollapsed();
                 yield AssociationField::new('admins')->setLabel('admin.shop.field.admins');
             }
         }
