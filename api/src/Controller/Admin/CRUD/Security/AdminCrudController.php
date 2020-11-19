@@ -29,6 +29,8 @@ class AdminCrudController extends AbstractCrudController
 {
     protected $actions;
 
+    public const ACTIVE_CUSTOM_ROLES = false; // Enable or diable custom roles
+
     public function __construct(CustomizeActions $actions)
     {
         $this->actions = $actions;
@@ -167,16 +169,20 @@ class AdminCrudController extends AbstractCrudController
             yield EmailField::new('email')->setLabel('admin.admin.field.email');
             yield PasswordField::new('plainPassword')->setLabel('admin.admin.field.plain_password');
 
-            if (
-                (PermissionsAdmin::checkAdmin($this->getUser()))
-                || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'EDIT'))
-                && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_ROLES))
-            ) {
-                yield ChoiceField::new('roles')->setChoices(PermissionsAdmin::getAllRoles())
-                    ->allowMultipleChoices(true)
-                    ->autocomplete(true)
-                    ->setRequired(false)
-                    ->setLabel('admin.admin.field.roles');
+            // You can use it if you want to customize roles without using AdminGroup
+            // By default this field is disabled
+            if (self::ACTIVE_CUSTOM_ROLES) {
+                if (
+                    (PermissionsAdmin::checkAdmin($this->getUser()))
+                    || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'EDIT'))
+                    && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_ROLES))
+                ) {
+                    yield ChoiceField::new('roles')->setChoices(PermissionsAdmin::getAllRoles())
+                        ->allowMultipleChoices(true)
+                        ->autocomplete(true)
+                        ->setRequired(false)
+                        ->setLabel('admin.admin.field.roles');
+                }
             }
 
             if (
@@ -193,16 +199,20 @@ class AdminCrudController extends AbstractCrudController
             yield EmailField::new('email')->setLabel('admin.admin.field.email');
             yield PasswordField::new('password')->setLabel('admin.admin.field.password');
 
-            if (
-                (PermissionsAdmin::checkAdmin($this->getUser()))
-                || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'NEW'))
-                && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_ROLES))
-            ) {
-                yield ChoiceField::new('roles')->setChoices(PermissionsAdmin::getAllRoles())
-                    ->allowMultipleChoices(true)
-                    ->autocomplete(true)
-                    ->setRequired(false)
-                    ->setLabel('admin.admin.field.roles');
+            // You can use it if you want to customize roles without using AdminGroup
+            // By default this field is disabled
+            if (self::ACTIVE_CUSTOM_ROLES) {
+                if (
+                    (PermissionsAdmin::checkAdmin($this->getUser()))
+                    || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'NEW'))
+                    && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_ROLES))
+                ) {
+                    yield ChoiceField::new('roles')->setChoices(PermissionsAdmin::getAllRoles())
+                        ->allowMultipleChoices(true)
+                        ->autocomplete(true)
+                        ->setRequired(false)
+                        ->setLabel('admin.admin.field.roles');
+                }
             }
 
             if (

@@ -8,6 +8,7 @@ use App\Entity\Security\Admin;
 use App\Entity\Security\AdminGroup;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use App\Service\Admin\Builder\ConfigurationBuilder;
 use App\Service\Admin\Permissions\PermissionsAdmin;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -24,6 +25,9 @@ class DashboardController extends AbstractDashboardController
 {
     protected $config;
 
+    public const SET_PAGINATOR_PAGE_SIZE = 15; // Default pagination
+    public const SET_DEFAULT_FOLDER_EASYADMIN = 'admin/_easyadmin/'; // Default folder to override template EasyAdminBundle
+
     public function __construct(ConfigurationBuilder $config)
     {
         $this->config = $config;
@@ -35,6 +39,22 @@ class DashboardController extends AbstractDashboardController
     public function index(): Response
     {
         return parent::index();
+    }
+
+    public function configureCrud(): Crud
+    {
+        return Crud::new()
+            // this defines the pagination size for all CRUD controllers
+            // (each CRUD controller can override this value if needed)
+            ->setPaginatorPageSize(self::SET_PAGINATOR_PAGE_SIZE)
+            // the first argument is the "template name", which is the same as the
+            // Twig path but without the `@EasyAdmin/` prefix
+            ->overrideTemplates([
+                'layout' => self::SET_DEFAULT_FOLDER_EASYADMIN . 'layout.html.twig',
+                'crud/paginator' => self::SET_DEFAULT_FOLDER_EASYADMIN . 'crud/paginator.html.twig',
+                'crud/detail' => self::SET_DEFAULT_FOLDER_EASYADMIN . 'crud/detail.html.twig',
+                'crud/edit' => self::SET_DEFAULT_FOLDER_EASYADMIN . 'crud/edit.html.twig',
+            ]);
     }
 
     public function configureDashboard(): Dashboard
