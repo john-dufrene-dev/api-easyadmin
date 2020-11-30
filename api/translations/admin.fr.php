@@ -67,6 +67,7 @@ return [
     'admin.dashboard.menu.admins' => 'Admins',
     'admin.dashboard.menu.groups' => 'Groups',
     'admin.dashboard.menu.settings' => 'Paramètres avancées',
+    'admin.dashboard.menu.settings_general' => 'Configurations générales',
     'admin.dashboard.menu.documentation' => 'Documentation',
     'admin.dashboard.menu.api_doc' => 'Documentation de l\'API',
     'admin.dashboard.menu.monitoring' => 'Monitoring',
@@ -115,6 +116,14 @@ return [
     'admin.group.field.name' => 'Nom',
     'admin.group.field.roles' => 'Rôles',
     'admin.group.field.admins' => 'Administrateurs',
+
+    // Config Admin Page
+    'Config' => 'Configuration',
+    'admin.config.field.name' => 'Nom',
+    'admin.config.field.description' => 'Description',
+    'admin.config.field.value' => 'Valeur',
+    'admin.config.field.is_active' => 'Activation',
+    'admin.config.panel_general' => 'Configuration générale de configuration',
 
     // Log Admin Page
     'Log' => 'Log',
