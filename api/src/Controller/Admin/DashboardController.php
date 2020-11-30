@@ -6,6 +6,7 @@ use App\Entity\Client\Shop;
 use App\Entity\Monitoring\Log;
 use App\Entity\Security\Admin;
 use App\Entity\Security\AdminGroup;
+use App\Entity\Configuration\Config;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -16,6 +17,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use App\Controller\Admin\CRUD\Configuration\ConfigGeneralCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 
 /**
@@ -46,7 +48,7 @@ class DashboardController extends AbstractDashboardController
         return Crud::new()
             // this defines the pagination size for all CRUD controllers
             // (each CRUD controller can override this value if needed)
-            ->setPaginatorPageSize(self::SET_PAGINATOR_PAGE_SIZE)
+            ->setPaginatorPageSize($this->config->get('CONF_DEFAULT_PAGINATOR') ?? self::SET_PAGINATOR_PAGE_SIZE)
             // the first argument is the "template name", which is the same as the
             // Twig path but without the `@EasyAdmin/` prefix
             ->overrideTemplates([
@@ -111,6 +113,8 @@ class DashboardController extends AbstractDashboardController
         // @todo : Add some configurations system
         if (PermissionsAdmin::checkAdmin($this->getUser())) {
             yield MenuItem::section('admin.dashboard.menu.settings');
+            yield MenuItem::linkToCrud('admin.dashboard.menu.settings_general', 'fas fa-receipt', Config::class)
+                ->setController(ConfigGeneralCrudController::class);
         }
 
         /*************** -- MONITORING LINK -- ***************/

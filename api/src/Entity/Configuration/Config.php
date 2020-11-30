@@ -57,6 +57,15 @@ class Config
     private $description;
 
     /**
+     * typing - The tpye of FormField of the config
+     * 
+     * @var int
+     * 
+     * @ORM\Column(type="smallint")
+     */
+    private $typing = 0;
+
+    /**
      * is_active - The active status of the Config
      * 
      * @var bool
@@ -86,6 +95,16 @@ class Config
      * @Assert\NotNull(message="asserts.entity.updated_at.not_null")
      */
     private $updated_at;
+
+    /**
+     * __toString
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->getName();
+    }
 
     /**
      * getName
@@ -152,6 +171,29 @@ class Config
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+    
+    /**
+     * getType
+     *
+     * @return int
+     */
+    public function getTyping(): ?int
+    {
+        return $this->typing;
+    }
+    
+    /**
+     * setTyping
+     *
+     * @param  mixed $typing
+     * @return self
+     */
+    public function setTyping(int $typing): self
+    {
+        $this->typing = $typing;
 
         return $this;
     }

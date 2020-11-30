@@ -86,6 +86,32 @@ final class CustomizeActions
     }
 
     /**
+     * limitedToEdit
+     *
+     * @param  mixed $actions
+     * @return Actions
+     */
+    public function limitedToEdit(Actions $actions): Actions
+    {
+        $actions->add(Crud::PAGE_INDEX, Action::DETAIL);
+        $actions->add(Crud::PAGE_EDIT, Action::INDEX);
+        $actions->add(Crud::PAGE_EDIT, Action::DETAIL);
+
+        $actions->remove(Action::INDEX, Action::DELETE);
+        $actions->remove(Action::INDEX, Action::NEW);
+        $actions->remove(Action::NEW, Action::SAVE_AND_RETURN);
+        $actions->remove(Action::NEW, Action::SAVE_AND_ADD_ANOTHER);
+
+        $actions->disable(
+            Action::NEW,
+            Action::DELETE,
+            Action::SAVE_AND_ADD_ANOTHER
+        );
+
+        return $actions;
+    }
+
+    /**
      * reorder
      *
      * @param  mixed $actions
@@ -102,6 +128,23 @@ final class CustomizeActions
         $actions->reorder(Crud::PAGE_NEW, [
             Action::INDEX, Action::SAVE_AND_CONTINUE, Action::SAVE_AND_ADD_ANOTHER,
             Action::SAVE_AND_RETURN
+        ]);
+
+        return $actions;
+    }
+
+    /**
+     * reorderForEdit
+     *
+     * @param  mixed $actions
+     * @return Actions
+     */
+    public function reorderForEdit(Actions $actions): Actions
+    {
+        $actions->reorder(Crud::PAGE_INDEX, [Action::DETAIL, Action::EDIT]);
+        $actions->reorder(Crud::PAGE_DETAIL, [Action::INDEX, Action::EDIT]);
+        $actions->reorder(Crud::PAGE_EDIT, [
+            Action::INDEX, Action::SAVE_AND_CONTINUE, Action::SAVE_AND_RETURN, Action::DETAIL
         ]);
 
         return $actions;
@@ -267,6 +310,45 @@ final class CustomizeActions
                     }
                     return true;
                 });
+            });
+
+        return $actions;
+    }
+
+    /**
+     * limitedToEditCustomize
+     *
+     * @param  mixed $actions
+     * @return Actions
+     */
+    public function limitedToEditCustomize(Actions $actions): Actions
+    {
+        $actions
+            ->update(Crud::PAGE_INDEX, Action::EDIT, function (Action $a) {
+                return $a->setIcon('fa fa-edit')->setLabel(false);
+            })
+            ->update(Crud::PAGE_INDEX, Action::DETAIL, function (Action $a) {
+                return $a->setIcon('fa fa-eye')->setLabel(false);
+            });
+
+        $actions
+            ->update(Crud::PAGE_DETAIL, Action::EDIT, function (Action $a) {
+                return $a->setIcon('fa fa-edit')->setLabel(false);
+            });
+
+        $actions
+            ->update(Crud::PAGE_EDIT, Action::INDEX, function (Action $a) {
+                return $a->setIcon('fa fa-list-alt')->setCssClass('btn btn-secondary');
+            })
+            ->update(Crud::PAGE_EDIT, Action::DETAIL, function (Action $a) {
+                return $a->setIcon('fa fa-eye')->setLabel(false)->setCssClass('btn btn-info');
+            })
+
+            ->update(Crud::PAGE_EDIT, Action::SAVE_AND_CONTINUE, function (Action $a) {
+                return $a->setIcon('fa fa-edit')->setCssClass('btn btn-success');
+            })
+            ->update(Crud::PAGE_EDIT, Action::SAVE_AND_RETURN, function (Action $a) {
+                return $a->setIcon('fa fa-edit')->setLabel(false)->setCssClass('btn btn-success');
             });
 
         return $actions;
