@@ -34,8 +34,7 @@ class User implements UserInterface
      *      min = 6,
      *      max = 180,
      *      minMessage = "asserts.entity.min_length",
-     *      maxMessage = "asserts.entity.max_length",
-     *      allowEmptyString = false
+     *      maxMessage = "asserts.entity.max_length"
      * )
      */
     private $email;
@@ -283,7 +282,7 @@ class User implements UserInterface
 
         return $this;
     }
-    
+
     /**
      * isVerified
      *
@@ -294,7 +293,7 @@ class User implements UserInterface
         return $this->is_verified;
     }
 
-        
+
     /**
      * getIsVerified
      *
@@ -304,7 +303,7 @@ class User implements UserInterface
     {
         return $this->is_verified;
     }
-    
+
     /**
      * setIsVerified
      *

@@ -69,8 +69,7 @@ class Log
      *      min = 2,
      *      max = 50,
      *      minMessage = "asserts.entity.min_length",
-     *      maxMessage = "asserts.entity.max_length",
-     *      allowEmptyString = false
+     *      maxMessage = "asserts.entity.max_length"
      * )
      */
     private $level_name;
@@ -127,7 +126,7 @@ class Log
 
         return $this;
     }
-    
+
     /**
      * getUser
      *
@@ -137,7 +136,7 @@ class Log
     {
         return $this->user;
     }
-    
+
     /**
      * setUser
      *

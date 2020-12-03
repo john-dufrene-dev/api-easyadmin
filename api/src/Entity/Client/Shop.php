@@ -68,8 +68,7 @@ class Shop
      *      min = 6,
      *      max = 255,
      *      minMessage = "asserts.entity.min_length",
-     *      maxMessage = "asserts.entity.max_length",
-     *      allowEmptyString = false
+     *      maxMessage = "asserts.entity.max_length"
      * )
      * 
      * @Groups({"shop:readOne", "shop:readAll"})
@@ -89,8 +88,7 @@ class Shop
      *      min = 6,
      *      max = 180,
      *      minMessage = "asserts.entity.min_length",
-     *      maxMessage = "asserts.entity.max_length",
-     *      allowEmptyString = false
+     *      maxMessage = "asserts.entity.max_length"
      * )
      * 
      * @Groups({"shop:readOne", "shop:readAll"})

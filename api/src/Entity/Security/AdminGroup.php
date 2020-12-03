@@ -34,8 +34,7 @@ class AdminGroup
      *      min = 6,
      *      max = 255,
      *      minMessage = "asserts.entity.min_length",
-     *      maxMessage = "asserts.entity.max_length",
-     *      allowEmptyString = false
+     *      maxMessage = "asserts.entity.max_length"
      * )
      */
     private $name;
