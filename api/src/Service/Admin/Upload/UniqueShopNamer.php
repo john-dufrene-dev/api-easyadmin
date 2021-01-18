@@ -19,7 +19,7 @@ class UniqueShopNamer implements NamerInterface
      * @return string
      */
     public function name($object, PropertyMapping $mapping): string
-    {   
+    {
         // Create name for Shop uploads
         if ($object instanceof ShopFile) {
 
@@ -31,7 +31,7 @@ class UniqueShopNamer implements NamerInterface
                 $name = \sprintf('%s.%s', $name, $extension);
             }
 
-            return $object->getShop()->getUuid()->ToString() . '__' . $name;
+            return $object->getShop()->getUuid()->toRfc4122() . '__' . $name;
         }
 
         // Add here your other custom file namer for others Entities

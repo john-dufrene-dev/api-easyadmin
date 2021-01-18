@@ -193,7 +193,7 @@ class AdminGroupCrudController extends AbstractCrudController
             ->leftJoin('entity.admins', 'd')
             ->addSelect('d')
             ->andWhere('d.uuid = :uuid')
-            ->setParameter('uuid', $this->getUser()->getUuid()) // put your user id connected here
+            ->setParameter('uuid', $this->getUser()->getUuid()->toBinary()) // put your user id connected here
         ;
     }
 }

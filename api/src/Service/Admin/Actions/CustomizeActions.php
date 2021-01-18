@@ -7,6 +7,7 @@ use Symfony\Component\Security\Core\Security;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 /**
  * CustomizeActions
@@ -21,6 +22,13 @@ final class CustomizeActions
      * @var mixed
      */
     protected $security;
+    
+    /**
+     * params
+     *
+     * @var mixed
+     */
+    protected $params;
 
     /**
      * __construct
@@ -28,9 +36,10 @@ final class CustomizeActions
      * @param  mixed $security
      * @return void
      */
-    public function __construct(Security $security)
+    public function __construct(Security $security, ParameterBagInterface $params)
     {
         $this->security = $security;
+        $this->params = $params;
     }
 
     /*********** CUSTOM USING ACTIONS ***********/
@@ -366,11 +375,8 @@ final class CustomizeActions
         return Action::new(self::IMPERSONATE, 'Impersonate')
             ->setIcon('fa fa-fw fa-user-lock')
             ->setLabel(false)
-            ->linkToRoute('admin_dashboard', function (Admin $e) {
-                return [
-                    'id' => $e->getId(),
-                    '_switch_user' => $e->getEmail()
-                ];
+            ->linkToUrl(function (Admin $e) {
+                return '?' . $this->params->get('route_for_switch_user') . '=' . $e->getUsername();
             })
             ->displayIf(function ($e) {
                 if ($e instanceof Admin) {

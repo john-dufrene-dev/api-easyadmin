@@ -78,12 +78,12 @@ class ConfigurationBuilder
      * @param  mixed $typing
      * @return string|null
      */
-    public function getType($typing = 0): ?string
+    public function getType($typing = null): ?string
     {
         switch ($typing) {
             case 0:
                 // Use yield TextField::new('value');
-                self::TEXT_TYPE;
+                return self::TEXT_TYPE;
                 break;
             case 1:
                 // Use yield ChoiceField::new('value')->setChoices(['false' => 0, 'true' => 1]);

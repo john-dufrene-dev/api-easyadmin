@@ -29,7 +29,7 @@ class BeforeCrudAdminGroupActionSubscriber implements EventSubscriberInterface
 
             if (PermissionsAdmin::checkActions($context->getUser(), 'ADMIN_GROUP', 'DETAIL')) {
                 foreach ($context->getEntity()->getInstance()->getAdmins() as $admin) {
-                    if ($admin->getUuid()->toString() === $context->getUser()->getUuid()->toString()) {
+                    if ($admin->getUuid()->toRfc4122() === $context->getUser()->getUuid()->toRfc4122()) {
                         return;
                     }
                 }
@@ -54,7 +54,7 @@ class BeforeCrudAdminGroupActionSubscriber implements EventSubscriberInterface
 
             if (PermissionsAdmin::checkActions($context->getUser(), 'ADMIN_GROUP', 'EDIT')) {
                 foreach ($context->getEntity()->getInstance()->getAdmins() as $admin) {
-                    if ($admin->getUuid()->toString() === $context->getUser()->getUuid()->toString()) {
+                    if ($admin->getUuid()->toRfc4122() === $context->getUser()->getUuid()->toRfc4122()) {
                         return;
                     }
                 }
@@ -79,7 +79,7 @@ class BeforeCrudAdminGroupActionSubscriber implements EventSubscriberInterface
 
             if (PermissionsAdmin::checkActions($context->getUser(), 'ADMIN_GROUP', 'DELETE')) {
                 foreach ($context->getEntity()->getInstance()->getAdmins() as $admin) {
-                    if ($admin->getUuid()->toString() === $context->getUser()->getUuid()->toString()) {
+                    if ($admin->getUuid()->toRfc4122() === $context->getUser()->getUuid()->toRfc4122()) {
                         return;
                     }
                 }

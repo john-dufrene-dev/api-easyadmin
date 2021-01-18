@@ -57,6 +57,7 @@ security:
             switch_user:
                 provider: admin_user
                 role: ROLE_ALLOWED_TO_SWITCH
+                parameter: '%route_for_switch_user%'
 
     role_hierarchy:
         ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH, ROLE_API_DOCUMENTATION]

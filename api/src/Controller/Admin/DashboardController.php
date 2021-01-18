@@ -29,6 +29,7 @@ class DashboardController extends AbstractDashboardController
 
     public const SET_PAGINATOR_PAGE_SIZE = 15; // Default pagination
     public const SET_DEFAULT_FOLDER_EASYADMIN = 'admin/_easyadmin/'; // Default folder to override template EasyAdminBundle
+    public const SET_DEFAULT_ROUTE_API_DOC = '/api/docs'; // Default route API documentation
 
     public function __construct(ConfigurationBuilder $config)
     {
@@ -129,7 +130,7 @@ class DashboardController extends AbstractDashboardController
         }
 
         if (PermissionsAdmin::checkAdmin($this->getUser()) || $this->isGranted(PermissionsAdmin::ROLE_API_DOCUMENTATION)) {
-            yield MenuItem::linkToRoute('admin.dashboard.menu.api_doc', 'fas fa-spider', 'api_doc')
+            yield MenuItem::linkToUrl('admin.dashboard.menu.api_doc', 'fas fa-spider', self::SET_DEFAULT_ROUTE_API_DOC)
                 ->setLinkTarget('_blank');
         }
     }
@@ -142,7 +143,7 @@ class DashboardController extends AbstractDashboardController
             ->addMenuItems([
                 MenuItem::linkToCrud('admin.dashboard.my_profile', 'fa fa-id-card', Admin::class)
                     ->setAction('edit')
-                    ->setEntityId($this->getUser()->getUuid()->toString()),
+                    ->setEntityId($this->getUser()->getUuid()->toRfc4122()),
             ]);
     }
 }

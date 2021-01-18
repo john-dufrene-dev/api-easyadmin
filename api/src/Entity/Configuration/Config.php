@@ -32,8 +32,7 @@ class Config
      *      min = 6,
      *      max = 255,
      *      minMessage = "asserts.entity.min_length",
-     *      maxMessage = "asserts.entity.max_length",
-     *      allowEmptyString = false
+     *      maxMessage = "asserts.entity.max_length"
      * )
      */
     private $name;
@@ -174,7 +173,7 @@ class Config
 
         return $this;
     }
-    
+
     /**
      * getType
      *
@@ -184,7 +183,7 @@ class Config
     {
         return $this->typing;
     }
-    
+
     /**
      * setTyping
      *

@@ -38,8 +38,7 @@ class Admin implements UserInterface
      *      min = 6,
      *      max = 180,
      *      minMessage = "asserts.entity.min_length",
-     *      maxMessage = "asserts.entity.max_length",
-     *      allowEmptyString = false
+     *      maxMessage = "asserts.entity.max_length"
      * )
      */
     private $email;
@@ -229,11 +228,12 @@ class Admin implements UserInterface
         }
 
         // guarantee every admin at least has ROLE_ADMIN
-        $roles[] = PermissionsAdmin::DEFAULT;
+        $roles[] = PermissionsAdmin::
+        DEFAULT;
 
         return array_values(array_unique($roles));
     }
-    
+
     /**
      * setRoles
      *
@@ -250,7 +250,7 @@ class Admin implements UserInterface
 
         return $this;
     }
-    
+
     /**
      * addRole
      *
@@ -265,7 +265,7 @@ class Admin implements UserInterface
             $this->roles[] = $role;
         }
     }
-    
+
     /**
      * hasRole
      *
@@ -287,7 +287,7 @@ class Admin implements UserInterface
     {
         return (string) $this->password;
     }
-    
+
     /**
      * setPassword
      *
@@ -311,7 +311,7 @@ class Admin implements UserInterface
     {
         return (string) $this->plainPassword;
     }
-    
+
     /**
      * setPlainPassword
      *
@@ -343,7 +343,7 @@ class Admin implements UserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
-    
+
     /**
      * getIsAdmin
      *
@@ -353,7 +353,7 @@ class Admin implements UserInterface
     {
         return $this->is_admin;
     }
-    
+
     /**
      * setIsAdmin
      *
@@ -376,7 +376,7 @@ class Admin implements UserInterface
     {
         return $this->groups;
     }
-    
+
     /**
      * addGroup
      *
@@ -391,7 +391,7 @@ class Admin implements UserInterface
 
         return $this;
     }
-    
+
     /**
      * removeGroup
      *
@@ -406,7 +406,7 @@ class Admin implements UserInterface
 
         return $this;
     }
-    
+
     /**
      * getCreatedAt
      *
@@ -416,7 +416,7 @@ class Admin implements UserInterface
     {
         return $this->created_at;
     }
-    
+
     /**
      * setCreatedAt
      *
@@ -429,7 +429,7 @@ class Admin implements UserInterface
 
         return $this;
     }
-    
+
     /**
      * getUpdatedAt
      *
@@ -439,7 +439,7 @@ class Admin implements UserInterface
     {
         return $this->updated_at;
     }
-    
+
     /**
      * setUpdatedAt
      *
@@ -462,7 +462,7 @@ class Admin implements UserInterface
     {
         return $this->shops;
     }
-    
+
     /**
      * addShop
      *
@@ -478,7 +478,7 @@ class Admin implements UserInterface
 
         return $this;
     }
-    
+
     /**
      * removeShop
      *
@@ -502,7 +502,7 @@ class Admin implements UserInterface
     {
         return $this->reset_password;
     }
-    
+
     /**
      * addResetPassword
      *
@@ -518,7 +518,7 @@ class Admin implements UserInterface
 
         return $this;
     }
-    
+
     /**
      * removeResetPassword
      *
