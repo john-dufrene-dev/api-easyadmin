@@ -51,7 +51,7 @@ class BeforeCrudAdminActionSubscriber implements EventSubscriberInterface
 
             if (
                 PermissionsAdmin::checkActions($context->getUser(), 'ADMIN', 'DETAIL')
-                && $context->getEntity()->getInstance()->getUuid()->toString() === $context->getUser()->getUuid()->toString()
+                && $context->getEntity()->getInstance()->getUuid()->toRfc4122() === $context->getUser()->getUuid()->toRfc4122()
             ) {
                 return;
             }
@@ -81,7 +81,7 @@ class BeforeCrudAdminActionSubscriber implements EventSubscriberInterface
 
             if (
                 PermissionsAdmin::checkActions($context->getUser(), 'ADMIN', 'EDIT')
-                && $context->getEntity()->getInstance()->getUuid()->toString() === $context->getUser()->getUuid()->toString()
+                && $context->getEntity()->getInstance()->getUuid()->toRfc4122() === $context->getUser()->getUuid()->toRfc4122()
             ) {
                 return;
             }
@@ -111,7 +111,7 @@ class BeforeCrudAdminActionSubscriber implements EventSubscriberInterface
 
             if (
                 PermissionsAdmin::checkActions($context->getUser(), 'ADMIN', 'DELETE')
-                && $context->getEntity()->getInstance()->getUuid()->toString() === $context->getUser()->getUuid()->toString()
+                && $context->getEntity()->getInstance()->getUuid()->toRfc4122() === $context->getUser()->getUuid()->toRfc4122()
             ) {
                 return;
             }

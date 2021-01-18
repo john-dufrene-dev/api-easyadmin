@@ -2,12 +2,11 @@
 
 namespace App\Service\Traits\Entity;
 
-use Ramsey\Uuid\UuidInterface;
 use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\Doctrine\UuidGenerator;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\IdGenerator\UuidV4Generator;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -35,16 +34,15 @@ trait UuidTrait
     /**
      * uuid - The unique auto incremented primary key
      * 
-     * @var \Ramsey\Uuid\UuidInterface
      * Todo : Change to uuidGenerator default symfony when release symfony 5.2
      * Todo : Change to assert \Uuid when release symfony 5.2
      *
      * @ORM\Id()
      * @ORM\Column(type="uuid", unique=true)
      * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
+     * @ORM\CustomIdGenerator(class=UuidV4Generator::class)
      *
-     * @Assert\Type("Ramsey\Uuid\UuidInterface")
+     * @Assert\Uuid
      * 
      * @Groups({"shop:readOne", "shop:readAll"})
      *
@@ -65,18 +63,17 @@ trait UuidTrait
     /**
      * getUuid
      *
-     * @return UuidInterface
+     * @return UuidV4
      */
-    public function getUuid(): ?UuidInterface
+    public function getUuid()
     {
         return $this->uuid;
     }
 
     /**
-     * @var \Ramsey\Uuid\UuidInterface
      * Display unmapped Uuid in form
      */
-    public function DisplayUuid(): ?UuidInterface
+    public function DisplayUuid()
     {
         return $this->uuid;
     }

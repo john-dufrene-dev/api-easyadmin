@@ -94,7 +94,7 @@ class UserMailer
             $verifyEmailRouteName,
             $user->getUuid(),
             $user->getEmail(),
-            ['uuid' => $user->getUuid()->toString()],
+            ['uuid' => $user->getUuid()->toRfc4122()],
         );
 
         $email = (new TemplatedEmail())

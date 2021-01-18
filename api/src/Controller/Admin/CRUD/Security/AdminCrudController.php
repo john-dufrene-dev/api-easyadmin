@@ -29,7 +29,7 @@ class AdminCrudController extends AbstractCrudController
 {
     protected $actions;
 
-    public const ACTIVE_CUSTOM_ROLES = false; // Enable or diable custom roles
+    public const ACTIVE_CUSTOM_ROLES = false; // Enable or disable custom roles
 
     public function __construct(CustomizeActions $actions)
     {
@@ -237,7 +237,7 @@ class AdminCrudController extends AbstractCrudController
 
         return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters)
             ->andWhere('entity.uuid = :uuid')
-            ->setParameter('uuid', $this->getUser()->getUuid()) // put your user id connected here
+            ->setParameter('uuid', $this->getUser()->getUuid()->toBinary()) // put your user id connected here
         ;
     }
 }

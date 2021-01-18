@@ -9,6 +9,9 @@ parameters:
 
     ### CUSTOM VALUE NOT PRESENT IN .env ###
 
+    # Security user impersonation
+    route_for_switch_user: _switch_user # Define the switch user route
+
     # Activation of email confirmation for User
     active_confirm_user: true # Confirmation User email (if false you don't need to confirm User email)
 
