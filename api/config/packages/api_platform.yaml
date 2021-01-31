@@ -1,4 +1,7 @@
 api_platform:
+# @Todo : For now use version 2.5 of Api-platform
+# Upgrade Api-platform to version 2.6 with OpenApiInterface exemple here (depreciation of Swagger and use OpenApi) :
+# https://api-platform.com/docs/core/jwt/#adding-endpoint-to-swaggerui-to-retrieve-a-jwt-token
 
     # The title of the API.
     title: 'API title'
