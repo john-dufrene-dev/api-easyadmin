@@ -19,7 +19,7 @@ use SymfonyCasts\Bundle\ResetPassword\Controller\ResetPasswordControllerTrait;
 use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
 
 /**
- * @Route("/admin/reset-password")
+ * @Route("%url_for_admin%/reset-password")
  */
 class SecurityResetPasswordController extends AbstractController
 {
@@ -71,12 +71,12 @@ class SecurityResetPasswordController extends AbstractController
     public function checkEmail(): Response
     {
         // We prevent users from directly accessing this page
-        if (!$this->canCheckEmail()) {
+        if (null === ($resetToken = $this->getTokenObjectFromSession())) {
             return $this->redirectToRoute('admin_forgot_password_request');
         }
 
         return $this->render('admin/security/reset_password/check_email.html.twig', [
-            'tokenLifetime' => $this->resetPasswordHelper->getTokenLifetime(),
+            'tokenLifetime' => $resetToken,
         ]);
     }
 
@@ -145,9 +145,6 @@ class SecurityResetPasswordController extends AbstractController
         $admin = $this->getDoctrine()->getRepository(Admin::class)->findOneBy([
             'email' => $emailFormData,
         ]);
-
-        // Marks that you are allowed to see the admin_check_email page.
-        $this->setCanCheckEmailInSession();
 
         // Do not reveal whether a admin account was found or not.
         if (!$admin) {

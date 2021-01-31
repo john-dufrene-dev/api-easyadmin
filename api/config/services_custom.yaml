@@ -9,6 +9,9 @@ parameters:
 
     ### CUSTOM VALUE NOT PRESENT IN .env ###
 
+    # URL for AdminDashboard
+    url_for_admin: admin # Define default URL for AdminDashboard
+
     # Security user impersonation
     route_for_switch_user: _switch_user # Define the switch user route
 
