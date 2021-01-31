@@ -2,7 +2,7 @@
    directly in your applications. Instead, use the 'login.html.twig' template #}
 {% trans_default_domain translation_domain ?? 'admin' %}
 <!DOCTYPE html>
-<html>
+<html lang="{{ app.getRequest().getLocale() }}">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">

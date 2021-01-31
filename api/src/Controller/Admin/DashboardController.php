@@ -37,7 +37,7 @@ class DashboardController extends AbstractDashboardController
     }
 
     /**
-     * @Route("/admin", name="admin_dashboard")
+     * @Route("%url_for_admin%", name="admin_dashboard")
      */
     public function index(): Response
     {
@@ -54,6 +54,7 @@ class DashboardController extends AbstractDashboardController
             // Twig path but without the `@EasyAdmin/` prefix
             ->overrideTemplates([
                 'layout' => self::SET_DEFAULT_FOLDER_EASYADMIN . 'layout.html.twig',
+                // @Todo change to default paginator when new version is merge
                 'crud/paginator' => self::SET_DEFAULT_FOLDER_EASYADMIN . 'crud/paginator.html.twig',
                 'crud/detail' => self::SET_DEFAULT_FOLDER_EASYADMIN . 'crud/detail.html.twig',
                 'crud/edit' => self::SET_DEFAULT_FOLDER_EASYADMIN . 'crud/edit.html.twig',

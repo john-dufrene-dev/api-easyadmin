@@ -1,3 +1,6 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var paginator \EasyCorp\Bundle\EasyAdminBundle\Orm\EntityPaginator #}
+{# @Todo remove this file when new default paginator is merge #}
 {% trans_default_domain 'EasyAdminBundle' %}
 
 <div class="list-pagination">
@@ -5,33 +8,67 @@
         {{ 'paginator.results'|trans({'%count%': paginator.numResults})|raw }}
     </div>
 
-    <div class="list-pagination-counter">
-        <span class="font-weight-bold"> {{ 'paginator.page'|trans|raw }} </span> {{ paginator.CurrentPage }} / {{ paginator.lastPage }}
-    </div>
-
     <nav class="pager list-pagination-paginator {{ not paginator.hasPreviousPage ? 'first-page' }} {{ not paginator.hasNextPage ? 'last-page' }}">
         <ul class="pagination">
-            <li class="page-item {{ not paginator.hasPreviousPage ? 'disabled' }}">
-                <a class="page-link" href="{{ not paginator.hasPreviousPage ? '#' : paginator.generateUrlForPage(1) }}">
-                    <i class="fa fa-angle-double-left mx-1"></i>
-                </a>
-            </li>
-
             <li class="page-item {{ not paginator.hasPreviousPage ? 'disabled' }}">
                 <a class="page-link" href="{{ not paginator.hasPreviousPage ? '#' : paginator.generateUrlForPage(paginator.previousPage) }}">
                     <i class="fa fa-angle-left mx-1"></i> <span class="btn-label">{{ 'paginator.previous'|trans }}</span>
                 </a>
             </li>
 
+            {% if paginator.toPaginate %}
+
+                {% set pageRange = 4 %}
+                {% set rangeStart = paginator.currentPage - (pageRange / 2)|round(0, 'floor') %}
+                {% set rangeStart = rangeStart < 2 ? 2 : rangeStart %}
+                {% set rangeEnd = rangeStart + pageRange %}
+                {% set rangeEnd = rangeEnd > paginator.lastPage - 1 ? paginator.lastPage - 1 : rangeEnd %}
+                {% set rangeEnd = rangeEnd < 2 ? 2 : rangeEnd %}
+                {% set rangeStart = rangeEnd - rangeStart < pageRange ? rangeEnd - pageRange : rangeStart %}
+                {% set rangeStart = rangeStart < 2 ? 2 : rangeStart %}
+
+                <li class="page-item {{ 1 == paginator.currentPage ? 'active' }}">
+                    <a class="page-link" href="{{ paginator.generateUrlForPage(1) }}">
+                        <span class="btn-label">1</span>
+                    </a>
+                </li>
+
+                {% if rangeStart > 2 %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">
+                        <span class="btn-label">&hellip;</span>
+                    </a>
+                </li>
+                {% endif %}
+
+                {% for pageNum in rangeStart..rangeEnd %}
+                <li class="page-item {{ pageNum == paginator.currentPage ? 'active' }}">
+                    <a class="page-link" href="{{ paginator.generateUrlForPage(pageNum) }}">
+                        <span class="btn-label">{{ pageNum }}</span>
+                    </a>
+                </li>
+                {% endfor %}
+
+                {% if rangeEnd < paginator.lastPage - 1 %}
+                <li class="page-item disabled">
+                    <a class="page-link" href="#">
+                        <span class="btn-label">&hellip;</span>
+                    </a>
+                </li>
+                {% endif %}
+                
+                {% if rangeEnd < paginator.lastPage %}
+                <li class="page-item {{ paginator.lastPage == paginator.currentPage ? 'active' }}">
+                    <a class="page-link" href="{{ paginator.generateUrlForPage(paginator.lastPage) }}">
+                        <span class="btn-label">{{ paginator.lastPage }}</span>
+                    </a>
+                </li>
+                {% endif %}
+            {% endif %}
+
             <li class="page-item {{ not paginator.hasNextPage ? 'disabled' }}">
                 <a class="page-link" href="{{ not paginator.hasNextPage ? '#' : paginator.generateUrlForPage(paginator.nextPage) }}">
                     <span class="btn-label">{{ 'paginator.next'|trans }}</span> <i class="fa fa-angle-right mx-1"></i>
-                </a>
-            </li>
-
-            <li class="page-item {{ not paginator.hasNextPage ? 'disabled' }}">
-                <a class="page-link" href="{{ not paginator.hasNextPage ? '#' : paginator.generateUrlForPage(paginator.lastPage) }}">
-                    <i class="fa fa-angle-double-right mx-1"></i>
                 </a>
             </li>
         </ul>
