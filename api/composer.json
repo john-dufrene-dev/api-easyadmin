@@ -38,6 +38,7 @@
         "symfony/security-bundle": "5.2.*",
         "symfony/sendgrid-mailer": "5.2.*",
         "symfony/twig-bundle": "5.2.*",
+        "symfony/ux-chartjs": "^1.2",
         "symfony/validator": "5.2.*",
         "symfony/webpack-encore-bundle": "^1.9",
         "symfony/yaml": "5.2.*",
