@@ -109,7 +109,7 @@ class DashboardController extends AbstractDashboardController
             // Twig path but without the `@EasyAdmin/` prefix
             ->overrideTemplates([
                 'layout' => self::SET_DEFAULT_FOLDER_EASYADMIN . 'layout.html.twig',
-                // @Todo change to default paginator when new version is merge
+                // @Todo change to default paginator when new version is merge merge (new release) https://github.com/EasyCorp/EasyAdminBundle/pull/4171
                 'crud/paginator' => self::SET_DEFAULT_FOLDER_EASYADMIN . 'crud/paginator.html.twig',
                 'crud/detail' => self::SET_DEFAULT_FOLDER_EASYADMIN . 'crud/detail.html.twig',
                 'crud/edit' => self::SET_DEFAULT_FOLDER_EASYADMIN . 'crud/edit.html.twig',
