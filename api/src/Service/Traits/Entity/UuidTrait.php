@@ -33,9 +33,6 @@ trait UuidTrait
 
     /**
      * uuid - The unique auto incremented primary key
-     * 
-     * Todo : Change to uuidGenerator default symfony when release symfony 5.2
-     * Todo : Change to assert \Uuid when release symfony 5.2
      *
      * @ORM\Id()
      * @ORM\Column(type="uuid", unique=true)
