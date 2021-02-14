@@ -6,6 +6,8 @@ use App\Entity\Client\Shop;
 use Doctrine\ORM\QueryBuilder;
 use App\Form\Type\Client\ShopFileType;
 use App\Form\Type\Client\ShopHourType;
+use App\Service\Admin\Builder\ExportBuilder;
+use Symfony\Component\HttpFoundation\Request;
 use App\Service\Admin\Actions\CustomizeActions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -18,24 +20,36 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CountryField;
+use EasyCorp\Bundle\EasyAdminBundle\Factory\FilterFactory;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
+use EasyCorp\Bundle\EasyAdminBundle\Factory\AdminContextFactory;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class ShopCrudController extends AbstractCrudController
 {
     protected $actions;
 
-    public function __construct(CustomizeActions $actions)
-    {
+    protected $export;
+
+    protected $adminContextFactory;
+
+    public function __construct(
+        CustomizeActions $actions,
+        ExportBuilder $export,
+        AdminContextFactory $adminContextFactory
+    ) {
         $this->actions = $actions;
+        $this->export = $export;
+        $this->adminContextFactory = $adminContextFactory;
     }
 
     public static function getEntityFqcn(): string
@@ -71,6 +85,15 @@ class ShopCrudController extends AbstractCrudController
     {
         // Actions adding by default
         $this->actions->all($actions);
+
+        // Action new export csv
+        if (
+            PermissionsAdmin::checkAdmin($this->getUser())
+            || PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'EXPORT')
+        ) {
+            $export = $this->actions->export('exportCsv', 'csv');
+            $actions->add(Crud::PAGE_INDEX, $export);
+        }
 
         // Default customize actions
         $this->actions->customize($actions);
@@ -256,5 +279,61 @@ class ShopCrudController extends AbstractCrudController
             ->andWhere('d.uuid = :uuid')
             ->setParameter('uuid', $this->getUser()->getUuid()->toBinary()) // put your user id connected here
         ;
+    }
+
+    /*************** -- Custom Actions -- ***************/
+    /***************************************************/
+    /**************************************************/
+    /*************************************************/
+
+    /**
+     * exportCsv
+     *
+     * @param  mixed $request
+     * @return void
+     */
+    public function exportCsv(Request $request)
+    {
+        if (
+            !PermissionsAdmin::checkAdmin($this->getUser())
+            && !PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'EXPORT')
+        ) {
+            throw $this->createAccessDeniedException();
+        }
+
+        // retrieve referrer's querystring 'filters'
+        \parse_str(\parse_url($request->query->get(EA::REFERRER))[EA::QUERY], $referrerQuery);
+
+        if (isset($referrerQuery[EA::FILTERS])) {
+            $request->query->set(EA::FILTERS, $referrerQuery[EA::FILTERS]);
+        }
+
+        $context = $request->attributes->get(EA::CONTEXT_REQUEST_ATTRIBUTE);
+
+        // recreate searchDto so that it takes into account the querystring 'filters'
+        $searchDto = (!isset($referrerQuery[EA::FILTERS]))
+            ? $context->getSearch()
+            : $this->adminContextFactory->getSearchDto($request, $context->getCrud());
+        $fields = FieldCollection::new($this->configureFields(Crud::PAGE_INDEX));
+        $filters = $this->get(FilterFactory::class)->create($context->getCrud()->getFiltersConfig(), $fields, $context->getEntity());
+
+        $shops = $this->createIndexQueryBuilder($searchDto, $context->getEntity(), $fields, $filters)
+            ->getQuery()
+            ->getResult();
+
+        $data = [];
+        foreach ($shops as $shop) {
+            $data[] = $shop->getExportData();
+        }
+
+        // @todo : translation
+        if (empty($data)) {
+            $data[] = ['error' => 'empty file'];
+        }
+
+        return $this->export->exportCsv(
+            $data,
+            'export_shop_' . date_create()->format('d-m-y') . '.' . $this->export->format('csv')
+        );
     }
 }

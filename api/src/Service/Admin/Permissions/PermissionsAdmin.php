@@ -74,6 +74,7 @@ final class PermissionsAdmin
     public const ROLE_ADMIN_ACTION_DELETE       = 'ROLE_ADMIN_ACTION_DELETE';
     public const ROLE_ADMIN_ACTION_NEW          = 'ROLE_ADMIN_ACTION_NEW';
     public const ROLE_ADMIN_ACTION_DETAIL       = 'ROLE_ADMIN_ACTION_DETAIL';
+    public const ROLE_ADMIN_ACTION_EXPORT       = 'ROLE_ADMIN_ACTION_EXPORT';
 
     /*************** -- ROLES ACTIONS FOR ADMIN_GROUP ENTITY -- ***************/
     public const ROLE_ADMIN_GROUP_ACTION_ALL          = 'ROLE_ADMIN_GROUP_ACTION_ALL';
@@ -82,6 +83,7 @@ final class PermissionsAdmin
     public const ROLE_ADMIN_GROUP_ACTION_DELETE       = 'ROLE_ADMIN_GROUP_ACTION_DELETE';
     public const ROLE_ADMIN_GROUP_ACTION_NEW          = 'ROLE_ADMIN_GROUP_ACTION_NEW';
     public const ROLE_ADMIN_GROUP_ACTION_DETAIL       = 'ROLE_ADMIN_GROUP_ACTION_DETAIL';
+    public const ROLE_ADMIN_GROUP_ACTION_EXPORT       = 'ROLE_ADMIN_GROUP_ACTION_EXPORT';
 
     /*************** -- ROLES ACTIONS FOR SHOP ENTITY -- ***************/
     public const ROLE_SHOP_ACTION_ALL          = 'ROLE_SHOP_ACTION_ALL';
@@ -90,6 +92,7 @@ final class PermissionsAdmin
     public const ROLE_SHOP_ACTION_DELETE       = 'ROLE_SHOP_ACTION_DELETE';
     public const ROLE_SHOP_ACTION_NEW          = 'ROLE_SHOP_ACTION_NEW';
     public const ROLE_SHOP_ACTION_DETAIL       = 'ROLE_SHOP_ACTION_DETAIL';
+    public const ROLE_SHOP_ACTION_EXPORT       = 'ROLE_SHOP_ACTION_EXPORT';
 
     /**
      * 
@@ -105,6 +108,7 @@ final class PermissionsAdmin
     public const ROLE_ADMIN_OWNER_DELETE        = 'ROLE_ADMIN_OWNER_DELETE';
     public const ROLE_ADMIN_OWNER_NEW           = 'ROLE_ADMIN_OWNER_NEW';
     public const ROLE_ADMIN_OWNER_DETAIL        = 'ROLE_ADMIN_OWNER_DETAIL';
+    public const ROLE_ADMIN_OWNER_EXPORT        = 'ROLE_ADMIN_OWNER_EXPORT';
 
     /*************** -- ROLES OWNERS FOR ADMIN_GROUP ENTITY -- ***************/
     public const ROLE_ADMIN_GROUP_OWNER_ALL           = 'ROLE_ADMIN_GROUP_OWNER_ALL';
@@ -113,6 +117,7 @@ final class PermissionsAdmin
     public const ROLE_ADMIN_GROUP_OWNER_DELETE        = 'ROLE_ADMIN_GROUP_OWNER_DELETE';
     public const ROLE_ADMIN_GROUP_OWNER_NEW           = 'ROLE_ADMIN_GROUP_OWNER_NEW';
     public const ROLE_ADMIN_GROUP_OWNER_DETAIL        = 'ROLE_ADMIN_GROUP_OWNER_DETAIL';
+    public const ROLE_ADMIN_GROUP_OWNER_EXPORT        = 'ROLE_ADMIN_GROUP_OWNER_EXPORT';
 
     /*************** -- ROLES OWNERS FOR SHOP ENTITY -- ***************/
     public const ROLE_SHOP_OWNER_ALL           = 'ROLE_SHOP_OWNER_ALL';
@@ -121,6 +126,7 @@ final class PermissionsAdmin
     public const ROLE_SHOP_OWNER_DELETE        = 'ROLE_SHOP_OWNER_DELETE';
     public const ROLE_SHOP_OWNER_NEW           = 'ROLE_SHOP_OWNER_NEW';
     public const ROLE_SHOP_OWNER_DETAIL        = 'ROLE_SHOP_OWNER_DETAIL';
+    public const ROLE_SHOP_OWNER_EXPORT        = 'ROLE_SHOP_OWNER_EXPORT';
 
     public static function exists(?string $permissionName): bool
     {
@@ -207,6 +213,7 @@ final class PermissionsAdmin
             'ROLE_ADMIN_ACTION_DELETE' => self::ROLE_ADMIN_ACTION_DELETE,
             'ROLE_ADMIN_ACTION_NEW' => self::ROLE_ADMIN_ACTION_NEW,
             'ROLE_ADMIN_ACTION_DETAIL' => self::ROLE_ADMIN_ACTION_DETAIL,
+            'ROLE_ADMIN_ACTION_EXPORT' => self::ROLE_ADMIN_ACTION_EXPORT,
         ];
     }
 
@@ -219,6 +226,7 @@ final class PermissionsAdmin
             'ROLE_ADMIN_GROUP_ACTION_DELETE' => self::ROLE_ADMIN_GROUP_ACTION_DELETE,
             'ROLE_ADMIN_GROUP_ACTION_NEW' => self::ROLE_ADMIN_GROUP_ACTION_NEW,
             'ROLE_ADMIN_GROUP_ACTION_DETAIL' => self::ROLE_ADMIN_GROUP_ACTION_DETAIL,
+            'ROLE_ADMIN_GROUP_ACTION_EXPORT' => self::ROLE_ADMIN_GROUP_ACTION_EXPORT,
         ];
     }
 
@@ -231,6 +239,7 @@ final class PermissionsAdmin
             'ROLE_SHOP_ACTION_DELETE' => self::ROLE_SHOP_ACTION_DELETE,
             'ROLE_SHOP_ACTION_NEW' => self::ROLE_SHOP_ACTION_NEW,
             'ROLE_SHOP_ACTION_DETAIL' => self::ROLE_SHOP_ACTION_DETAIL,
+            'ROLE_SHOP_ACTION_EXPORT' => self::ROLE_SHOP_ACTION_EXPORT,
         ];
     }
 
@@ -245,6 +254,7 @@ final class PermissionsAdmin
             'ROLE_ADMIN_OWNER_DELETE' => self::ROLE_ADMIN_OWNER_DELETE,
             'ROLE_ADMIN_OWNER_NEW' => self::ROLE_ADMIN_OWNER_NEW,
             'ROLE_ADMIN_OWNER_DETAIL' => self::ROLE_ADMIN_OWNER_DETAIL,
+            'ROLE_ADMIN_OWNER_EXPORT' => self::ROLE_ADMIN_OWNER_EXPORT,
         ];
     }
 
@@ -257,6 +267,7 @@ final class PermissionsAdmin
             'ROLE_ADMIN_GROUP_OWNER_DELETE' => self::ROLE_ADMIN_GROUP_OWNER_DELETE,
             'ROLE_ADMIN_GROUP_OWNER_NEW' => self::ROLE_ADMIN_GROUP_OWNER_NEW,
             'ROLE_ADMIN_GROUP_OWNER_DETAIL' => self::ROLE_ADMIN_GROUP_OWNER_DETAIL,
+            'ROLE_ADMIN_GROUP_OWNER_EXPORT' => self::ROLE_ADMIN_GROUP_OWNER_EXPORT,
         ];
     }
 
@@ -269,6 +280,7 @@ final class PermissionsAdmin
             'ROLE_SHOP_OWNER_DELETE' => self::ROLE_SHOP_OWNER_DELETE,
             'ROLE_SHOP_OWNER_NEW' => self::ROLE_SHOP_OWNER_NEW,
             'ROLE_SHOP_OWNER_DETAIL' => self::ROLE_SHOP_OWNER_DETAIL,
+            'ROLE_SHOP_OWNER_EXPORT' => self::ROLE_SHOP_OWNER_EXPORT,
         ];
     }
 

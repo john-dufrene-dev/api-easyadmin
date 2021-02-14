@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 final class CustomizeActions
 {
     public const IMPERSONATE = 'impersonate';
+    public const EXPORT_CSV = 'export_to_csv';
 
     /**
      * security
@@ -22,7 +23,7 @@ final class CustomizeActions
      * @var mixed
      */
     protected $security;
-    
+
     /**
      * params
      *
@@ -368,9 +369,9 @@ final class CustomizeActions
     /**
      * impersonate
      *
-     * @return void
+     * @return Action
      */
-    public function impersonate()
+    public function impersonate(): Action
     {
         return Action::new(self::IMPERSONATE, 'Impersonate')
             ->setIcon('fa fa-fw fa-user-lock')
@@ -387,5 +388,35 @@ final class CustomizeActions
                 }
                 return true;
             });
+    }
+
+    /**
+     * export
+     *
+     * @param  mixed $action
+     * @param  mixed $format
+     * @return Action
+     */
+    public function export($action, $format): Action
+    {
+        // @todo : For the moment this action just export all files, waiting for this PR :
+        // https://github.com/EasyCorp/EasyAdminBundle/issues/4197 and
+        // https://github.com/EasyCorp/EasyAdminBundle/pull/4154
+        
+        switch ($format) {
+            case 'csv':
+                $using_format = self::EXPORT_CSV;
+                break;
+            default:
+                $using_format = self::EXPORT_CSV;
+                break;
+        }
+
+        return Action::new($using_format, $action)
+            ->setIcon('fa fa-fw fa-download')
+            ->setLabel(false)
+            ->linkToCrudAction($action)
+            ->setCssClass('btn')
+            ->createAsGlobalAction();
     }
 }

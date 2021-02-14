@@ -264,4 +264,22 @@ class Log
 
         return $this;
     }
+
+    /**
+     * getExportData
+     *
+     * @return array
+     */
+    public function getExportData(): array
+    {
+        return [
+            'message' => $this->message,
+            'user' => $this->user,
+            'context' => $this->context,
+            'level' => $this->level,
+            'level_name' => $this->level_name,
+            'extra' => $this->extra,
+            'created_at' => $this->created_at->format('d/m/Y H:m'),
+        ];
+    }
 }
