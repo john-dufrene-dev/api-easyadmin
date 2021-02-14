@@ -381,4 +381,6 @@ class User implements UserInterface
 
         return $this;
     }
+
+    // @todo : Add getExportData() function for export
 }

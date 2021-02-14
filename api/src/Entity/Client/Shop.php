@@ -416,4 +416,20 @@ class Shop
 
         return $this;
     }
+    
+    /**
+     * getExportData
+     *
+     * @return array
+     */
+    public function getExportData(): array
+    {
+        // @todo : finish to render all informations
+        return [
+            'name' => $this->name,
+            'email' => $this->email,
+            'created_at' => $this->created_at->format('d/m/Y H:m'),
+            'updated_at' => $this->updated_at->format('d/m/Y H:m'),
+        ];
+    }
 }
