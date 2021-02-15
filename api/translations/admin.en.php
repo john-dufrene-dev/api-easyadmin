@@ -55,6 +55,20 @@ return [
     'admin.field.saturday' => 'Saturday',
     'admin.field.sunday' => 'Sunday',
 
+    // Configuration Months
+    'admin.field.january' => 'January',
+    'admin.field.february' => 'Fébruary',
+    'admin.field.march' => 'March',
+    'admin.field.april' => 'April',
+    'admin.field.may' => 'May',
+    'admin.field.june' => 'June',
+    'admin.field.july' => 'July',
+    'admin.field.august' => 'August',
+    'admin.field.september' => 'September',
+    'admin.field.october' => 'October',
+    'admin.field.november' => 'November',
+    'admin.field.december' => 'Décember',
+
     // Configuration User Menu
     'admin.dashboard.my_profile' => 'My profile',
 
