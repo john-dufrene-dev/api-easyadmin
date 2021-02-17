@@ -46,6 +46,7 @@ class AdminGroupCrudController extends AbstractCrudController
             $filters->add('uuid');
         }
 
+        $filters->add('reference');
         $filters->add('name');
 
         return $filters;
@@ -103,7 +104,7 @@ class AdminGroupCrudController extends AbstractCrudController
                 yield IdField::new('id')->setLabel('admin.field.id');
             }
 
-            yield TextField::new('displayuuid')->setLabel('admin.field.displayuuid');
+            yield TextField::new('reference')->setLabel('admin.field.reference');
             yield TextField::new('name')->setLabel('admin.group.field.name');
             yield DateField::new('created_at')->setLabel('admin.field.created_at');
             yield DateField::new('updated_at')->setLabel('admin.field.updated_at');
@@ -116,9 +117,10 @@ class AdminGroupCrudController extends AbstractCrudController
                 || PermissionsAdmin::checkOwners($this->getUser(), 'ADMIN_GROUP', 'DETAIL')
             ) {
                 yield IdField::new('id')->setLabel('admin.field.id');
+                yield TextField::new('displayuuid')->setLabel('admin.field.displayuuid');
             }
 
-            yield TextField::new('displayuuid')->setLabel('admin.field.displayuuid');
+            yield TextField::new('reference')->setLabel('admin.field.reference');
             yield TextField::new('name')->setLabel('admin.group.field.name');
 
             if (
@@ -143,9 +145,9 @@ class AdminGroupCrudController extends AbstractCrudController
 
         // EDIT
         if (Crud::PAGE_EDIT === $pageName) {
-            yield TextField::new('displayuuid')->setFormTypeOptions([
+            yield TextField::new('reference')->setFormTypeOptions([
                 'disabled' => true,
-            ])->setLabel('admin.field.displayuuid');
+            ])->setLabel('admin.field.reference');
             yield TextField::new('name')->setLabel('admin.group.field.name');
 
             if (

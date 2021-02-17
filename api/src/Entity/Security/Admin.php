@@ -199,7 +199,7 @@ class Admin implements UserInterface
      */
     public function setReference(?string $reference): self
     {
-        $this->reference = $this->generateReference($reference);
+        $this->reference = $reference;
 
         return $this;
     }
