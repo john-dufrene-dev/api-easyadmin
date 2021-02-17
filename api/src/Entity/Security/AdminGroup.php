@@ -5,6 +5,7 @@ namespace App\Entity\Security;
 use Doctrine\ORM\Mapping as ORM;
 use App\Service\Traits\Entity\UuidTrait;
 use Doctrine\Common\Collections\Collection;
+use App\Service\Traits\Utils\ReferenceTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Repository\Security\AdminGroupRepository;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -14,13 +15,24 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity(repositoryClass=AdminGroupRepository::class)
  *
  * @UniqueEntity(
- *     fields={"name"},
+ *     fields={"name", "reference"},
  *     message="asserts.group.unique"
  * )
  */
 class AdminGroup
 {
-    use UuidTrait;
+    use UuidTrait, ReferenceTrait;
+
+    /**
+     * reference - The unique reference the AdminGroup
+     * 
+     * @var string|null
+     * 
+     * @ORM\Column(type="string", length=40, unique=true)
+     *
+     * @Assert\NotNull(message="asserts.entity.ulid.not_null")
+     */
+    private $reference;
 
     /**
      * name - The name of the AdminGroup
@@ -92,6 +104,7 @@ class AdminGroup
      */
     public function __construct()
     {
+        $this->reference = (isset($reference)) ? $reference : $this->generateReference();
         $this->admins = new ArrayCollection();
         $this->created_at = new \DateTime();
         $this->updated_at = new \DateTime();
@@ -105,6 +118,29 @@ class AdminGroup
     public function __toString(): string
     {
         return $this->getName();
+    }
+
+    /**
+     * getReference
+     *
+     * @return string
+     */
+    public function getReference(): ?string
+    {
+        return $this->reference;
+    }
+
+    /**
+     * setReference
+     *
+     * @param  mixed $reference
+     * @return self
+     */
+    public function setReference(?string $reference): self
+    {
+        $this->reference = $reference;
+
+        return $this;
     }
 
     /**
