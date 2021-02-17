@@ -21,7 +21,7 @@ class AdminFixtures extends Fixture
         // Default Admin
         $admin = new Admin();
         $admin->setEmail('admin@admin.com'); // don't forget to change address
-        
+
         $password = $this->encoder->encodePassword($admin, 'admin'); // don't forget to change password
         $admin->setPassword($password);
         $admin->setRoles(['ROLE_ADMIN', 'ROLE_SUPER_ADMIN']);
@@ -34,7 +34,7 @@ class AdminFixtures extends Fixture
         // Test Admin
         $test = new Admin();
         $test->setEmail('default@default.com');
-        
+
         $password = $this->encoder->encodePassword($test, 'test'); // don't forget to change password
         $test->setPassword($password);
         $test->setCreatedAt(new \DateTime());

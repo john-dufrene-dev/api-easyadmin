@@ -55,6 +55,20 @@ return [
     'admin.field.saturday' => 'Saturday',
     'admin.field.sunday' => 'Sunday',
 
+    // Configuration Months
+    'admin.field.january' => 'January',
+    'admin.field.february' => 'Fébruary',
+    'admin.field.march' => 'March',
+    'admin.field.april' => 'April',
+    'admin.field.may' => 'May',
+    'admin.field.june' => 'June',
+    'admin.field.july' => 'July',
+    'admin.field.august' => 'August',
+    'admin.field.september' => 'September',
+    'admin.field.october' => 'October',
+    'admin.field.november' => 'November',
+    'admin.field.december' => 'Décember',
+
     // Configuration User Menu
     'admin.dashboard.my_profile' => 'My profile',
 
@@ -99,6 +113,7 @@ return [
     'admin.shop.field.shipping_delivery' => 'Shipping delivery',
     'admin.shop.field.collection_shop_images.no_files' => 'No files',
     'admin.shop.field.is_active' => 'Activate',
+    'admin.shop.flash.no_delete.admin' => 'Cannot delete Shop as long as an Admin is associated',
 
     // Admin Admin Page
     'Admin' => 'Admin',
@@ -109,6 +124,7 @@ return [
     'admin.admin.field.shops' => 'Shops',
     'admin.admin.field.password' => 'Password',
     'admin.admin.field.plain_password' => 'Plain Password',
+    'admin.admin.flash.no_delete.shop' => 'Cannot delete Admin as long as an Shop is associated',
 
     // Group Admin Page
     'AdminGroup' => 'Group',

@@ -16,10 +16,12 @@ class AdminGroupFixtures extends Fixture
         //Add Admin Role
         'ROLE_ADMIN_ACTION_EDIT',
         'ROLE_ADMIN_ACTION_DETAIL',
+        'ROLE_ADMIN_ACTION_EXPORT',
         //Add Shop Role
         'ROLE_SHOP_ACTION_INDEX',
         'ROLE_SHOP_ACTION_EDIT',
         'ROLE_SHOP_ACTION_DETAIL',
+        'ROLE_SHOP_ACTION_EXPORT',
     ];
 
     public const API_ROLES = [

@@ -6,6 +6,7 @@ use App\Entity\Client\Shop;
 use Doctrine\ORM\Mapping as ORM;
 use App\Service\Traits\Entity\UuidTrait;
 use Doctrine\Common\Collections\Collection;
+use App\Service\Traits\Utils\ReferenceTrait;
 use App\Repository\Security\AdminRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\Admin\Permissions\PermissionsAdmin;
@@ -17,13 +18,24 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity(repositoryClass=AdminRepository::class)
  *
  * @UniqueEntity(
- *     fields={"email"},
+ *     fields={"email", "reference"},
  *     message="asserts.admin.unique"
  * )
  */
 class Admin implements UserInterface
 {
-    use UuidTrait;
+    use UuidTrait, ReferenceTrait;
+
+    /**
+     * reference - The unique reference the Admin
+     * 
+     * @var string|null
+     * 
+     * @ORM\Column(type="string", length=40, unique=true)
+     *
+     * @Assert\NotNull(message="asserts.entity.ulid.not_null")
+     */
+    private $reference;
 
     /**
      * email - The email of the Admin
@@ -151,6 +163,7 @@ class Admin implements UserInterface
      */
     public function __construct()
     {
+        $this->reference = (isset($reference)) ? $reference : $this->generateReference();
         $this->groups = new ArrayCollection();
         $this->created_at = new \DateTime();
         $this->updated_at = new \DateTime();
@@ -166,6 +179,29 @@ class Admin implements UserInterface
     public function __toString(): string
     {
         return $this->getUsername();
+    }
+
+    /**
+     * getReference
+     *
+     * @return string
+     */
+    public function getReference(): ?string
+    {
+        return $this->reference;
+    }
+
+    /**
+     * setReference
+     *
+     * @param  mixed $reference
+     * @return self
+     */
+    public function setReference(?string $reference): self
+    {
+        $this->reference = $this->generateReference($reference);
+
+        return $this;
     }
 
     /**
@@ -228,8 +264,7 @@ class Admin implements UserInterface
         }
 
         // guarantee every admin at least has ROLE_ADMIN
-        $roles[] = PermissionsAdmin::
-        DEFAULT;
+        $roles[] = PermissionsAdmin::DEFAULT;
 
         return array_values(array_unique($roles));
     }

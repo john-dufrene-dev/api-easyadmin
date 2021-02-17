@@ -65,6 +65,7 @@ class LogCrudController extends AbstractCrudController
             ->add('id')
             ->add('uuid')
             ->add('message')
+            ->add('user')
             ->add('context')
             ->add(ChoiceFilter::new('level')
                 ->setChoices([
