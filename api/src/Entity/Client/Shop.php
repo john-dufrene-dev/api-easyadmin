@@ -10,6 +10,7 @@ use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Service\Traits\Utils\ReferenceTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -20,7 +21,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity(repositoryClass=ShopRepository::class)
  *
  * @UniqueEntity(
- *     fields={"email"},
+ *     fields={"email", "reference"},
  *     message="asserts.shop.unique"
  * )
  * 
@@ -54,7 +55,20 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Shop
 {
-    use UuidTrait;
+    use UuidTrait, ReferenceTrait;
+
+    /**
+     * reference - The unique reference of the Shop
+     * 
+     * @var string|null
+     *
+     * @ORM\Column(type="string", length=40, unique=true)
+     *
+     * @Assert\NotNull(message="asserts.entity.ulid.not_null")
+     * 
+     * @Groups({"shop:readOne", "shop:readAll"})
+     */
+    private $reference;
 
     /**
      * name - The name of the Shop
@@ -180,6 +194,7 @@ class Shop
      */
     public function __construct()
     {
+        $this->reference = (isset($reference)) ? $reference : $this->generateReference();
         $this->created_at = new \DateTime();
         $this->updated_at = new \DateTime();
         $this->admins = new ArrayCollection();
@@ -194,6 +209,29 @@ class Shop
     public function __toString(): string
     {
         return $this->getName();
+    }
+
+    /**
+     * getReference
+     *
+     * @return string
+     */
+    public function getReference(): ?string
+    {
+        return $this->reference;
+    }
+
+    /**
+     * setReference
+     *
+     * @param  mixed $reference
+     * @return self
+     */
+    public function setReference(?string $reference): self
+    {
+        $this->reference = $reference;
+
+        return $this;
     }
 
     /**
@@ -416,7 +454,7 @@ class Shop
 
         return $this;
     }
-    
+
     /**
      * getExportData
      *
@@ -426,6 +464,7 @@ class Shop
     {
         // @todo : finish to render all informations
         return [
+            'reference' => $this->reference,
             'name' => $this->name,
             'email' => $this->email,
             'created_at' => $this->created_at->format('d/m/Y H:m'),

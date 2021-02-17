@@ -15,13 +15,13 @@ class UserFixtures extends Fixture
     {
         $this->encoder = $encoder;
     }
-    
+
     public function load(ObjectManager $manager)
     {
         // Default User
         $user = new User();
         $user->setEmail('user@user.com'); // don't forget to change address
-        
+
         $password = $this->encoder->encodePassword($user, 'user'); // don't forget to change password
         $user->setPassword($password);
         $user->setRoles(['ROLE__USER']);

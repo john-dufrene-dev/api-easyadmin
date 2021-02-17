@@ -5,6 +5,7 @@ namespace App\Entity\Customer;
 use Doctrine\ORM\Mapping as ORM;
 use App\Service\Traits\Entity\UuidTrait;
 use App\Repository\Customer\UserRepository;
+use App\Service\Traits\Utils\ReferenceTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -13,13 +14,24 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * 
  * @UniqueEntity(
- *      fields={"email"}, 
+ *      fields={"email", "reference"}, 
  *      message="asserts.user.unique"
  * )
  */
 class User implements UserInterface
 {
-    use UuidTrait;
+    use UuidTrait, ReferenceTrait;
+
+    /**
+     * reference - The unique reference of the User
+     *
+     * @var string|null
+     * 
+     * @ORM\Column(type="string", length=40, unique=true)
+     *
+     * @Assert\NotNull(message="asserts.entity.ulid.not_null")
+     */
+    private $reference;
 
     /**
      * email - The email of the User
@@ -115,6 +127,7 @@ class User implements UserInterface
      */
     public function __construct()
     {
+        $this->reference = (isset($reference)) ? $reference : $this->generateReference();
         $this->created_at = new \DateTime();
         $this->updated_at = new \DateTime();
     }
@@ -127,6 +140,29 @@ class User implements UserInterface
     public function __toString(): string
     {
         return $this->getUsername();
+    }
+
+    /**
+     * getReference
+     *
+     * @return string
+     */
+    public function getReference(): ?string
+    {
+        return $this->reference;
+    }
+
+    /**
+     * setReference
+     *
+     * @param  mixed $reference
+     * @return self
+     */
+    public function setReference(?string $reference): self
+    {
+        $this->reference = $reference;
+
+        return $this;
     }
 
     /**
