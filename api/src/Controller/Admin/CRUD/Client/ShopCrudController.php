@@ -75,6 +75,7 @@ class ShopCrudController extends AbstractCrudController
             $filters->add('uuid');
         }
 
+        $filters->add('reference');
         $filters->add('name');
         $filters->add('email');
 
@@ -129,7 +130,7 @@ class ShopCrudController extends AbstractCrudController
                 yield IdField::new('id')->setLabel('admin.field.id');
             }
 
-            yield TextField::new('displayuuid')->setLabel('admin.field.displayuuid');
+            yield TextField::new('reference')->setLabel('admin.field.reference');
             yield TextField::new('name')->setLabel('admin.shop.field.name');
             yield EmailField::new('email')->setLabel('admin.shop.field.email');
             yield DateField::new('created_at')->setLabel('admin.field.created_at');
@@ -148,9 +149,10 @@ class ShopCrudController extends AbstractCrudController
                 || PermissionsAdmin::checkOwners($this->getUser(), 'SHOP', 'DETAIL')
             ) {
                 yield IdField::new('id')->setLabel('admin.field.id');
+                yield TextField::new('displayuuid')->setLabel('admin.field.displayuuid');
             }
 
-            yield TextField::new('displayuuid')->setLabel('admin.field.displayuuid');
+            yield TextField::new('reference')->setLabel('admin.field.reference');
             yield TextField::new('name')->setLabel('admin.shop.field.name');
             yield EmailField::new('email')->setLabel('admin.shop.field.email');
 
@@ -192,9 +194,9 @@ class ShopCrudController extends AbstractCrudController
         if (Crud::PAGE_EDIT === $pageName) {
             yield FormField::addPanel('admin.shop.panel_shop')->renderCollapsed(false);
 
-            yield TextField::new('displayuuid')->setFormTypeOptions([
+            yield TextField::new('reference')->setFormTypeOptions([
                 'disabled' => true,
-            ])->setLabel('admin.field.displayuuid');
+            ])->setLabel('admin.field.reference');
             yield TextField::new('name')->setLabel('admin.shop.field.name');
             yield EmailField::new('email')->setLabel('admin.shop.field.email');
 

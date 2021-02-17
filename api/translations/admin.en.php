@@ -90,6 +90,7 @@ return [
     // Configuration general field informations
     'admin.field.id' => 'ID',
     'admin.field.displayuuid' => 'Username',
+    'admin.field.reference' => 'Reference',
     'admin.field.created_at' => 'Created at',
     'admin.field.updated_at' => 'Updated at',
 

@@ -59,6 +59,7 @@ class AdminCrudController extends AbstractCrudController
             $filters->add('uuid');
         }
 
+        $filters->add('reference');
         $filters->add('email');
 
         return $filters;
@@ -115,7 +116,7 @@ class AdminCrudController extends AbstractCrudController
                 yield IdField::new('id')->setLabel('admin.field.id');
             }
 
-            yield TextField::new('displayuuid')->setLabel('admin.field.displayuuid');
+            yield TextField::new('reference')->setLabel('admin.field.reference');
             yield EmailField::new('email')->setLabel('admin.admin.field.email');
             yield DateField::new('created_at')->setLabel('admin.field.created_at');
             yield DateField::new('updated_at')->setLabel('admin.field.updated_at');
@@ -128,9 +129,10 @@ class AdminCrudController extends AbstractCrudController
                 || PermissionsAdmin::checkOwners($this->getUser(), 'ADMIN', 'DETAIL')
             ) {
                 yield IdField::new('id')->setLabel('admin.field.id');
+                yield TextField::new('displayuuid')->setLabel('admin.field.displayuuid');
             }
 
-            yield TextField::new('displayuuid')->setLabel('admin.field.displayuuid');
+            yield TextField::new('reference')->setLabel('admin.field.reference');
             yield EmailField::new('email')->setLabel('admin.admin.field.email');
 
             if (
@@ -163,9 +165,9 @@ class AdminCrudController extends AbstractCrudController
 
         // EDIT
         if (Crud::PAGE_EDIT === $pageName) {
-            yield TextField::new('displayuuid')->setFormTypeOptions([
+            yield TextField::new('reference')->setFormTypeOptions([
                 'disabled' => true,
-            ])->setLabel('admin.field.displayuuid');
+            ])->setLabel('admin.field.reference');
             yield EmailField::new('email')->setLabel('admin.admin.field.email');
             yield PasswordField::new('plainPassword')->setLabel('admin.admin.field.plain_password');
 
