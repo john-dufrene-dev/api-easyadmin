@@ -2,30 +2,44 @@
 
 declare(strict_types=1);
 
-namespace App\Swagger;
+namespace App\OpenApi;
 
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
+use ApiPlatform\Core\OpenApi\OpenApi;
 
-final class ComponentsSwaggerDecorator implements NormalizerInterface
+final class ComponentsOpenApiDecorator implements OpenApiFactoryInterface
 {
+    /**
+     * decorated
+     *
+     * @var mixed
+     */
     private $decorated;
 
-    public function __construct(NormalizerInterface $decorated)
+    /**
+     * __construct
+     *
+     * @param  mixed $decorated
+     * @return void
+     */
+    public function __construct(OpenApiFactoryInterface $decorated)
     {
         $this->decorated = $decorated;
     }
 
-    public function supportsNormalization($data, string $format = null): bool
+    /**
+     * __invoke
+     *
+     * @param  mixed $context
+     * @return OpenApi
+     */
+    public function __invoke(array $context = []): OpenApi
     {
-        return $this->decorated->supportsNormalization($data, $format);
-    }
-
-    public function normalize($object, string $format = null, array $context = [])
-    {
-        $docs = $this->decorated->normalize($object, $format, $context);
+        $openApi = ($this->decorated)($context);
+        $schemas = $openApi->getComponents()->getSchemas();
 
         // Component Token
-        $docs['components']['schemas']['Token'] = [
+        $schemas['Token'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
                 'token' => [
@@ -37,10 +51,10 @@ final class ComponentsSwaggerDecorator implements NormalizerInterface
                     'readOnly' => true,
                 ],
             ],
-        ];
+        ]);
 
         // Component Refresh Token
-        $docs['components']['schemas']['RefreshToken'] = [
+        $schemas['RefreshToken'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
                 'refresh_token' => [
@@ -48,10 +62,10 @@ final class ComponentsSwaggerDecorator implements NormalizerInterface
                     'example' => 'your_refresh_token',
                 ],
             ],
-        ];
+        ]);
 
         // Component Credentials
-        $docs['components']['schemas']['Credentials'] = [
+        $schemas['Credentials'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
                 'email' => [
@@ -63,8 +77,8 @@ final class ComponentsSwaggerDecorator implements NormalizerInterface
                     'example' => 'your_password',
                 ],
             ],
-        ];
+        ]);
 
-        return $docs;
+        return $openApi;
     }
 }
