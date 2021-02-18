@@ -37,33 +37,28 @@ services:
     ##########################################################
 
     # Add Swagger components
-    App\Swagger\ComponentsSwaggerDecorator:
-        decorates: 'api_platform.swagger.normalizer.documentation'
-        arguments: ['@App\Swagger\ComponentsSwaggerDecorator.inner']
+    App\OpenApi\ComponentsOpenApiDecorator:
+        decorates: 'api_platform.openapi.factory'
         autoconfigure: false
 
     # Register new User and get JWT token
-    App\Swagger\User\RegisterSwaggerDecorator:
-        decorates: 'api_platform.swagger.normalizer.documentation'
-        arguments: ['@App\Swagger\User\RegisterSwaggerDecorator.inner']
+    App\OpenApi\User\RegisterOpenApiDecorator:
+        decorates: 'api_platform.openapi.factory'
         autoconfigure: false
 
     # Logout the current User
-    App\Swagger\User\LogoutSwaggerDecorator:
-        decorates: 'api_platform.swagger.normalizer.documentation'
-        arguments: ['@App\Swagger\User\LogoutSwaggerDecorator.inner']
+    App\OpenApi\User\LogoutOpenApiDecorator:
+        decorates: 'api_platform.openapi.factory'
         autoconfigure: false
 
     # Add JWT token User auth for api
-    App\Swagger\User\AuthenticationTokenSwaggerDecorator:
-        decorates: 'api_platform.swagger.normalizer.documentation'
-        arguments: ['@App\Swagger\User\AuthenticationTokenSwaggerDecorator.inner']
+    App\OpenApi\User\AuthenticationTokenOpenApiDecorator:
+        decorates: 'api_platform.openapi.factory'
         autoconfigure: false
-    
+
     # Get Refresh JWT token User auth for api
-    App\Swagger\User\RefreshTokenSwaggerDecorator:
-        decorates: 'api_platform.swagger.normalizer.documentation'
-        arguments: ['@App\Swagger\User\RefreshTokenSwaggerDecorator.inner']
+    App\OpenApi\User\RefreshTokenOpenApiDecorator:
+        decorates: 'api_platform.openapi.factory'
         autoconfigure: false
 
 imports:

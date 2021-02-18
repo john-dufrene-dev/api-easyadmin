@@ -12,6 +12,25 @@ api_platform:
     # The version of the API.
     version: '1.0.0'
 
+    # @Todo : Create the contact page, the terms of service page and the licence page
+    # openapi:
+    #     # The contact information for the exposed API.
+    #     contact:
+    #         # The identifying name of the contact person/organization.
+    #         name: '%env(resolve:ADMIN_URL)%'
+    #         # The URL pointing to the contact information. MUST be in the format of a URL.
+    #         url: '%env(resolve:ADMIN_URL)%'
+    #         # The email address of the contact person/organization. MUST be in the format of an email address.
+    #         email: '%env(resolve:MAILER_USER)%'
+    #     # A URL to the Terms of Service for the API. MUST be in the format of a URL.
+    #     termsOfService: '%env(resolve:ADMIN_URL)%'
+    #     # The license information for the exposed API.
+    #     license:
+    #         # The license name used for the API.
+    #         name: Licence
+    #         # URL to the license used for the API. MUST be in the format of a URL.
+    #         url: '%env(resolve:ADMIN_URL)%'
+
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
 
