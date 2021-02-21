@@ -3,9 +3,9 @@
 namespace App\Entity\Customer;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Service\Utils\ReferenceFactory;
 use App\Service\Traits\Entity\UuidTrait;
 use App\Repository\Customer\UserRepository;
-use App\Service\Traits\Utils\ReferenceTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -14,13 +14,17 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * 
  * @UniqueEntity(
- *      fields={"email", "reference"}, 
+ *      fields={"email"},
  *      message="asserts.user.unique"
+ * )
+ * @UniqueEntity(
+ *     fields={"reference"},
+ *     message="asserts.unique.reference"
  * )
  */
 class User implements UserInterface
 {
-    use UuidTrait, ReferenceTrait;
+    use UuidTrait;
 
     /**
      * reference - The unique reference of the User
@@ -127,7 +131,8 @@ class User implements UserInterface
      */
     public function __construct()
     {
-        $this->reference = (isset($reference)) ? $reference : $this->generateReference();
+        $referencefactory = new ReferenceFactory;
+        $this->reference = (isset($reference)) ? $reference : $referencefactory->generateReference();
         $this->created_at = new \DateTime();
         $this->updated_at = new \DateTime();
     }

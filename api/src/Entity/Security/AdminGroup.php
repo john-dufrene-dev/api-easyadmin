@@ -3,9 +3,9 @@
 namespace App\Entity\Security;
 
 use Doctrine\ORM\Mapping as ORM;
+use App\Service\Utils\ReferenceFactory;
 use App\Service\Traits\Entity\UuidTrait;
 use Doctrine\Common\Collections\Collection;
-use App\Service\Traits\Utils\ReferenceTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Repository\Security\AdminGroupRepository;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -15,13 +15,17 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity(repositoryClass=AdminGroupRepository::class)
  *
  * @UniqueEntity(
- *     fields={"name", "reference"},
+ *     fields={"name"},
  *     message="asserts.group.unique"
+ * )
+ * @UniqueEntity(
+ *     fields={"reference"},
+ *     message="asserts.unique.reference"
  * )
  */
 class AdminGroup
 {
-    use UuidTrait, ReferenceTrait;
+    use UuidTrait;
 
     /**
      * reference - The unique reference the AdminGroup
@@ -43,7 +47,7 @@ class AdminGroup
      * 
      * @Assert\NotNull(message="asserts.entity.name.not_null")
      * @Assert\Length(
-     *      min = 6,
+     *      min = 3,
      *      max = 255,
      *      minMessage = "asserts.entity.min_length",
      *      maxMessage = "asserts.entity.max_length"
@@ -104,7 +108,8 @@ class AdminGroup
      */
     public function __construct()
     {
-        $this->reference = (isset($reference)) ? $reference : $this->generateReference();
+        $referencefactory = new ReferenceFactory;
+        $this->reference = (isset($reference)) ? $reference : $referencefactory->generateReference();
         $this->admins = new ArrayCollection();
         $this->created_at = new \DateTime();
         $this->updated_at = new \DateTime();
