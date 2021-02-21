@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Service\Traits\Utils;
+namespace App\Service\Utils;
 
-trait ReferenceTrait
+class ReferenceFactory
 {
     /**
      * n - Default number to create chain

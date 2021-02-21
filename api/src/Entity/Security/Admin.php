@@ -4,9 +4,9 @@ namespace App\Entity\Security;
 
 use App\Entity\Client\Shop;
 use Doctrine\ORM\Mapping as ORM;
+use App\Service\Utils\ReferenceFactory;
 use App\Service\Traits\Entity\UuidTrait;
 use Doctrine\Common\Collections\Collection;
-use App\Service\Traits\Utils\ReferenceTrait;
 use App\Repository\Security\AdminRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\Service\Admin\Permissions\PermissionsAdmin;
@@ -18,13 +18,17 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity(repositoryClass=AdminRepository::class)
  *
  * @UniqueEntity(
- *     fields={"email", "reference"},
+ *     fields={"email"},
  *     message="asserts.admin.unique"
+ * )
+ * @UniqueEntity(
+ *     fields={"reference"},
+ *     message="asserts.unique.reference"
  * )
  */
 class Admin implements UserInterface
 {
-    use UuidTrait, ReferenceTrait;
+    use UuidTrait;
 
     /**
      * reference - The unique reference the Admin
@@ -163,7 +167,8 @@ class Admin implements UserInterface
      */
     public function __construct()
     {
-        $this->reference = (isset($reference)) ? $reference : $this->generateReference();
+        $referencefactory = new ReferenceFactory;
+        $this->reference = (isset($reference)) ? $reference : $referencefactory->generateReference();
         $this->groups = new ArrayCollection();
         $this->created_at = new \DateTime();
         $this->updated_at = new \DateTime();

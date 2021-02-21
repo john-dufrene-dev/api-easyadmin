@@ -29,6 +29,9 @@ return [
     'asserts.change_password.min_length' => 'Your password should be at least {{ limit }} characters',
     'asserts.change_password.match' => 'The password fields must match',
 
+    // General validators
+    'asserts.unique.reference' => 'Reference {{ value }} already exist',
+
     // Shop Entity
     'asserts.shop.unique' => 'Shop email {{ value }} already exist',
 

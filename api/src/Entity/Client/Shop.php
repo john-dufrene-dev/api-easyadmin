@@ -4,13 +4,13 @@ namespace App\Entity\Client;
 
 use App\Entity\Security\Admin;
 use Doctrine\ORM\Mapping as ORM;
+use App\Service\Utils\ReferenceFactory;
 use App\Service\Traits\Entity\UuidTrait;
 use App\Repository\Client\ShopRepository;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Service\Traits\Utils\ReferenceTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -21,8 +21,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity(repositoryClass=ShopRepository::class)
  *
  * @UniqueEntity(
- *     fields={"email", "reference"},
+ *     fields={"email"},
  *     message="asserts.shop.unique"
+ * )
+ * @UniqueEntity(
+ *     fields={"reference"},
+ *     message="asserts.unique.reference"
  * )
  * 
  * @ApiResource(
@@ -55,7 +59,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  */
 class Shop
 {
-    use UuidTrait, ReferenceTrait;
+    use UuidTrait;
 
     /**
      * reference - The unique reference of the Shop
@@ -194,7 +198,8 @@ class Shop
      */
     public function __construct()
     {
-        $this->reference = (isset($reference)) ? $reference : $this->generateReference();
+        $referencefactory = new ReferenceFactory;
+        $this->reference = (isset($reference)) ? $reference : $referencefactory->generateReference();
         $this->created_at = new \DateTime();
         $this->updated_at = new \DateTime();
         $this->admins = new ArrayCollection();
