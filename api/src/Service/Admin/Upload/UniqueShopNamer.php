@@ -23,6 +23,7 @@ class UniqueShopNamer implements NamerInterface
         // Create name for Shop uploads
         if ($object instanceof ShopFile) {
 
+            // @todo : Replace with u() string function
             $file = $mapping->getFile($object);
             $name = \str_replace('.', '', \uniqid('', true));
             $extension = $this->getExtension($file);

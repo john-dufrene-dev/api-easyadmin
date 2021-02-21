@@ -188,7 +188,7 @@ class ConfigGeneralCrudController extends AbstractCrudController
     {
         return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters)
             ->andWhere('entity.name IN (:names)')
-            ->setParameter('names', $this->getConfigValues());
+            ->setParameter('names', $this->conf->getGeneralConfigValues());
     }
 
     /**
@@ -199,18 +199,5 @@ class ConfigGeneralCrudController extends AbstractCrudController
     public function getContext(): ?AdminContext
     {
         return $this->get(AdminContextProvider::class)->getContext();
-    }
-
-    /**
-     * getConfigValues
-     *
-     * @return array
-     */
-    public function getConfigValues(): array
-    {
-        return [
-            'CONF_DASHBOARD_TITLE',
-            'CONF_DEFAULT_PAGINATOR'
-        ];
     }
 }

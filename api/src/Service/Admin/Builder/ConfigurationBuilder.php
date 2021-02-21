@@ -111,4 +111,17 @@ class ConfigurationBuilder
                 break;
         }
     }
+
+    /**
+     * getGeneralConfigValues
+     *
+     * @return array
+     */
+    public function getGeneralConfigValues(): array
+    {
+        return [
+            'CONF_DASHBOARD_TITLE',
+            'CONF_DEFAULT_PAGINATOR'
+        ];
+    }
 }
