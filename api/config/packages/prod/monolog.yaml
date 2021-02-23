@@ -21,4 +21,3 @@ monolog:
             path: "%kernel.logs_dir%/admin_%kernel.environment%.log"
             level: debug
             channels: [admin]
-            

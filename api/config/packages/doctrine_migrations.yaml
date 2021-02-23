@@ -2,16 +2,16 @@ doctrine_migrations:
     migrations_paths:
         # namespace is arbitrary but should be different from App\Migrations
         # as migrations classes should NOT be autoloaded
-        'DoctrineMigrations': '%kernel.project_dir%/migrations'
-    
+        "DoctrineMigrations": "%kernel.project_dir%/migrations"
+
     # Connection to use for the migrations
     connection: default
 
     storage:
         # Default (SQL table) metadata storage configuration
         table_storage:
-            table_name: 'doctrine_migration_versions'
-            version_column_name: 'version'
+            table_name: "doctrine_migration_versions"
+            version_column_name: "version"
             version_column_length: 1024
-            executed_at_column_name: 'executed_at'
-            execution_time_column_name: 'execution_time'
+            executed_at_column_name: "executed_at"
+            execution_time_column_name: "execution_time"

@@ -4,4 +4,3 @@ gesdinet_jwt_refresh_token:
     refresh_token_class: App\Entity\Customer\UserToken
     # ttl_update: true
     # single_use: true
-    
