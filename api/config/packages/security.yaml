@@ -20,7 +20,7 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         refresh:
-            pattern:  ^/api/auth/refresh_token
+            pattern: ^/api/auth/refresh_token
             stateless: true
             anonymous: true
             lazy: true
@@ -57,10 +57,11 @@ security:
             switch_user:
                 provider: admin_user
                 role: ROLE_ALLOWED_TO_SWITCH
-                parameter: '%route_for_switch_user%'
+                parameter: "%route_for_switch_user%"
 
     role_hierarchy:
-        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH, ROLE_API_DOCUMENTATION]
+        ROLE_SUPER_ADMIN:
+            [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH, ROLE_API_DOCUMENTATION]
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used

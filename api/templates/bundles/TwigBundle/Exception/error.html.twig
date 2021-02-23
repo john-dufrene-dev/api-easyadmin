@@ -2,34 +2,38 @@
 {% trans_default_domain 'admin' %}
 
 {% block head_stylesheets %}
-    <link rel="stylesheet" href="{{ asset('bundles/easyadmin/app.css') }}">
+	<link rel="stylesheet" href="{{ asset('bundles/easyadmin/app.css') }}">
 {% endblock %}
 
 {% block body_class 'page-login' %}
 
 {% block page_title %}
-    {{exception.getStatusText|trans}} - {{exception.getStatusCode}}
+	{{exception.getStatusText|trans}}
+	-
+	{{exception.getStatusCode}}
 {% endblock %}
 
 {% block wrapper_wrapper %}
-    <div class="login-wrapper"> 
-        
-        <header class="main-header mb-4">
-            <div class="error-message">
-                <h1><i class="fa fa-fw fa-exclamation-circle"></i> 
-                    {{'error.get_error_title'|trans}} {{exception.getStatusCode}}
-                </h1>
-                {{exception.getStatusText|trans}}
-            </div>
-        </header>
+	<div class="login-wrapper">
 
-        <section class="content">
-            <div class="form-group field-button">
-                <a class="btn btn-primary btn-lg btn-block" href="{{ path('admin_default') }}">
-                    {{'error.return'|trans}}
-                </a>
-            </div>
-        </section>
+		<header class="main-header mb-4">
+			<div class="error-message">
+				<h1>
+					<i class="fa fa-fw fa-exclamation-circle"></i>
+					{{'error.get_error_title'|trans}}
+					{{exception.getStatusCode}}
+				</h1>
+				{{exception.getStatusText|trans}}
+			</div>
+		</header>
 
-    </div>
+		<section class="content">
+			<div class="form-group field-button">
+				<a class="btn btn-primary btn-lg btn-block" href="{{ path('admin_default') }}">
+					{{'error.return'|trans}}
+				</a>
+			</div>
+		</section>
+
+	</div>
 {% endblock %}

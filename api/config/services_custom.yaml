@@ -1,11 +1,10 @@
 parameters:
+    locale: "%env(resolve:APP_LOCALE)%" # Default LOCALE LANGUAGE value
+    mailer_user: "%env(resolve:MAILER_USER)%" # Default MAIL value
 
-    locale: '%env(resolve:APP_LOCALE)%' # Default LOCALE LANGUAGE value
-    mailer_user: '%env(resolve:MAILER_USER)%' # Default MAIL value
-
-    router.request_context.scheme: '%env(API_ENTRYPOINT_SCHEME)%'
-    router.request_context.host: '%env(API_ENTRYPOINT_HOST)%'
-    request_listener.https_port: '%env(int:API_ENTRYPOINT_PORT)%'
+    router.request_context.scheme: "%env(API_ENTRYPOINT_SCHEME)%"
+    router.request_context.host: "%env(API_ENTRYPOINT_HOST)%"
+    request_listener.https_port: "%env(int:API_ENTRYPOINT_PORT)%"
 
     ### CUSTOM VALUE NOT PRESENT IN .env ###
 
@@ -26,7 +25,6 @@ parameters:
     admin.log.persist_actions_entity: true # Enable/Disable Entity CRUD Actions
 
 services:
-
     ########################
     ### Mailer Component ###
     ########################
@@ -34,16 +32,25 @@ services:
     # Service email notifications for Admin
     app.service.admin_mailer:
         class: App\Service\Admin\Email\AdminMailer
-        arguments: ['@mailer.mailer', '@parameter_bag', '@doctrine.orm.default_entity_manager']
+        arguments:
+            [
+                "@mailer.mailer",
+                "@parameter_bag",
+                "@doctrine.orm.default_entity_manager",
+            ]
 
     #########################
     ### JWT Refresh Token ###
     #########################
-    
+
     # Override RefreshTokenManager
     gesdinet.jwtrefreshtoken.refresh_token_manager:
         class: App\Doctrine\RefreshTokenManager
-        arguments: ['@doctrine.orm.default_entity_manager', 'App\Entity\Customer\UserToken']
+        arguments:
+            [
+                "@doctrine.orm.default_entity_manager",
+                'App\Entity\Customer\UserToken',
+            ]
 
     ########################
     ### VichUploadBundle ###
@@ -66,5 +73,10 @@ services:
     # Admin log
     app.service.admin.log.admin_logger:
         class: App\Service\Admin\Log\AdminLogger
-        arguments: ['@monolog.logger.admin', '@doctrine.orm.entity_manager', '@request_stack', '@security.helper']
-        
+        arguments:
+            [
+                "@monolog.logger.admin",
+                "@doctrine.orm.entity_manager",
+                "@request_stack",
+                "@security.helper",
+            ]

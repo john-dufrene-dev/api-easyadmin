@@ -26,8 +26,9 @@ Encore
      */
     .addEntry('app', './assets/js/app.js')
     .addEntry('admin', './assets/js/admin/admin.js')
-    //.addEntry('page1', './assets/page1.js')
-    //.addEntry('page2', './assets/page2.js')
+
+    // Crud js admin file
+    .addEntry('admin/crud/shop', './assets/js/admin/crud/shop.js')
 
     .copyFiles({
         from: './assets/img',
@@ -84,12 +85,12 @@ Encore
     // Provide the location of your controllers.json file
     .enableStimulusBridge('./assets/js/admin/controllers.json');
 
-    // uncomment if you're having problems with a jQuery plugin
-    //.autoProvidejQuery()
+// uncomment if you're having problems with a jQuery plugin
+//.autoProvidejQuery()
 
-    // uncomment if you use API Platform Admin (composer req api-admin)
-    //.enableReactPreset()
-    //.addEntry('admin', './assets/admin.js')
+// uncomment if you use API Platform Admin (composer req api-admin)
+//.enableReactPreset()
+//.addEntry('admin', './assets/admin.js')
 ;
 
 let config = Encore.getWebpackConfig();

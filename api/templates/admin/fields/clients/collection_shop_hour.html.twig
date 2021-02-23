@@ -1,0 +1,46 @@
+{% trans_default_domain 'admin' %}
+
+<div class="form-widget">
+	{% if field.value > 0 %}
+		{% for hour in field.value %}
+			<div class="mt-3 badge badge-pill badge-{{ hour.active == false ? 'danger' : 'info' }}">
+
+				{% if hour.day == 'M' %}
+					{% set day = 'admin.field.monday'|trans %}
+				{% elseif hour.day == 'TU' %}
+					{% set day = 'admin.field.tuesday'|trans %}
+				{% elseif hour.day == 'W' %}
+					{% set day = 'admin.field.wednesday'|trans %}
+				{% elseif hour.day == 'TH' %}
+					{% set day = 'admin.field.thursday'|trans %}
+				{% elseif hour.day == 'F' %}
+					{% set day = 'admin.field.friday'|trans %}
+				{% elseif hour.day == 'S' %}
+					{% set day = 'admin.field.saturday'|trans %}
+				{% else %}
+					{% set day = 'admin.field.sunday'|trans %}
+				{% endif %}
+
+				<span>{{ hour.active == false ? 'admin.field.day.close'|trans : 'admin.field.day.open'|trans }}</span>
+				{{ 'admin.field.day.on'|trans }}
+				<span>{{ day }}</span>
+				{% if hour.active != false %}
+					/
+					<span>{{hour.startTime|date('H:i') }}</span>
+					-
+					<span>{{hour.endTime|date('H:i')}}</span>
+					{% if hour.break != false %}
+						/
+						<span>{{hour.startBreakTime|date('H:i')}}</span>
+						-
+						<span>{{hour.endBreakTime|date('H:i')}}</span>
+					{% endif %}
+				{% endif %}
+			</div><br>
+		{% endfor %}
+	{% else %}
+		<span>
+			{{ 'admin.shop.field.collection_shop_images.no_hour'|trans }}
+		</span>
+	{% endif %}
+</div>

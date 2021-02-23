@@ -62,7 +62,13 @@ class ShopCrudController extends AbstractCrudController
         return $crud
             ->setDefaultSort(['id' => 'ASC'])
             ->setDateFormat('full')
-            ->setTimeFormat('full');
+            ->setTimeFormat('full')
+            // @Todo : Delete this override and inject webpack file
+            // https://github.com/EasyCorp/EasyAdminBundle/pull/4223
+            ->overrideTemplates([
+                // Shop custom templates
+                'crud/edit' => '/admin/crud/shop/edit.html.twig',
+            ]);
     }
 
     public function configureFilters(Filters $filters): Filters
@@ -170,8 +176,9 @@ class ShopCrudController extends AbstractCrudController
                 ->setCustomOption('renderAsSwitch', false)
                 ->setLabel('admin.shop.field.shipping_delivery');
 
-            // @Todo : transform in array to show shop hour
-            // yield ArrayField::new('shop_info.shop_hour');
+            yield CollectionField::new('shop_info.shop_hour')
+                ->setTemplatePath('admin/fields/clients/collection_shop_hour.html.twig')
+                ->setLabel('admin.shop.field.shop_hour');
 
             yield FormField::addPanel('admin.shop.panel_shop_files')->renderCollapsed();
             yield CollectionField::new('shop_files')

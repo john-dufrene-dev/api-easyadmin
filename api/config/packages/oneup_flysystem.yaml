@@ -3,7 +3,7 @@ oneup_flysystem:
     adapters:
         shop_adapter:
             local:
-                directory: '%kernel.project_dir%/public/uploads/clients/shop'
+                directory: "%kernel.project_dir%/public/uploads/clients/shop"
                 lazy: ~ # boolean (default "false")
                 writeFlags: ~
                 linkHandling: ~
@@ -13,4 +13,3 @@ oneup_flysystem:
             adapter: shop_adapter
             mount: shop_image_fs
             alias: League\Flysystem\Filesystem
-            

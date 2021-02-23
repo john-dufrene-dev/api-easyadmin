@@ -54,6 +54,9 @@ return [
     'admin.field.friday' => 'Vendredi',
     'admin.field.saturday' => 'Samedi',
     'admin.field.sunday' => 'Dimanche',
+    'admin.field.day.open' => 'Ouvert',
+    'admin.field.day.close' => 'Fermer',
+    'admin.field.day.on' => 'le',
 
     // Configuration Months
     'admin.field.january' => 'Janvier',
@@ -99,7 +102,7 @@ return [
     'Shop Files' => 'Shop Files',
     'Image file' => 'Image File',
     'admin.shop.title' => 'Information Shop',
-    'admin.shop.panel_shop' => 'Informations d\identité Shop',
+    'admin.shop.panel_shop' => 'Informations d\'identité Shop',
     'admin.shop.panel_shop_info' => 'Informations heures/localisation Shop',
     'admin.shop.panel_shop_files' => 'Photos du Shop',
     'admin.shop.panel_shop_admin' => 'Informations admin Shop',
@@ -113,6 +116,7 @@ return [
     'admin.shop.field.shipping_click' => 'Livraison Click & Collect',
     'admin.shop.field.shipping_delivery' => 'Livraison de proxmité',
     'admin.shop.field.collection_shop_images.no_files' => 'Pas de fichiers',
+    'admin.shop.field.collection_shop_images.no_hour' => 'Pas d\'horaires paramétrés',
     'admin.shop.field.is_active' => 'Activation',
     'admin.shop.flash.no_delete.admin' => 'Impossible de supprimer Shop tant qu\'un Admin est associé',
 
