@@ -18,16 +18,3 @@ export const app = startStimulusApp(require.context(
 
 // Need jQuery? Install it with "yarn add jquery", then uncomment to import it.
 // import $ from 'jquery';
-
-import EaShopField from "@@js/admin/fields/shop";
-
-window.addEventListener('DOMContentLoaded', (event) => {
-    document.querySelectorAll('[data-ea-collection-field]').forEach((collection) => {
-
-        // Shop hour break enable/disable
-        if (collection.querySelector('.form-widget .form-widget-compound > div').id === 'Shop_shop_info_shop_hour') {
-            EaShopField.handleShopHour();
-        }
-
-    });
-});

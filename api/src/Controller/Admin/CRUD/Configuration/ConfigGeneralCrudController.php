@@ -30,8 +30,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class ConfigGeneralCrudController extends AbstractCrudController
 {
-    // @todo : Add eventSubscriber (block update if not this specific Controller)
-
     protected $actions;
 
     protected $conf;

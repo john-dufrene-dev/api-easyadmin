@@ -54,6 +54,9 @@ return [
     'admin.field.friday' => 'Friday',
     'admin.field.saturday' => 'Saturday',
     'admin.field.sunday' => 'Sunday',
+    'admin.field.day.open' => 'Open',
+    'admin.field.day.close' => 'Close',
+    'admin.field.day.on' => 'on',
 
     // Configuration Months
     'admin.field.january' => 'January',
@@ -113,6 +116,7 @@ return [
     'admin.shop.field.shipping_click' => 'Shipping Click & Collect',
     'admin.shop.field.shipping_delivery' => 'Shipping delivery',
     'admin.shop.field.collection_shop_images.no_files' => 'No files',
+    'admin.shop.field.collection_shop_images.no_hour' => 'No set schedules',
     'admin.shop.field.is_active' => 'Activate',
     'admin.shop.flash.no_delete.admin' => 'Cannot delete Shop as long as an Admin is associated',
 
