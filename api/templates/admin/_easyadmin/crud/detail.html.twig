@@ -3,10 +3,10 @@
 {% trans_default_domain ea.i18n.translationDomain %}
 
 {% block content_title %}
-    {%- apply spaceless -%}
-        {% set default_title = 'admin.general.title.detail'|trans ~ ea.i18n.translationParameters["%entity_label_singular%"]
+	{%- apply spaceless -%}
+	{% set default_title = 'admin.general.title.detail'|trans ~ ea.i18n.translationParameters["%entity_label_singular%"]
             ~ ' : ' ~ ea.crud.defaultPageTitle('detail', entity.instance) %}
-        {% set custom_title = ea.crud.customPageTitle('detail', entity.instance) %}
-        {{ custom_title is null ? default_title|raw : custom_title|raw }}
-    {%- endapply -%}
+	{% set custom_title = ea.crud.customPageTitle('detail', entity.instance) %}
+	{{ custom_title is null ? default_title|raw : custom_title|raw }}
+	{%- endapply -%}
 {% endblock %}

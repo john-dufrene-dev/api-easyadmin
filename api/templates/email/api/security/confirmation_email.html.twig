@@ -1,18 +1,23 @@
 {% extends 'email/api/base.html.twig' %}
 {% trans_default_domain 'email' %}
 
-{% block title %} {{ 'email.email_confirmation.title'|trans }} {% endblock %}
+{% block title %}
+	{{ 'email.email_confirmation.title'|trans }}
+{% endblock %}
 
 {% block body %}
 
-    <h1>{{ 'email.email_confirmation.welcome'|trans }}</h1>
+	<h1>{{ 'email.email_confirmation.welcome'|trans }}</h1>
 
-    <p>
-        {{ 'email.email_confirmation.message'|trans }} <br><br>
-        <a href="{{ signedUrl|raw }}">{{ 'email.email_confirmation.confirm'|trans }}</a>
-        {{ 'email.email_confirmation.expire'|trans }} {{ expiresAt|date('g') }} {{ 'email.email_confirmation.hour'|trans }}
-    </p>
+	<p>
+		{{ 'email.email_confirmation.message'|trans }}
+		<br><br>
+		<a href="{{ signedUrl|raw }}">{{ 'email.email_confirmation.confirm'|trans }}</a>
+		{{ 'email.email_confirmation.expire'|trans }}
+		{{ expiresAt|date('g') }}
+		{{ 'email.email_confirmation.hour'|trans }}
+	</p>
 
-    <p>{{ 'email.email_confirmation.cheers'|trans }}</p>
+	<p>{{ 'email.email_confirmation.cheers'|trans }}</p>
 
 {% endblock %}
