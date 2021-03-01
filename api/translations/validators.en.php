@@ -23,6 +23,9 @@ return [
     'asserts.entity.bool' => 'The value {{ value }} is not a valid',
     'asserts.entity.file.not_null' => 'File Upload could not be null',
     'asserts.entity.int.not_valid' => 'The value {{ value }} is not a valid {{ type }}.',
+    'asserts.entity.phone' => 'The value {{ value }} is not a valid format',
+    'asserts.entity.postal_code' => 'The value {{ value }} is not a valid postal code',
+    'asserts.entity.range_localization' => 'Value must be between {{ min }} and {{ max }}',
 
     // Form change password
     'asserts.change_password.require' => 'Please enter a password',

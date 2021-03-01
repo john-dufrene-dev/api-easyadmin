@@ -20,7 +20,7 @@ final class Version20201005223416 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE shop_info (id INT AUTO_INCREMENT NOT NULL, shop_id BINARY(16) DEFAULT NULL COMMENT \'(DC2Type:uuid)\', country VARCHAR(180) DEFAULT NULL, shop_hour LONGTEXT DEFAULT NULL COMMENT \'(DC2Type:json)\', shipping_click TINYINT(1) NOT NULL, shipping_delivery TINYINT(1) NOT NULL, UNIQUE INDEX UNIQ_A7BD72C4D16C4DD (shop_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE shop_info (id INT AUTO_INCREMENT NOT NULL, shop_id BINARY(16) DEFAULT NULL COMMENT \'(DC2Type:uuid)\', country VARCHAR(180) DEFAULT NULL, city VARCHAR(64) DEFAULT NULL, postal_code VARCHAR(12) DEFAULT NULL, address VARCHAR(128) DEFAULT NULL, latitude NUMERIC(13, 8) DEFAULT NULL, longitude NUMERIC(13, 8) DEFAULT NULL, phone VARCHAR(16) DEFAULT NULL, shop_hour LONGTEXT DEFAULT NULL COMMENT \'(DC2Type:json)\', shipping_click TINYINT(1) NOT NULL, shipping_delivery TINYINT(1) NOT NULL, UNIQUE INDEX UNIQ_A7BD72C4D16C4DD (shop_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('ALTER TABLE shop_info ADD CONSTRAINT FK_A7BD72C4D16C4DD FOREIGN KEY (shop_id) REFERENCES shop (uuid)');
     }
 

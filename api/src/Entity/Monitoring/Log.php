@@ -273,13 +273,13 @@ class Log
     public function getExportData(): array
     {
         return [
-            'message' => $this->message,
-            'user' => $this->user,
-            'context' => $this->context,
-            'level' => $this->level,
-            'level_name' => $this->level_name,
-            'extra' => $this->extra,
-            'created_at' => $this->created_at->format('d/m/Y H:m'),
+            'message' => $this->getMessage(),
+            'user' => $this->getUser(),
+            'context' => $this->getContext(),
+            'level' => $this->getLevel(),
+            'level_name' => $this->getLevelName(),
+            'extra' => $this->getExtra(),
+            'created_at' => $this->getCreatedAt()->format('d/m/Y H:m'),
         ];
     }
 }

@@ -118,6 +118,12 @@ return [
     'admin.shop.field.collection_shop_images.no_files' => 'Pas de fichiers',
     'admin.shop.field.collection_shop_images.no_hour' => 'Pas d\'horaires paramétrés',
     'admin.shop.field.is_active' => 'Activation',
+    'admin.shop.field.city' => 'Ville',
+    'admin.shop.field.postal_code' => 'Code postal',
+    'admin.shop.field.address' => 'Adresse',
+    'admin.shop.field.latitude' => 'Latitude',
+    'admin.shop.field.longitude' => 'Longitude',
+    'admin.shop.field.phone' => 'Téléphone',
     'admin.shop.flash.no_delete.admin' => 'Impossible de supprimer Shop tant qu\'un Admin est associé',
 
     // Admin Admin Page

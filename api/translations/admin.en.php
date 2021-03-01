@@ -118,6 +118,12 @@ return [
     'admin.shop.field.collection_shop_images.no_files' => 'No files',
     'admin.shop.field.collection_shop_images.no_hour' => 'No set schedules',
     'admin.shop.field.is_active' => 'Activate',
+    'admin.shop.field.city' => 'City',
+    'admin.shop.field.postal_code' => 'Postal code',
+    'admin.shop.field.address' => 'Address',
+    'admin.shop.field.latitude' => 'Latitude',
+    'admin.shop.field.longitude' => 'Longitude',
+    'admin.shop.field.phone' => 'Phone',
     'admin.shop.flash.no_delete.admin' => 'Cannot delete Shop as long as an Admin is associated',
 
     // Admin Admin Page
