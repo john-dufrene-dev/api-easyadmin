@@ -222,7 +222,7 @@ class LogCrudController extends AbstractCrudController
 
         return $this->export->exportCsv(
             $data,
-            'export_log_' . date_create()->format('d-m-y') . '.' . $this->export->format('csv')
+            'export_log_' . date_create()->format('dmyhis') . '.' . $this->export->format('csv')
         );
     }
 }

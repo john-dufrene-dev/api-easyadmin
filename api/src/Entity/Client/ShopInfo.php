@@ -46,6 +46,124 @@ class ShopInfo
     private $country;
 
     /**
+     * city - The city of the Shop
+     * 
+     * @var string|null
+     *
+     * @ORM\Column(type="string", length=64, nullable=true)
+     * 
+     * @Assert\Length(
+     *      max = 64,
+     *      maxMessage = "asserts.entity.max_length"
+     * )
+     * 
+     * @Groups({"shop:readOne"})
+     */
+    private $city;
+
+    /**
+     * postal_code - The postal code of the Shop
+     * 
+     * @var string|null
+     * 
+     * @ORM\Column(type="string", length=12, nullable=true)
+     * 
+     * @Assert\Length(
+     *      max = 12,
+     *      maxMessage = "asserts.entity.max_length"
+     * )
+     * @Assert\Regex(
+     *     pattern="/^([0-9A-Za-z]{5}|[0-9A-Za-z]{9}|(([0-9a-zA-Z]{5}-){1}[0-9a-zA-Z]{4}))$/",
+     *     message="asserts.entity.postal_code"
+     * )
+     * 
+     * @Groups({"shop:readOne"})
+     */
+    private $postal_code;
+
+    /**
+     * address - The address of the Shop
+     * 
+     * @var string|null
+     *
+     * @ORM\Column(type="string", length=128, nullable=true)
+     * 
+     * @Assert\Length(
+     *      max = 128,
+     *      maxMessage = "asserts.entity.max_length"
+     * )
+     * 
+     * @Groups({"shop:readOne"})
+     */
+    private $address;
+
+    /**
+     * latitude - The latitude of the Shop
+     * 
+     * @var string|null
+     * 
+     * @ORM\Column(type="decimal", precision=13, scale=8, nullable=true)
+     * 
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 25,
+     *      minMessage = "asserts.entity.min_length",
+     *      maxMessage = "asserts.entity.max_length"
+     * )
+     * @Assert\Range(
+     *      min = -90,
+     *      max = 90,
+     *      notInRangeMessage = "You must be between {{ min }} and {{ max }}",
+     * )
+     * 
+     * @Groups({"shop:readOne"})
+     */
+    private $latitude;
+
+    /**
+     * longitude - The longitude of the Shop
+     * 
+     * @var string|null
+     * 
+     * @ORM\Column(type="decimal", precision=13, scale=8, nullable=true)
+     * 
+     * @Assert\Length(
+     *      min = 1,
+     *      max = 25,
+     *      minMessage = "asserts.entity.min_length",
+     *      maxMessage = "asserts.entity.max_length"
+     * )
+     * @Assert\Range(
+     *      min = -180,
+     *      max = 180,
+     *      notInRangeMessage = "asserts.entity.range_localization",
+     * )
+     * 
+     * @Groups({"shop:readOne"})
+     */
+    private $longitude;
+
+    /**
+     * phone - The phone of the Shop
+     * 
+     * @var string|null
+     *
+     * @ORM\Column(type="string", length=16, nullable=true)
+     * 
+     * @Assert\Length(
+     *      max = 16,
+     *      maxMessage = "asserts.entity.max_length"
+     * )
+     * @Assert\Regex(
+     *     pattern="/^([0-9\(\)\/\+ \-]*)$/",
+     *     message="asserts.entity.phone"
+     * )
+     * 
+     * @Groups({"shop:readOne"})
+     */
+    private $phone;
+
+    /**
      * shop_hour - Hour of the Shop
      * 
      * @var array
@@ -100,7 +218,7 @@ class ShopInfo
      */
     public function __toString(): string
     {
-        return 'ShopInfo';
+        return $this->getShop()->getName();
     }
 
     /**
@@ -155,6 +273,144 @@ class ShopInfo
     public function setCountry(?string $country): self
     {
         $this->country = $country;
+
+        return $this;
+    }
+
+    /**
+     * getCity
+     *
+     * @return string
+     */
+    public function getCity(): ?string
+    {
+        return $this->city;
+    }
+
+    /**
+     * setCity
+     *
+     * @param  mixed $city
+     * @return self
+     */
+    public function setCity(?string $city): self
+    {
+        $this->city = $city;
+
+        return $this;
+    }
+
+    /**
+     * getPostalCode
+     *
+     * @return string
+     */
+    public function getPostalCode(): ?string
+    {
+        return $this->postal_code;
+    }
+
+    /**
+     * setPostalCode
+     *
+     * @param  mixed $postal_code
+     * @return self
+     */
+    public function setPostalCode(?string $postal_code): self
+    {
+        $this->postal_code = $postal_code;
+
+        return $this;
+    }
+
+    /**
+     * getAddress
+     *
+     * @return string
+     */
+    public function getAddress(): ?string
+    {
+        return $this->address;
+    }
+
+    /**
+     * setAddress
+     *
+     * @param  mixed $address
+     * @return self
+     */
+    public function setAddress(?string $address): self
+    {
+        $this->address = $address;
+
+        return $this;
+    }
+
+    /**
+     * getLatitude
+     *
+     * @return float
+     */
+    public function getLatitude(): ?float
+    {
+        return $this->latitude;
+    }
+
+    /**
+     * setLatitude
+     *
+     * @param  mixed $latitude
+     * @return self
+     */
+    public function setLatitude(?float $latitude): self
+    {
+        $this->latitude = $latitude;
+
+        return $this;
+    }
+
+    /**
+     * getLongitude
+     *
+     * @return float
+     */
+    public function getLongitude(): ?float
+    {
+        return $this->longitude;
+    }
+
+    /**
+     * setLongitude
+     *
+     * @param  mixed $longitude
+     * @return self
+     */
+    public function setLongitude(?float $longitude): self
+    {
+        $this->longitude = $longitude;
+
+        return $this;
+    }
+
+    /**
+     * getPhone
+     *
+     * @return string
+     */
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    /**
+     * setPhone
+     *
+     * @param  mixed $phone
+     * @return self
+     */
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
 
         return $this;
     }

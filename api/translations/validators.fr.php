@@ -23,6 +23,9 @@ return [
     'asserts.entity.bool' => 'Cette valeur {{ value }} n\'est pas valide',
     'asserts.entity.file.not_null' => 'Une image est requise',
     'asserts.entity.int.not_valid' => 'La valeur {{ value }} n\'est pas un {{ type }} valide',
+    'asserts.entity.phone' => 'La valeur {{ value }} n\'est pas un format valide',
+    'asserts.entity.postal_code' => 'La valeur {{ value }} n\'est pas un code postal valide',
+    'asserts.entity.range_localization' => 'La valeur doit être comprise entre {{ min }} et {{ max }}',
 
     // Form change password
     'asserts.change_password.require' => 'Veuillez entrer un mot de passe',

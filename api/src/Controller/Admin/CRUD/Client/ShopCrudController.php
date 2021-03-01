@@ -23,8 +23,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CountryField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Factory\FilterFactory;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -84,6 +86,8 @@ class ShopCrudController extends AbstractCrudController
         $filters->add('reference');
         $filters->add('name');
         $filters->add('email');
+        // @todo : try to add association filter
+        // $filters->add(EntityFilter::new('shop_info')); // Not working for now !
 
         return $filters;
     }
@@ -168,6 +172,14 @@ class ShopCrudController extends AbstractCrudController
 
             yield FormField::addPanel('admin.shop.panel_shop_info')->renderCollapsed();
             yield CountryField::new('shop_info.country')->setLabel('admin.shop.field.country');
+            yield TextField::new('shop_info.city')->setLabel('admin.shop.field.city');
+            yield TextField::new('shop_info.postal_code')->setLabel('admin.shop.field.postal_code');
+            yield TextField::new('shop_info.address')->setLabel('admin.shop.field.address');
+            yield NumberField::new('shop_info.latitude')->setLabel('admin.shop.field.latitude')
+                ->setNumDecimals(8);
+            yield NumberField::new('shop_info.longitude')->setLabel('admin.shop.field.longitude')
+                ->setNumDecimals(8);
+            yield TelephoneField::new('shop_info.phone')->setLabel('admin.shop.field.phone');
 
             yield BooleanField::new('shop_info.shipping_click')
                 ->setCustomOption('renderAsSwitch', false)
@@ -216,6 +228,14 @@ class ShopCrudController extends AbstractCrudController
             yield CountryField::new('shop_info.country')
                 ->setFormType(CountryType::class)
                 ->setLabel('admin.shop.field.country');
+            yield TextField::new('shop_info.city')->setLabel('admin.shop.field.city');
+            yield TextField::new('shop_info.postal_code')->setLabel('admin.shop.field.postal_code');
+            yield TextField::new('shop_info.address')->setLabel('admin.shop.field.address');
+            yield NumberField::new('shop_info.latitude')->setLabel('admin.shop.field.latitude')
+                ->setNumDecimals(8);
+            yield NumberField::new('shop_info.longitude')->setLabel('admin.shop.field.longitude')
+                ->setNumDecimals(8);
+            yield TelephoneField::new('shop_info.phone')->setLabel('admin.shop.field.phone');
 
             yield BooleanField::new('shop_info.shipping_click')
                 ->setCustomOption('renderAsSwitch', false)
@@ -342,7 +362,7 @@ class ShopCrudController extends AbstractCrudController
 
         return $this->export->exportCsv(
             $data,
-            'export_shop_' . date_create()->format('d-m-y') . '.' . $this->export->format('csv')
+            'export_shop_' . date_create()->format('dmyhis') . '.' . $this->export->format('csv')
         );
     }
 }

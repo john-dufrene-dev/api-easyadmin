@@ -4,17 +4,22 @@ namespace App\Entity\Client;
 
 use App\Entity\Security\Admin;
 use Doctrine\ORM\Mapping as ORM;
+use App\Filter\Api\OrSearchFilter;
 use App\Service\Utils\ReferenceFactory;
+use App\Filter\Api\FullTextSearchFilter;
 use App\Service\Traits\Entity\UuidTrait;
 use App\Repository\Client\ShopRepository;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\Common\Collections\Collection;
-use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+use Symfony\Component\Serializer\Annotation\SerializedName;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\NumericFilter;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -42,20 +47,54 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *         }
  *    },
  *    collectionOperations={
- *         "get"={
+ *         "get_all"={
  *             "method"="GET",
- *             "normalization_context"={"groups"={"shop:readAll"}}
- *         }
+ *             "normalization_context"={"groups"={"shop:readAll"}},
+ *         },
  *    },
  *    itemOperations={
- *         "get"={
+ *         "get_uuid"={
  *             "method"="GET",
- *             "normalization_context"={"groups"={"shop:readOne"}}
- *         }
+ *             "normalization_context"={"groups"={"shop:readOne"}},
+ *         },
  *    }
  * )
  * 
- * @ApiFilter(BooleanFilter::class, properties={"is_active"})
+ * @ApiFilter(OrderFilter::class, properties={
+ *      "id",
+ *      "name",
+ *      "created_at",
+ *      "updated_at",
+ * }, arguments={"orderParameterName"="order"})
+ * @ApiFilter(BooleanFilter::class, properties={
+ *      "is_active",
+ *      "shop_info.shipping_click",
+ *      "shop_info.shipping_delivery",
+ * })
+ * @ApiFilter(NumericFilter::class, properties={"id"})
+ * @ApiFilter(OrSearchFilter::class, properties={
+ *      "reference": "exact",
+ *      "name": "ipartial",
+ *      "email": "exact",
+ *      "shop_info.country": "ipartial",
+ *      "shop_info.city": "ipartial",
+ *      "shop_info.postal_code": "ipartial",
+ *      "shop_info.address": "ipartial",
+ *      "shop_info.latitude": "exact",
+ *      "shop_info.longitude": "exact",
+ *      "shop_info.phone": "exact",
+ * })
+ * @ApiFilter(FullTextSearchFilter::class, properties={
+ *      "search_full_address"={
+ *          "shop_info.city": "ipartial",
+ *          "shop_info.postal_code": "ipartial",
+ *          "shop_info.address": "ipartial",
+ *      },
+ * })
+ * @ApiFilter(DateFilter::class, properties={
+ *      "created_at": DateFilter::EXCLUDE_NULL,
+ *      "updated_at": DateFilter::EXCLUDE_NULL,
+ * })
  */
 class Shop
 {
@@ -119,6 +158,8 @@ class Shop
      * @var bool
      * 
      * @ORM\Column(type="boolean")
+     * 
+     * @SerializedName("active")
      * 
      * @Groups({"shop:readOne"})
      */
@@ -467,13 +508,23 @@ class Shop
      */
     public function getExportData(): array
     {
-        // @todo : finish to render all informations
         return [
-            'reference' => $this->reference,
-            'name' => $this->name,
-            'email' => $this->email,
-            'created_at' => $this->created_at->format('d/m/Y H:m'),
-            'updated_at' => $this->updated_at->format('d/m/Y H:m'),
+            'reference' => $this->getReference(),
+            'name' => $this->getName(),
+            'email' => $this->getEmail(),
+            'is_active' => $this->getIsActive(),
+            'country' => $this->getShopInfo()->getCountry(),
+            'city' => $this->getShopInfo()->getCity(),
+            'postal_code' => $this->getShopInfo()->getPostalCode(),
+            'address' => $this->getShopInfo()->getAddress(),
+            'latitude' => $this->getShopInfo()->getLatitude(),
+            'longitude' => $this->getShopInfo()->getLongitude(),
+            'phone' => $this->getShopInfo()->getPhone(),
+            'shipping_click' => $this->getShopInfo()->getShippingClick(),
+            'shipping_delivery' => $this->getShopInfo()->getShippingDelivery(),
+            'shop_hour' => $this->getShopInfo()->getShopHour(),
+            'created_at' => $this->getCreatedAt()->format('d/m/Y H:m'),
+            'updated_at' => $this->getUpdatedAt()->format('d/m/Y H:m'),
         ];
     }
 }
