@@ -48,7 +48,7 @@ final class ShopHourType extends AbstractType
                 'input'  => 'string',
                 'widget' => 'choice',
                 'label' => false,
-                'minutes' => range(0, 60, 15),
+                'minutes' => range(0, 59, 5),
                 'attr' => [
                     'class' => 'flex',
                     'style' => 'width:100px'
@@ -58,7 +58,7 @@ final class ShopHourType extends AbstractType
                 'input'  => 'string',
                 'widget' => 'choice',
                 'label' => false,
-                'minutes' => range(0, 60, 15),
+                'minutes' => range(0, 59, 5),
                 'attr' => [
                     'class' => 'flex',
                     'style' => 'width:100px'
@@ -68,7 +68,7 @@ final class ShopHourType extends AbstractType
                 'input'  => 'string',
                 'widget' => 'choice',
                 'label' => false,
-                'minutes' => range(0, 60, 15),
+                'minutes' => range(0, 59, 5),
                 'attr' => [
                     'class' => 'flex target-start-break-shop',
                     'style' => 'width:100px; display:none'
@@ -78,7 +78,7 @@ final class ShopHourType extends AbstractType
                 'input'  => 'string',
                 'widget' => 'choice',
                 'label' => false,
-                'minutes' => range(0, 60, 15),
+                'minutes' => range(0, 59, 5),
                 'attr' => [
                     'class' => 'flex target-end-break-shop',
                     'style' => 'width:100px; display:none'
