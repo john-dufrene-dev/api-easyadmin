@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use Faker;
 use App\Entity\Client\Shop;
 use App\Entity\Security\Admin;
 use App\Entity\Client\ShopInfo;
@@ -9,6 +10,7 @@ use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use App\Service\Traits\Entity\ShopHourTrait;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class ShopFixtures extends Fixture
 {
@@ -27,9 +29,12 @@ class ShopFixtures extends Fixture
 
     protected $em;
 
-    public function __construct(EntityManagerInterface $em)
+    protected $params;
+
+    public function __construct(EntityManagerInterface $em, ParameterBagInterface $params)
     {
         $this->em = $em;
+        $this->params = $params;
     }
 
     public function load(ObjectManager $manager)
@@ -64,5 +69,36 @@ class ShopFixtures extends Fixture
 
         $manager->persist($shop);
         $manager->flush();
+
+        if ($this->params->get('admin.doctrine.faker.active') === true) {
+            $faker = Faker\Factory::create();
+
+            for ($i = 0; $i < 1000; $i++) {
+                $shop = new Shop();
+                $shop_info = new ShopInfo();
+
+                $shop->setEmail($faker->email)
+                    ->setName($faker->company)
+                    ->setCreatedAt(new \DateTime())
+                    ->setUpdatedAt(new \DateTime());
+
+                // @Todo : Faker true/fase shipping/click&collect
+
+                $shop_info->setShop($shop)
+                    ->setCountry($faker->country)
+                    ->setCity($faker->city)
+                    ->setPostalCode($faker->postcode)
+                    ->setAddress($faker->address)
+                    ->setLatitude($faker->longitude)
+                    ->setLongitude($faker->longitude)
+                    ->setPhone($faker->e164PhoneNumber)
+                    ->setShopHour($this->getShopHourFormattedValues());
+
+                $shop->setShopInfo($shop_info);
+
+                $manager->persist($shop);
+                $manager->flush();
+            }
+        }
     }
 }

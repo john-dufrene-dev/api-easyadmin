@@ -80,3 +80,6 @@ api_platform:
 
         jsonld:
             mime_types: ["application/ld+json"]
+
+    defaults:
+        pagination_items_per_page: 10 # Default value

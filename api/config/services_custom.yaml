@@ -15,7 +15,7 @@ parameters:
     route_for_switch_user: _switch_user # Define the switch user route
 
     # Activation of email confirmation for User
-    active_confirm_user: true # Confirmation User email (if false you don't need to confirm User email)
+    active_confirm_user: false # Confirmation User email (if false you don't need to confirm User email)
 
     # Logger for admin connection
     admin.log.register_in_database: true # Enable/Disable register in database logger when an Admin connect to back-office
@@ -23,6 +23,9 @@ parameters:
 
     # Logger for admin Update/create/delete CRUD entity
     admin.log.persist_actions_entity: true # Enable/Disable Entity CRUD Actions
+
+    # Doctrine faker fixtures
+    admin.doctrine.faker.active: true # Enable/Disable Faker fixtures
 
 services:
     ########################
