@@ -241,12 +241,14 @@ class RegistrationController extends AbstractController
         }
 
         // Tcheck if it's json contentType
-        if (!\in_array($request->headers->get('content_type'), self::CONTENT_TYPE, true)) {
+        if (!empty($request->headers->get('content_type'))) {
+            if (!\in_array($request->headers->get('content_type'), self::CONTENT_TYPE, true)) {
 
-            return $this->json([
-                "code" => Response::HTTP_UNSUPPORTED_MEDIA_TYPE,
-                "message" => 'Invalid content type Header (Allow: {application/json & application/ld+json})'
-            ], Response::HTTP_UNSUPPORTED_MEDIA_TYPE);
+                return $this->json([
+                    "code" => Response::HTTP_UNSUPPORTED_MEDIA_TYPE,
+                    "message" => 'Invalid content type Header (Allow: {application/json & application/ld+json})'
+                ], Response::HTTP_UNSUPPORTED_MEDIA_TYPE);
+            }
         }
 
         // Do something to clear user information or logging
