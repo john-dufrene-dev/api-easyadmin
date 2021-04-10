@@ -14,7 +14,12 @@
     },
     "license": "UNLICENSED",
     "private": true,
-    "browserslist": ["> 0.5%", "last 2 versions", "Firefox ESR", "not dead"],
+    "browserslist": [
+        "> 0.5%",
+        "last 2 versions",
+        "Firefox ESR",
+        "not dead"
+    ],
     "scripts": {
         "dev-server": "encore dev-server",
         "dev": "encore dev",
