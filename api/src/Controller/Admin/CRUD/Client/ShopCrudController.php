@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Service\Admin\Actions\CustomizeActions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -59,18 +60,17 @@ class ShopCrudController extends AbstractCrudController
         return Shop::class;
     }
 
+    public function configureAssets(Assets $assets): Assets
+    {
+        return $assets->addWebpackEncoreEntry('admin/crud/shop');
+    }
+
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
             ->setDefaultSort(['id' => 'ASC'])
             ->setDateFormat('full')
-            ->setTimeFormat('full')
-            // @Todo : Delete this override and inject webpack file
-            // https://github.com/EasyCorp/EasyAdminBundle/pull/4223
-            ->overrideTemplates([
-                // Shop custom templates
-                'crud/edit' => '/admin/crud/shop/edit.html.twig',
-            ]);
+            ->setTimeFormat('full');
     }
 
     public function configureFilters(Filters $filters): Filters
@@ -170,6 +170,9 @@ class ShopCrudController extends AbstractCrudController
                 yield BooleanField::new('is_active')->setLabel('admin.shop.field.is_active');
             }
 
+            yield DateField::new('created_at')->setLabel('admin.field.created_at');
+            yield DateField::new('updated_at')->setLabel('admin.field.updated_at');
+
             yield FormField::addPanel('admin.shop.panel_shop_info')->renderCollapsed();
             yield CountryField::new('shop_info.country')->setLabel('admin.shop.field.country');
             yield TextField::new('shop_info.city')->setLabel('admin.shop.field.city');
@@ -204,9 +207,6 @@ class ShopCrudController extends AbstractCrudController
                 yield FormField::addPanel('admin.shop.panel_shop_admin')->renderCollapsed();
                 yield ArrayField::new('admins')->setLabel('admin.shop.field.admins');
             }
-
-            yield DateField::new('created_at')->setLabel('admin.field.created_at');
-            yield DateField::new('updated_at')->setLabel('admin.field.updated_at');
         }
 
         // EDIT
@@ -330,23 +330,10 @@ class ShopCrudController extends AbstractCrudController
             throw $this->createAccessDeniedException();
         }
 
-        // retrieve referrer's querystring 'filters'
-        \parse_str(\parse_url($request->query->get(EA::REFERRER))[EA::QUERY], $referrerQuery);
-
-        if (isset($referrerQuery[EA::FILTERS])) {
-            $request->query->set(EA::FILTERS, $referrerQuery[EA::FILTERS]);
-        }
-
         $context = $request->attributes->get(EA::CONTEXT_REQUEST_ATTRIBUTE);
-
-        // recreate searchDto so that it takes into account the querystring 'filters'
-        $searchDto = (!isset($referrerQuery[EA::FILTERS]))
-            ? $context->getSearch()
-            : $this->adminContextFactory->getSearchDto($request, $context->getCrud());
         $fields = FieldCollection::new($this->configureFields(Crud::PAGE_INDEX));
         $filters = $this->get(FilterFactory::class)->create($context->getCrud()->getFiltersConfig(), $fields, $context->getEntity());
-
-        $shops = $this->createIndexQueryBuilder($searchDto, $context->getEntity(), $fields, $filters)
+        $shops = $this->createIndexQueryBuilder($context->getSearch(), $context->getEntity(), $fields, $filters)
             ->getQuery()
             ->getResult();
 

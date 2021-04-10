@@ -137,12 +137,6 @@ class RegistrationController extends AbstractController
         $user->setPlainPassword($password);
         $user->setRoles(['ROLE__USER']);
 
-        // Create the refresh token User
-        $refreshToken = $refreshTokenManager->create();
-        $refreshToken->setUsername($user->getUsername());
-        $refreshToken->setRefreshToken();
-        $refreshToken->setValid($datetime);
-
         $errors_user = $validator->validate($user);
         $errors_token = $validator->validate($user);
 
@@ -172,6 +166,7 @@ class RegistrationController extends AbstractController
 
                 // Send email confirmation active User if active_confirm_user is true
                 if ($this->params->get('active_confirm_user')) {
+                    $user->setIsVerified(false);
                     $this->mailer->sendEmailConfirmationApi(
                         'api_verify_email',
                         $user,
@@ -179,6 +174,12 @@ class RegistrationController extends AbstractController
                     );
                 }
             }
+
+            // Create the refresh token User
+            $refreshToken = $refreshTokenManager->create();
+            $refreshToken->setUsername($user->getUsername());
+            $refreshToken->setRefreshToken();
+            $refreshToken->setValid($datetime);
 
             $refreshTokenManager->save($refreshToken);
 

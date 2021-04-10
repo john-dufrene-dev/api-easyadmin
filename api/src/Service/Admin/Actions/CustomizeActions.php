@@ -399,10 +399,6 @@ final class CustomizeActions
      */
     public function export($action, $format): Action
     {
-        // @todo : For the moment this action just export all files, waiting for this PR :
-        // https://github.com/EasyCorp/EasyAdminBundle/issues/4197 and
-        // https://github.com/EasyCorp/EasyAdminBundle/pull/4154
-        
         switch ($format) {
             case 'csv':
                 $using_format = self::EXPORT_CSV;
