@@ -80,6 +80,8 @@ return [
     'admin.dashboard.logout' => 'Déconnexion',
     'admin.dashboard.menu.shop' => 'Shop Management',
     'admin.dashboard.menu.shops' => 'Shops',
+    'admin.dashboard.menu.user' => 'User Management',
+    'admin.dashboard.menu.users' => 'Users',
     'admin.dashboard.menu.admin' => 'Admin Management',
     'admin.dashboard.menu.admins' => 'Admins',
     'admin.dashboard.menu.groups' => 'Groups',
@@ -125,6 +127,18 @@ return [
     'admin.shop.field.longitude' => 'Longitude',
     'admin.shop.field.phone' => 'Téléphone',
     'admin.shop.flash.no_delete.admin' => 'Impossible de supprimer Shop tant qu\'un Admin est associé',
+
+    // User Admin Page
+    'User' => 'User',
+    'None' => 'Vide',
+    'admin.user.panel_user' => 'User informations',
+    'admin.user.panel_shop_id' => 'User informations Shop associé',
+    'admin.user.field.email' => 'Email',
+    'admin.user.field.is_active' => 'Actif',
+    'admin.user.field.is_verified' => 'Vérifié',
+    'admin.user.field.password' => 'Mot de passe',
+    'admin.user.field.plain_password' => 'Mot de passe',
+    'admin.user.field.shop' => 'Shop selectionné',
 
     // Admin Admin Page
     'Admin' => 'Admin',

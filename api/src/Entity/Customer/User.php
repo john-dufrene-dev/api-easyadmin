@@ -2,6 +2,7 @@
 
 namespace App\Entity\Customer;
 
+use App\Entity\Client\Shop;
 use Doctrine\ORM\Mapping as ORM;
 use App\Service\Utils\ReferenceFactory;
 use App\Service\Traits\Entity\UuidTrait;
@@ -100,7 +101,15 @@ class User implements UserInterface
      * 
      * @ORM\Column(type="boolean")
      */
-    private $is_verified = false;
+    private $is_verified = true;
+
+    /**
+     * shop - Shop related of the user
+     * 
+     * @ORM\ManyToOne(targetEntity=Shop::class, inversedBy="users")
+     * @ORM\JoinColumn(referencedColumnName="uuid")
+     */
+    private $shop;
 
     /**
      * created_at - Date of created User
@@ -375,6 +384,29 @@ class User implements UserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+    
+    /**
+     * getShop
+     *
+     * @return Shop
+     */
+    public function getShop(): ?Shop
+    {
+        return $this->shop;
+    }
+    
+    /**
+     * setShop
+     *
+     * @param  mixed $shop
+     * @return self
+     */
+    public function setShop(?Shop $shop): self
+    {
+        $this->shop = $shop;
+
+        return $this;
     }
 
     /**

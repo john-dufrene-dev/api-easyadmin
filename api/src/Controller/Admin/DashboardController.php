@@ -3,10 +3,11 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Client\Shop;
+use App\Entity\Customer\User;
 use App\Entity\Monitoring\Log;
 use App\Entity\Security\Admin;
-use Symfony\UX\Chartjs\Model\Chart;
 use App\Entity\Security\AdminGroup;
+use Symfony\UX\Chartjs\Model\Chart;
 use App\Entity\Configuration\Config;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -139,6 +140,18 @@ class DashboardController extends AbstractDashboardController
             || PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'INDEX')
         ) {
             yield MenuItem::linkToCrud('admin.dashboard.menu.shops', 'fas fa-cart-plus', Shop::class);
+        }
+
+        /*************** -- USER LINK -- ***************/
+        if (PermissionsAdmin::checkAdmin($this->getUser()) || PermissionsAdmin::checkActions($this->getUser(), 'USER', 'INDEX')) {
+            yield MenuItem::section('admin.dashboard.menu.user');
+        }
+
+        if (
+            PermissionsAdmin::checkAdmin($this->getUser())
+            || PermissionsAdmin::checkActions($this->getUser(), 'USER', 'INDEX')
+        ) {
+            yield MenuItem::linkToCrud('admin.dashboard.menu.users', 'fas fa-user', User::class);
         }
 
         /*************** -- ADMIN LINK -- ***************/

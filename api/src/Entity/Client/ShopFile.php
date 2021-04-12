@@ -15,8 +15,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  * @ORM\Entity(repositoryClass=ShopFileRepository::class)
  * 
  * @Vich\Uploadable
- * 
- * 
  */
 class ShopFile implements \Serializable
 {
@@ -346,7 +344,7 @@ class ShopFile implements \Serializable
 
         return $this;
     }
-        
+
     /**
      * serialize
      *
@@ -356,7 +354,7 @@ class ShopFile implements \Serializable
     {
         $this->image_name = base64_encode($this->image_name);
     }
-        
+
     /**
      * unserialize
      *

@@ -94,6 +94,15 @@ final class PermissionsAdmin
     public const ROLE_SHOP_ACTION_DETAIL       = 'ROLE_SHOP_ACTION_DETAIL';
     public const ROLE_SHOP_ACTION_EXPORT       = 'ROLE_SHOP_ACTION_EXPORT';
 
+    /*************** -- ROLES ACTIONS FOR USER ENTITY -- ***************/
+    public const ROLE_USER_ACTION_ALL          = 'ROLE_USER_ACTION_ALL';
+    public const ROLE_USER_ACTION_INDEX        = 'ROLE_USER_ACTION_INDEX';
+    public const ROLE_USER_ACTION_EDIT         = 'ROLE_USER_ACTION_EDIT';
+    public const ROLE_USER_ACTION_DELETE       = 'ROLE_USER_ACTION_DELETE';
+    public const ROLE_USER_ACTION_NEW          = 'ROLE_USER_ACTION_NEW';
+    public const ROLE_USER_ACTION_DETAIL       = 'ROLE_USER_ACTION_DETAIL';
+    public const ROLE_USER_ACTION_EXPORT       = 'ROLE_USER_ACTION_EXPORT';
+
     /**
      * 
      * Roles owners
@@ -128,6 +137,15 @@ final class PermissionsAdmin
     public const ROLE_SHOP_OWNER_DETAIL        = 'ROLE_SHOP_OWNER_DETAIL';
     public const ROLE_SHOP_OWNER_EXPORT        = 'ROLE_SHOP_OWNER_EXPORT';
 
+    /*************** -- ROLES OWNERS FOR USER ENTITY -- ***************/
+    public const ROLE_USER_OWNER_ALL           = 'ROLE_USER_OWNER_ALL';
+    public const ROLE_USER_OWNER_INDEX         = 'ROLE_USER_OWNER_INDEX';
+    public const ROLE_USER_OWNER_EDIT          = 'ROLE_USER_OWNER_EDIT';
+    public const ROLE_USER_OWNER_DELETE        = 'ROLE_USER_OWNER_DELETE';
+    public const ROLE_USER_OWNER_NEW           = 'ROLE_USER_OWNER_NEW';
+    public const ROLE_USER_OWNER_DETAIL        = 'ROLE_USER_OWNER_DETAIL';
+    public const ROLE_USER_OWNER_EXPORT        = 'ROLE_USER_OWNER_EXPORT';
+
     public static function exists(?string $permissionName): bool
     {
         if (null === $permissionName) {
@@ -152,6 +170,8 @@ final class PermissionsAdmin
             'permissions.owners.admin_group'                    => self::getOwnersAdminGroupEntity(),
             'permissions.actions.shop'                          => self::getActionsShopEntity(),
             'permissions.owners.shop'                           => self::getOwnersShopEntity(),
+            'permissions.actions.user'                          => self::getActionsUserEntity(),
+            'permissions.owners.user'                           => self::getOwnersUserEntity(),
         ];
     }
 
@@ -243,6 +263,19 @@ final class PermissionsAdmin
         ];
     }
 
+    public static function getActionsUserEntity()
+    {
+        return [
+            'ROLE_USER_ACTION_ALL' => self::ROLE_USER_ACTION_ALL,
+            'ROLE_USER_ACTION_INDEX' => self::ROLE_USER_ACTION_INDEX,
+            'ROLE_USER_ACTION_EDIT' => self::ROLE_USER_ACTION_EDIT,
+            'ROLE_USER_ACTION_DELETE' => self::ROLE_USER_ACTION_DELETE,
+            'ROLE_USER_ACTION_NEW' => self::ROLE_USER_ACTION_NEW,
+            'ROLE_USER_ACTION_DETAIL' => self::ROLE_USER_ACTION_DETAIL,
+            'ROLE_USER_ACTION_EXPORT' => self::ROLE_USER_ACTION_EXPORT,
+        ];
+    }
+
     /// OWNERS ///
 
     public static function getOwnersAdminEntity()
@@ -281,6 +314,19 @@ final class PermissionsAdmin
             'ROLE_SHOP_OWNER_NEW' => self::ROLE_SHOP_OWNER_NEW,
             'ROLE_SHOP_OWNER_DETAIL' => self::ROLE_SHOP_OWNER_DETAIL,
             'ROLE_SHOP_OWNER_EXPORT' => self::ROLE_SHOP_OWNER_EXPORT,
+        ];
+    }
+
+    public static function getOwnersUserEntity()
+    {
+        return [
+            'ROLE_USER_OWNER_ALL' => self::ROLE_USER_OWNER_ALL,
+            'ROLE_USER_OWNER_INDEX' => self::ROLE_USER_OWNER_INDEX,
+            'ROLE_USER_OWNER_EDIT' => self::ROLE_USER_OWNER_EDIT,
+            'ROLE_USER_OWNER_DELETE' => self::ROLE_USER_OWNER_DELETE,
+            'ROLE_USER_OWNER_NEW' => self::ROLE_USER_OWNER_NEW,
+            'ROLE_USER_OWNER_DETAIL' => self::ROLE_USER_OWNER_DETAIL,
+            'ROLE_USER_OWNER_EXPORT' => self::ROLE_USER_OWNER_EXPORT,
         ];
     }
 

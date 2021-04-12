@@ -67,6 +67,8 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/api/auth/*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/shops, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/shops/*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/(docs|index).*, roles: ROLE_API_DOCUMENTATION }
         - { path: ^/api, roles: ROLE__USER }
 

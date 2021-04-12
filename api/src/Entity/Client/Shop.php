@@ -2,6 +2,7 @@
 
 namespace App\Entity\Client;
 
+use App\Entity\Customer\User;
 use App\Entity\Security\Admin;
 use Doctrine\ORM\Mapping as ORM;
 use App\Filter\Api\OrSearchFilter;
@@ -207,6 +208,17 @@ class Shop
     private $shop_files;
 
     /**
+     * users - Users linked to the Shop
+     * 
+     * @ORM\OneToMany(targetEntity=User::class, mappedBy="shop", cascade={"persist", "remove"}, orphanRemoval=true)
+     * 
+     * @var Collection|User[]|null
+     * 
+     * @Assert\Valid
+     */
+    private $users;
+
+    /**
      * created_at - Date of created Shop
      *
      * @var \DateTimeInterface|null
@@ -245,6 +257,7 @@ class Shop
         $this->updated_at = new \DateTime();
         $this->admins = new ArrayCollection();
         $this->shop_files = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     /**
@@ -449,6 +462,48 @@ class Shop
             // set the owning side to null (unless already changed)
             if ($shopFile->getShop() === $this) {
                 $shopFile->setShop(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    /**
+     * addUser
+     *
+     * @param  mixed $user
+     * @return self
+     */
+    public function addUser(User $user): self
+    {
+        if (!$this->users->contains($user)) {
+            $this->users[] = $user;
+            $user->setShop($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * removeUser
+     *
+     * @param  mixed $user
+     * @return self
+     */
+    public function removeUser(User $user): self
+    {
+        if ($this->users->removeElement($user)) {
+            // set the owning side to null (unless already changed)
+            if ($user->getShop() === $this) {
+                $user->setShop(null);
             }
         }
 
