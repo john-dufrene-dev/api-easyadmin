@@ -25,7 +25,7 @@ class ShopInfo
     private $id;
 
     /**
-     * shop - Shop related of the images
+     * shop - Shop related of the infos
      * 
      * @ORM\OneToOne(targetEntity=Shop::class, inversedBy="shop_info")
      * @ORM\JoinColumn(referencedColumnName="uuid")

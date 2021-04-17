@@ -16,6 +16,7 @@ final class CustomizeActions
 {
     public const IMPERSONATE = 'impersonate';
     public const EXPORT_CSV = 'export_to_csv';
+    public const BATCH_ACTIVE = 'batch_active';
 
     /**
      * security
@@ -206,7 +207,14 @@ final class CustomizeActions
                     }
                     return true;
                 });
-            });
+            })
+            // @todo : waiting new release for batch action
+            // ->update(Crud::PAGE_INDEX, Action::BATCH_DELETE, function (Action $a) {
+            //     return $a->setIcon('fa fa-trash')->setLabel(false)->displayIf(function ($e) {
+            //         return true;
+            //     });
+            // })
+            ;
 
         $actions
             ->update(Crud::PAGE_DETAIL, Action::EDIT, function (Action $a) {
@@ -415,4 +423,6 @@ final class CustomizeActions
             ->setCssClass('btn')
             ->createAsGlobalAction();
     }
+
+    // @todo : Add active action - verified action
 }

@@ -137,7 +137,7 @@ class ConfigGeneralCrudController extends AbstractCrudController
                     ->renderAsBadges([
                         0 => 'primary',
                         1 => 'primary',
-                    ]);;
+                    ]);
             }
             yield DateField::new('created_at')->setLabel('admin.field.created_at');
             yield DateField::new('updated_at')->setLabel('admin.field.updated_at');

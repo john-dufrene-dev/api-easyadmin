@@ -5,7 +5,7 @@ doctrine_migrations:
         "DoctrineMigrations": "%kernel.project_dir%/migrations"
 
     # Connection to use for the migrations
-    connection: default
+    # connection: default
 
     storage:
         # Default (SQL table) metadata storage configuration
