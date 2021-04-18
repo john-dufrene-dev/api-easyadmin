@@ -3,13 +3,19 @@
 namespace App\DataFixtures;
 
 use App\Entity\Customer\User;
+use App\Entity\Customer\UserInfo;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserFixtures extends Fixture
 {
-    private $encoder;
+    public const DEFAULT_FIRSTNAME = 'Firstname';
+    public const DEFAULT_LASTNAME = 'Lastname';
+    public const DEFAULT_GENDER = 'M';
+    public const DEFAULT_PHONE = '+33601020102';
+
+    protected $encoder;
 
     public function __construct(UserPasswordEncoderInterface $encoder)
     {
@@ -20,7 +26,17 @@ class UserFixtures extends Fixture
     {
         // Default User
         $user = new User();
+        $user_info = new UserInfo();
+
         $user->setEmail('user@user.com'); // don't forget to change address
+
+        $user_info->setUser($user);
+        $user_info->setFirstname(self::DEFAULT_FIRSTNAME);
+        $user_info->setLastname(self::DEFAULT_LASTNAME);
+        $user_info->setBirthday(new \DateTime());
+        $user_info->setGender(self::DEFAULT_GENDER);
+        $user_info->setPhone(self::DEFAULT_PHONE);
+        $user->setUserInfo($user_info);
 
         $password = $this->encoder->encodePassword($user, 'user'); // don't forget to change password
         $user->setPassword($password);

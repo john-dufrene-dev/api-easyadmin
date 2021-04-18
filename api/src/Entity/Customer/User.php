@@ -4,6 +4,7 @@ namespace App\Entity\Customer;
 
 use App\Entity\Client\Shop;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Customer\UserInfo;
 use App\Service\Utils\ReferenceFactory;
 use App\Service\Traits\Entity\UuidTrait;
 use App\Repository\Customer\UserRepository;
@@ -102,6 +103,17 @@ class User implements UserInterface
      * @ORM\Column(type="boolean")
      */
     private $is_verified = true;
+
+    /**
+     * user_info - Infos of the User
+     * 
+     * @ORM\OneToOne(targetEntity=UserInfo::class, mappedBy="user", cascade={"persist", "remove"})
+     * 
+     * @var User|null
+     * 
+     * @Assert\Valid
+     */
+    private $user_info;
 
     /**
      * shop - Shop related of the user
@@ -368,24 +380,28 @@ class User implements UserInterface
     }
 
     /**
-     * @return void
-     * @see UserInterface
+     * getUserInfo
+     *
+     * @return UserInfo
      */
-    public function getSalt()
+    public function getUserInfo(): ?UserInfo
     {
-        // not needed when using the "bcrypt" algorithm in security.yaml
+        return $this->user_info;
     }
 
     /**
-     * @return void
-     * @see UserInterface
+     * setUserInfo
+     *
+     * @param  mixed $user_info
+     * @return self
      */
-    public function eraseCredentials()
+    public function setUserInfo(?UserInfo $user_info): self
     {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
+        $this->user_info = $user_info;
+
+        return $this;
     }
-    
+
     /**
      * getShop
      *
@@ -453,6 +469,25 @@ class User implements UserInterface
         $this->updated_at = $updated_at;
 
         return $this;
+    }
+
+    /**
+     * @return void
+     * @see UserInterface
+     */
+    public function getSalt()
+    {
+        // not needed when using the "bcrypt" algorithm in security.yaml
+    }
+
+    /**
+     * @return void
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 
     // @todo : Add getExportData() function for export

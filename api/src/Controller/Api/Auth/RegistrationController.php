@@ -4,6 +4,7 @@ namespace App\Controller\Api\Auth;
 
 use App\Entity\Customer\User;
 use Symfony\Component\Uid\Ulid;
+use App\Entity\Customer\UserInfo;
 use App\Entity\Customer\UserToken;
 use App\Service\Api\Email\UserMailer;
 use Doctrine\ORM\EntityManagerInterface;
@@ -133,9 +134,15 @@ class RegistrationController extends AbstractController
 
         // Create The User Entity
         $user = new User();
+        $user_info = new UserInfo();
+        
+        $user_info->setUser($user);
         $user->setEmail($username);
         $user->setPlainPassword($password);
         $user->setRoles(['ROLE__USER']);
+
+        // @todo : add User informations
+        $user->setUserInfo($user_info);
 
         $errors_user = $validator->validate($user);
         $errors_token = $validator->validate($user);

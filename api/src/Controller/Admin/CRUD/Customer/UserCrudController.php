@@ -18,7 +18,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
@@ -135,6 +137,23 @@ class UserCrudController extends AbstractCrudController
             yield DateField::new('created_at')->setLabel('admin.field.created_at');
             yield DateField::new('updated_at')->setLabel('admin.field.updated_at');
 
+            yield FormField::addPanel('admin.user.panel_user_info')->renderCollapsed();
+
+            yield TextField::new('user_info.firstname')->setLabel('admin.user.field.firstname');
+            yield TextField::new('user_info.lastname')->setLabel('admin.user.field.lastname');
+            yield DateField::new('user_info.birthday')
+                ->setFormat('full', 'none')
+                ->setLabel('admin.user.field.birthday');
+            yield ChoiceField::new('user_info.gender')
+                ->setLabel('admin.user.field.gender')
+                ->setFormTypeOption('empty_data', null)
+                ->setChoices([
+                    'admin.user.field.gender_male' => 'M',
+                    'admin.user.field.gender_female' => 'F',
+                    'admin.user.field.gender_other' => 'O',
+                ]);
+            yield TelephoneField::new('user_info.phone')->setLabel('admin.user.field.phone');
+
             if (
                 (PermissionsAdmin::checkAdmin($this->getUser()))
                 || (PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'DETAIL'))
@@ -157,6 +176,23 @@ class UserCrudController extends AbstractCrudController
             yield BooleanField::new('is_active')->setLabel('admin.user.field.is_active');
             yield BooleanField::new('is_verified')->setLabel('admin.user.field.is_verified');
 
+            yield FormField::addPanel('admin.user.panel_user_info')->renderCollapsed();
+
+            yield TextField::new('user_info.firstname')->setLabel('admin.user.field.firstname');
+            yield TextField::new('user_info.lastname')->setLabel('admin.user.field.lastname');
+            yield DateField::new('user_info.birthday')
+                ->setFormat('short', 'none')
+                ->setLabel('admin.user.field.birthday');
+            yield ChoiceField::new('user_info.gender')
+                ->setLabel('admin.user.field.gender')
+                ->setFormTypeOption('empty_data', null)
+                ->setChoices([
+                    'admin.user.field.gender_male' => 'M',
+                    'admin.user.field.gender_female' => 'F',
+                    'admin.user.field.gender_other' => 'O',
+                ]);
+            yield TelephoneField::new('user_info.phone')->setLabel('admin.user.field.phone');
+
             if (
                 (PermissionsAdmin::checkAdmin($this->getUser()))
                 || (PermissionsAdmin::checkActions($this->getUser(), 'USER', 'EDIT'))
@@ -166,6 +202,8 @@ class UserCrudController extends AbstractCrudController
                     // ->autocomplete(true)
                     ->setLabel('admin.user.field.shop');
             }
+
+            // @Todo : Add roles system ROLE__USER by default
         }
 
         // NEW

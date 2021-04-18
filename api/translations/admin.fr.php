@@ -131,7 +131,8 @@ return [
     // User Admin Page
     'User' => 'User',
     'None' => 'Vide',
-    'admin.user.panel_user' => 'User informations',
+    'admin.user.panel_user' => 'Paramètres User ',
+    'admin.user.panel_user_info' => 'User informations',
     'admin.user.panel_shop_id' => 'User informations Shop associé',
     'admin.user.field.email' => 'Email',
     'admin.user.field.is_active' => 'Actif',
@@ -139,6 +140,14 @@ return [
     'admin.user.field.password' => 'Mot de passe',
     'admin.user.field.plain_password' => 'Mot de passe',
     'admin.user.field.shop' => 'Shop selectionné',
+    'admin.user.field.firstname' => 'Prénom',
+    'admin.user.field.lastname' => 'Nom',
+    'admin.user.field.birthday' => 'Date d\'anniversaire',
+    'admin.user.field.gender' => 'Genre',
+    'admin.user.field.phone' => 'Téléphone',
+    'admin.user.field.gender_male' => 'Homme',
+    'admin.user.field.gender_female' => 'Femme',
+    'admin.user.field.gender_other' => 'Autre',
 
     // Admin Admin Page
     'Admin' => 'Admin',

@@ -3,6 +3,7 @@
 namespace App\EventSubscriber\Admin\Customer;
 
 use App\Entity\Customer\User;
+use App\Entity\Customer\UserInfo;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityUpdatedEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityPersistedEvent;
@@ -25,8 +26,13 @@ class CreateOrUpdateUserSubscriber implements EventSubscriberInterface
             return;
         }
 
+        $user_info = new UserInfo();
+        $user_info->setUser($entity);
+        $entity->setuserInfo($user_info);
+
         $password = $this->encoder->encodePassword($entity, $entity->getPassword());
         $entity->setPassword($password);
+        $entity->setRoles(['ROLE__USER']);
 
         $entity->setCreatedAt(new \DateTime());
         $entity->setUpdatedAt(new \DateTime());

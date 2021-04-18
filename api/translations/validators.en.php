@@ -26,6 +26,7 @@ return [
     'asserts.entity.phone' => 'The value {{ value }} is not a valid format',
     'asserts.entity.postal_code' => 'The value {{ value }} is not a valid postal code',
     'asserts.entity.range_localization' => 'Value must be between {{ min }} and {{ max }}',
+    'asserts.entity.gender' => 'Gender does not exist',
 
     // Form change password
     'asserts.change_password.require' => 'Please enter a password',
