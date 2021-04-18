@@ -54,12 +54,12 @@ final class RegisterOpenApiDecorator implements OpenApiFactoryInterface
                         'content' => [
                             'application/ld+json' => [
                                 'schema' => [
-                                    '$ref' => '#/components/schemas/Credentials',
+                                    '$ref' => '#/components/schemas/Auth.Credentials',
                                 ],
                             ],
                             'application/json' => [
                                 'schema' => [
-                                    '$ref' => '#/components/schemas/Credentials',
+                                    '$ref' => '#/components/schemas/Auth.Credentials',
                                 ],
                             ],
                         ],
@@ -83,12 +83,12 @@ final class RegisterOpenApiDecorator implements OpenApiFactoryInterface
                     new \ArrayObject([                   // Content
                         'application/ld+json' => [
                             'schema' => [
-                                '$ref' => '#/components/schemas/Credentials',
+                                '$ref' => '#/components/schemas/Auth.Credentials',
                             ],
                         ],
                         'application/json' => [
                             'schema' => [
-                                '$ref' => '#/components/schemas/Credentials',
+                                '$ref' => '#/components/schemas/Auth.Credentials',
                             ],
                         ],
                     ]),

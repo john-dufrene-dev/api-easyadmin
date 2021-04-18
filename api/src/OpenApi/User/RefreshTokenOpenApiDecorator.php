@@ -54,12 +54,12 @@ final class RefreshTokenOpenApiDecorator implements OpenApiFactoryInterface
                         'content' => [
                             'application/ld+json' => [
                                 'schema' => [
-                                    '$ref' => '#/components/schemas/RefreshToken',
+                                    '$ref' => '#/components/schemas/Auth.RefreshToken',
                                 ],
                             ],
                             'application/json' => [
                                 'schema' => [
-                                    '$ref' => '#/components/schemas/RefreshToken',
+                                    '$ref' => '#/components/schemas/Auth.RefreshToken',
                                 ],
                             ],
                         ],
@@ -83,12 +83,12 @@ final class RefreshTokenOpenApiDecorator implements OpenApiFactoryInterface
                     new \ArrayObject([                   // Content
                         'application/ld+json' => [
                             'schema' => [
-                                '$ref' => '#/components/schemas/RefreshToken',
+                                '$ref' => '#/components/schemas/Auth.RefreshToken',
                             ],
                         ],
                         'application/json' => [
                             'schema' => [
-                                '$ref' => '#/components/schemas/RefreshToken',
+                                '$ref' => '#/components/schemas/Auth.RefreshToken',
                             ],
                         ],
                     ]),

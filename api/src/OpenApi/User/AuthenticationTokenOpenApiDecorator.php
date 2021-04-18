@@ -54,12 +54,12 @@ final class AuthenticationTokenOpenApiDecorator implements OpenApiFactoryInterfa
                         'content' => [
                             'application/ld+json' => [
                                 'schema' => [
-                                    '$ref' => '#/components/schemas/Token',
+                                    '$ref' => '#/components/schemas/Auth.Token',
                                 ],
                             ],
                             'application/json' => [
                                 'schema' => [
-                                    '$ref' => '#/components/schemas/Token',
+                                    '$ref' => '#/components/schemas/Auth.Token',
                                 ],
                             ],
                         ],
@@ -83,12 +83,12 @@ final class AuthenticationTokenOpenApiDecorator implements OpenApiFactoryInterfa
                     new \ArrayObject([                   // Content
                         'application/ld+json' => [
                             'schema' => [
-                                '$ref' => '#/components/schemas/Credentials',
+                                '$ref' => '#/components/schemas/Auth.Credentials',
                             ],
                         ],
                         'application/json' => [
                             'schema' => [
-                                '$ref' => '#/components/schemas/Credentials',
+                                '$ref' => '#/components/schemas/Auth.Credentials',
                             ],
                         ],
                     ]),

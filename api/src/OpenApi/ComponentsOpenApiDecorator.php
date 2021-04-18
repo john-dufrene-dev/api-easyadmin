@@ -39,7 +39,7 @@ final class ComponentsOpenApiDecorator implements OpenApiFactoryInterface
         $schemas = $openApi->getComponents()->getSchemas();
 
         // Component Token
-        $schemas['Token'] = new \ArrayObject([
+        $schemas['Auth.Token'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
                 'token' => [
@@ -54,7 +54,7 @@ final class ComponentsOpenApiDecorator implements OpenApiFactoryInterface
         ]);
 
         // Component Refresh Token
-        $schemas['RefreshToken'] = new \ArrayObject([
+        $schemas['Auth.RefreshToken'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
                 'refresh_token' => [
@@ -65,7 +65,7 @@ final class ComponentsOpenApiDecorator implements OpenApiFactoryInterface
         ]);
 
         // Component Credentials
-        $schemas['Credentials'] = new \ArrayObject([
+        $schemas['Auth.Credentials'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
                 'email' => [
