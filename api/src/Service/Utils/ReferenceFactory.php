@@ -9,7 +9,7 @@ class ReferenceFactory
      *
      * @var int
      */
-    protected $n = 9;
+    protected $n = 12;
 
     /**
      * generateReference
