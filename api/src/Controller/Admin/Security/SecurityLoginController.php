@@ -34,6 +34,7 @@ class SecurityLoginController extends AbstractController
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
 
+        // @Todo : Finish translations
         return $this->render('admin/security/login.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,
@@ -47,13 +48,5 @@ class SecurityLoginController extends AbstractController
             'username_parameter' => 'email',
             'password_parameter' => 'password',
         ]);
-    }
-
-    /**
-     * @Route("/logout", name="admin_logout")
-     */
-    public function logout()
-    {
-        throw new \LogicException($this->translator->trans('', [], 'admin'));
     }
 }
