@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\OpenApi\User;
+namespace App\OpenApi\Auth;
 
 use ApiPlatform\Core\OpenApi\Model;
 use ApiPlatform\Core\OpenApi\OpenApi;

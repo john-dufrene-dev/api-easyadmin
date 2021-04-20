@@ -42,22 +42,22 @@ services:
         autoconfigure: false
 
     # Register new User and get JWT token
-    App\OpenApi\User\RegisterOpenApiDecorator:
+    App\OpenApi\Auth\RegisterOpenApiDecorator:
         decorates: "api_platform.openapi.factory"
         autoconfigure: false
 
     # Logout the current User
-    App\OpenApi\User\LogoutOpenApiDecorator:
+    App\OpenApi\Auth\LogoutOpenApiDecorator:
         decorates: "api_platform.openapi.factory"
         autoconfigure: false
 
     # Add JWT token User auth for api
-    App\OpenApi\User\AuthenticationTokenOpenApiDecorator:
+    App\OpenApi\Auth\AuthenticationTokenOpenApiDecorator:
         decorates: "api_platform.openapi.factory"
         autoconfigure: false
 
     # Get Refresh JWT token User auth for api
-    App\OpenApi\User\RefreshTokenOpenApiDecorator:
+    App\OpenApi\Auth\RefreshTokenOpenApiDecorator:
         decorates: "api_platform.openapi.factory"
         autoconfigure: false
 
