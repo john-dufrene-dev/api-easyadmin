@@ -158,7 +158,7 @@ class UserCrudController extends AbstractCrudController
                 (PermissionsAdmin::checkAdmin($this->getUser()))
                 || (PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'DETAIL'))
             ) {
-                yield FormField::addPanel('admin.user.panel_user')->renderCollapsed();
+                yield FormField::addPanel('admin.user.panel_shop_id')->renderCollapsed();
                 yield TextField::new('shop')->setLabel('admin.user.field.shop');
             }
         }
@@ -197,9 +197,12 @@ class UserCrudController extends AbstractCrudController
                 (PermissionsAdmin::checkAdmin($this->getUser()))
                 || (PermissionsAdmin::checkActions($this->getUser(), 'USER', 'EDIT'))
             ) {
+                $shop_disabled = (PermissionsAdmin::checkOwners($this->getUser(), 'USER', 'EDIT')
+                    || PermissionsAdmin::checkAdmin($this->getUser())) ? false : true;
                 yield FormField::addPanel('admin.user.panel_shop_id')->renderCollapsed();
                 yield AssociationField::new('shop')
                     // ->autocomplete(true)
+                    ->setFormTypeOptions(['disabled' => $shop_disabled])
                     ->setLabel('admin.user.field.shop');
             }
 

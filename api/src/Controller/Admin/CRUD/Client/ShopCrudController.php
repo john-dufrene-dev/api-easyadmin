@@ -8,6 +8,7 @@ use App\Form\Type\Client\ShopFileType;
 use App\Form\Type\Client\ShopHourType;
 use App\Service\Admin\Builder\ExportBuilder;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use App\Service\Admin\Actions\CustomizeActions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -319,9 +320,9 @@ class ShopCrudController extends AbstractCrudController
      * exportCsv
      *
      * @param  mixed $request
-     * @return void
+     * @return Response
      */
-    public function exportCsv(Request $request)
+    public function exportCsv(Request $request): Response
     {
         if (
             !PermissionsAdmin::checkAdmin($this->getUser())
@@ -333,7 +334,14 @@ class ShopCrudController extends AbstractCrudController
         $context = $request->attributes->get(EA::CONTEXT_REQUEST_ATTRIBUTE);
         $fields = FieldCollection::new($this->configureFields(Crud::PAGE_INDEX));
         $filters = $this->get(FilterFactory::class)->create($context->getCrud()->getFiltersConfig(), $fields, $context->getEntity());
-        $shops = $this->createIndexQueryBuilder($context->getSearch(), $context->getEntity(), $fields, $filters)
+
+        \parse_str(\parse_url($request->query->get(EA::REFERRER))[EA::QUERY], $referrerQuery);
+        $query = isset($referrerQuery[EA::QUERY]) ? $referrerQuery[EA::QUERY] : null;
+        $request->query->set(EA::QUERY, $query);
+        // recreate searchDto so that it takes into account the querystring 'query'
+        $searchDto = $this->adminContextFactory->getSearchDto($request, $context->getCrud());
+
+        $shops = $this->createIndexQueryBuilder($searchDto, $context->getEntity(), $fields, $filters)
             ->getQuery()
             ->getResult();
 

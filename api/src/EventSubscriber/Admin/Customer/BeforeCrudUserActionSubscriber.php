@@ -28,6 +28,19 @@ class BeforeCrudUserActionSubscriber implements EventSubscriberInterface
             }
 
             if (PermissionsAdmin::checkActions($context->getUser(), 'USER', 'DETAIL')) {
+                if (null !== $context->getEntity()->getInstance()->getShop()) {
+                    foreach ($context->getEntity()->getInstance()->getShop()->getAdmins() as $admin) {
+                        if ($admin->getUuid()->toRfc4122() === $context->getUser()->getUuid()->toRfc4122()) {
+                            return;
+                        }
+                    }
+                }
+            }
+
+            if (
+                PermissionsAdmin::checkOwners($context->getUser(), 'USER', 'DETAIL')
+                && PermissionsAdmin::checkActions($context->getUser(), 'USER', 'DETAIL')
+            ) {
                 return;
             }
 
@@ -42,6 +55,19 @@ class BeforeCrudUserActionSubscriber implements EventSubscriberInterface
             }
 
             if (PermissionsAdmin::checkActions($context->getUser(), 'USER', 'EDIT')) {
+                if (null !== $context->getEntity()->getInstance()->getShop()) {
+                    foreach ($context->getEntity()->getInstance()->getShop()->getAdmins() as $admin) {
+                        if ($admin->getUuid()->toRfc4122() === $context->getUser()->getUuid()->toRfc4122()) {
+                            return;
+                        }
+                    }
+                }
+            }
+
+            if (
+                PermissionsAdmin::checkOwners($context->getUser(), 'USER', 'EDIT')
+                && PermissionsAdmin::checkActions($context->getUser(), 'USER', 'EDIT')
+            ) {
                 return;
             }
 
@@ -56,6 +82,19 @@ class BeforeCrudUserActionSubscriber implements EventSubscriberInterface
             }
 
             if (PermissionsAdmin::checkActions($context->getUser(), 'USER', 'DELETE')) {
+                if (null !== $context->getEntity()->getInstance()->getShop()) {
+                    foreach ($context->getEntity()->getInstance()->getShop()->getAdmins() as $admin) {
+                        if ($admin->getUuid()->toRfc4122() === $context->getUser()->getUuid()->toRfc4122()) {
+                            return;
+                        }
+                    }
+                }
+            }
+
+            if (
+                PermissionsAdmin::checkOwners($context->getUser(), 'USER', 'DELETE')
+                && PermissionsAdmin::checkActions($context->getUser(), 'USER', 'DELETE')
+            ) {
                 return;
             }
 

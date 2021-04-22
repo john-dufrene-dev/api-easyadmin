@@ -28,9 +28,9 @@ class ExportBuilder
      *
      * @param  mixed $data
      * @param  mixed $filename
-     * @return void
+     * @return Response
      */
-    public function exportCsv($data, $filename)
+    public function exportCsv($data, $filename): Response
     {
         $serializer = new Serializer([new ObjectNormalizer()], [new CsvEncoder()]);
         $response = new Response($serializer->encode($data, CsvEncoder::FORMAT));
