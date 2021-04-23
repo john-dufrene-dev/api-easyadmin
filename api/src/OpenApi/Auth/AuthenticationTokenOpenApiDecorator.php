@@ -96,7 +96,7 @@ final class AuthenticationTokenOpenApiDecorator implements OpenApiFactoryInterfa
                 ),
                 null,                      // Callbacks
                 false,                     // Deprecated
-                null,                      // Security
+                [],                      // Security
                 null,                      // Servers
             ),
             null,                // Operation DELETE

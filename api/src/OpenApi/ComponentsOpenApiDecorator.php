@@ -38,7 +38,7 @@ final class ComponentsOpenApiDecorator implements OpenApiFactoryInterface
         $openApi = ($this->decorated)($context);
         $schemas = $openApi->getComponents()->getSchemas();
 
-        // Component Token
+        // Component Response Token
         $schemas['Auth.Token'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
@@ -53,7 +53,7 @@ final class ComponentsOpenApiDecorator implements OpenApiFactoryInterface
             ],
         ]);
 
-        // Component Refresh Token
+        // Component Request Refresh Token
         $schemas['Auth.RefreshToken'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
@@ -64,7 +64,7 @@ final class ComponentsOpenApiDecorator implements OpenApiFactoryInterface
             ],
         ]);
 
-        // Component Credentials
+        // Component Request Credentials
         $schemas['Auth.Credentials'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
@@ -75,6 +75,39 @@ final class ComponentsOpenApiDecorator implements OpenApiFactoryInterface
                 'password' => [
                     'type' => 'string',
                     'example' => 'your_password',
+                ],
+            ],
+        ]);
+
+        // Component Request Send Secret
+        $schemas['Auth.SendResetPassword'] = new \ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'email' => [
+                    'type' => 'string',
+                    'example' => 'email@email.com',
+                ],
+            ],
+        ]);
+
+        // Component Response Send Secret
+        $schemas['Auth.GetSecretToken'] = new \ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'code' => [
+                    'type' => 'integer',
+                    'example' => 200,
+                    'readOnly' => true,
+                ],
+                'message' => [
+                    'type' => 'string',
+                    'example' => 'Secret Successfully send secret password',
+                    'readOnly' => true,
+                ],
+                'token' => [
+                    'type' => 'string',
+                    'example' => '01F3R817DP5CNRGRC9H356CAQW',
+                    'readOnly' => true,
                 ],
             ],
         ]);

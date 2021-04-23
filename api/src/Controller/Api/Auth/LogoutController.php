@@ -51,6 +51,18 @@ class LogoutController extends AbstractController
             ], Response::HTTP_METHOD_NOT_ALLOWED);
         }
 
+        // Tcheck if it's json contentType
+        if (!empty($request->headers->get('content_type'))) {
+            if (!\in_array($request->headers->get('content_type'), self::CONTENT_TYPE, true)) {
+
+                return $this->json([
+                    "code" => Response::HTTP_UNSUPPORTED_MEDIA_TYPE,
+                    "message" => 'Invalid content type Header (Allow: {application/json & application/ld+json})'
+                ], Response::HTTP_UNSUPPORTED_MEDIA_TYPE);
+            }
+        }
+
+        // Tcheck if user is granted
         if (!$this->isGranted('ROLE__USER')) {
             return $this->json([
                 "code" => Response::HTTP_UNAUTHORIZED,
@@ -68,16 +80,6 @@ class LogoutController extends AbstractController
             }
         }
 
-        // Tcheck if it's json contentType
-        if (!empty($request->headers->get('content_type'))) {
-            if (!\in_array($request->headers->get('content_type'), self::CONTENT_TYPE, true)) {
-
-                return $this->json([
-                    "code" => Response::HTTP_UNSUPPORTED_MEDIA_TYPE,
-                    "message" => 'Invalid content type Header (Allow: {application/json & application/ld+json})'
-                ], Response::HTTP_UNSUPPORTED_MEDIA_TYPE);
-            }
-        }
 
         // Do something to clear user information or logging
 

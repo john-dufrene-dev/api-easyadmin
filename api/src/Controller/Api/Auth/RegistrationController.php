@@ -110,6 +110,15 @@ class RegistrationController extends AbstractController
             ], Response::HTTP_UNSUPPORTED_MEDIA_TYPE);
         }
 
+        // Tcheck if content is empty
+        if (empty($request->getContent())) {
+            // @Todo : translation
+            return $this->json([
+                "code" => Response::HTTP_BAD_REQUEST,
+                "message" => 'Bad Request : Body content is empty'
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
         $content = $serializer->deserialize($request->getContent(), User::class, 'json');
 
         $username = $content->getEmail() ? $content->getEmail() : null;

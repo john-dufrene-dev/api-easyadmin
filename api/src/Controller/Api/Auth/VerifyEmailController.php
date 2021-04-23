@@ -74,6 +74,7 @@ class VerifyEmailController extends AbstractController
 
         // If active_confirm_user is false return 404 Not Found Page
         if (!$this->params->get('active_confirm_user')) {
+            // @Todo : Transform in json response
             throw new NotFoundHttpException('Page doesn\'t exist');
         }
 
@@ -81,6 +82,7 @@ class VerifyEmailController extends AbstractController
 
         if (null === $uuid || !isset($uuid)) {
             // @Todo : translation
+            // @Todo : Transform in json response
             throw new BadRequestException("Uuid and email is required !");
         }
 
@@ -88,6 +90,7 @@ class VerifyEmailController extends AbstractController
 
         if (!$user) {
             // @Todo : translation
+            // @Todo : Transform in json response
             throw new NotFoundHttpException('User doesn\'t exist !');
         }
 
@@ -95,6 +98,7 @@ class VerifyEmailController extends AbstractController
 
         if (!$token) {
             // @Todo : translation
+            // @Todo : Transform in json response
             throw new BadRequestException('Jwt Token is invalid !');
         }
 
@@ -109,6 +113,7 @@ class VerifyEmailController extends AbstractController
                 'message' => $exception->getReason(),
                 'class' => 'danger'
             ]);
+            // @Todo : Transform in json response
             return $this->redirectToRoute('admin_callback', ['token' => $ulid->toBase32()]);
         }
 

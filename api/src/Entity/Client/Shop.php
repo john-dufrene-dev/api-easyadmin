@@ -39,24 +39,26 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *    normalizationContext={
  *        "groups"={
  *            "shop:readOne",
- *            "shop:readAll"
+ *            "shop:readAll",
  *         }
  *    },
  *    denormalizationContext={
  *        "groups"={
- *            "shop:write"
+ *            "shop:write",
  *         }
  *    },
  *    collectionOperations={
  *         "get_all"={
  *             "method"="GET",
- *             "normalization_context"={"groups"={"shop:readAll"}},
+ *             "normalization_context"={"groups"={"shop:readAll"}, "openapi_definition_name"= "collection"},
+ *             "openapi_context"={"security"= {}}
  *         },
  *    },
  *    itemOperations={
  *         "get_uuid"={
  *             "method"="GET",
- *             "normalization_context"={"groups"={"shop:readOne"}},
+ *             "normalization_context"={"groups"={"shop:readOne"}, "openapi_definition_name"= "detail"},
+ *             "openapi_context"={"security"= {}}
  *         },
  *    }
  * )
