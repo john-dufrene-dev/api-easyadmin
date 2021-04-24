@@ -185,13 +185,6 @@ class ShopCrudController extends AbstractCrudController
                 ->setNumDecimals(8);
             yield TelephoneField::new('shop_info.phone')->setLabel('admin.shop.field.phone');
 
-            yield BooleanField::new('shop_info.shipping_click')
-                ->setCustomOption('renderAsSwitch', false)
-                ->setLabel('admin.shop.field.shipping_click');
-            yield BooleanField::new('shop_info.shipping_delivery')
-                ->setCustomOption('renderAsSwitch', false)
-                ->setLabel('admin.shop.field.shipping_delivery');
-
             yield CollectionField::new('shop_info.shop_hour')
                 ->setTemplatePath('admin/fields/clients/collection_shop_hour.html.twig')
                 ->setLabel('admin.shop.field.shop_hour');
@@ -199,6 +192,14 @@ class ShopCrudController extends AbstractCrudController
             yield FormField::addPanel('admin.shop.panel_shop_files')->renderCollapsed();
             yield CollectionField::new('shop_files')
                 ->setTemplatePath('admin/fields/clients/collection_shop_images.html.twig');
+
+            yield FormField::addPanel('admin.shop.panel_shop_services')->renderCollapsed();
+            yield BooleanField::new('shop_info.shipping_click')
+                ->setCustomOption('renderAsSwitch', false)
+                ->setLabel('admin.shop.field.shipping_click');
+            yield BooleanField::new('shop_info.shipping_delivery')
+                ->setCustomOption('renderAsSwitch', false)
+                ->setLabel('admin.shop.field.shipping_delivery');
 
             if (
                 (PermissionsAdmin::checkAdmin($this->getUser()))
