@@ -106,6 +106,7 @@ return [
     'admin.shop.title' => 'Information Shop',
     'admin.shop.panel_shop' => 'Informations d\'identité Shop',
     'admin.shop.panel_shop_info' => 'Informations heures/localisation Shop',
+    'admin.shop.panel_shop_services' => 'Services & modules du Shop',
     'admin.shop.panel_shop_files' => 'Photos du Shop',
     'admin.shop.panel_shop_admin' => 'Informations admin Shop',
     'admin.shop.field.name' => 'Nom',

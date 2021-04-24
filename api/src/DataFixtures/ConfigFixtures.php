@@ -17,7 +17,7 @@ class ConfigFixtures extends Fixture
 
     // Default paginator
     public const CONF_DEFAULT_PAGINATOR_NAME = 'DEFAULT_PAGINATOR';
-    public const CONF_DEFAULT_PAGINATOR_VALUE = 15;
+    public const CONF_DEFAULT_PAGINATOR_VALUE = 30;
     public const CONF_DEFAULT_PAGINATOR_DESCRIPTION = 'Default Admin Pagination';
 
     public function load(ObjectManager $manager)

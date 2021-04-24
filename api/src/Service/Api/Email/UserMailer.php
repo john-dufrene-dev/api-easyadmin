@@ -67,7 +67,7 @@ class UserMailer
     public function sendRegistationApi(
         $user,
         $subject = 'Default registration User', // Default message without translation, you can change it
-        $template = 'email/api/security/register.html.twig'
+        $template = 'email/api/auth/register.html.twig'
     ) {
         $email = (new TemplatedEmail())
             ->from(new Address($this->params->get('mailer_user'), $subject))
@@ -88,7 +88,7 @@ class UserMailer
         string $verifyEmailRouteName,
         UserInterface $user,
         $subject = 'Default confirm email User', // Default message without translation, you can change it
-        $template = 'email/api/security/confirmation_email.html.twig'
+        $template = 'email/api/auth/confirmation_email.html.twig'
     ): void {
         $signatureComponents = $this->verifyEmailHelper->generateSignature(
             $verifyEmailRouteName,

@@ -208,13 +208,11 @@ final class CustomizeActions
                     return true;
                 });
             })
-            // @todo : waiting new release for batch action
-            // ->update(Crud::PAGE_INDEX, Action::BATCH_DELETE, function (Action $a) {
-            //     return $a->setIcon('fa fa-trash')->setLabel(false)->displayIf(function ($e) {
-            //         return true;
-            //     });
-            // })
-            ;
+            ->update(Crud::PAGE_INDEX, Action::BATCH_DELETE, function (Action $a) {
+                return $a->setIcon('fa fa-trash')->setLabel(false)->displayIf(function ($e) {
+                    return true;
+                });
+            });
 
         $actions
             ->update(Crud::PAGE_DETAIL, Action::EDIT, function (Action $a) {

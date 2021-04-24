@@ -238,13 +238,6 @@ class ShopCrudController extends AbstractCrudController
                 ->setNumDecimals(8);
             yield TelephoneField::new('shop_info.phone')->setLabel('admin.shop.field.phone');
 
-            yield BooleanField::new('shop_info.shipping_click')
-                ->setCustomOption('renderAsSwitch', false)
-                ->setLabel('admin.shop.field.shipping_click');
-            yield BooleanField::new('shop_info.shipping_delivery')
-                ->setCustomOption('renderAsSwitch', false)
-                ->setLabel('admin.shop.field.shipping_delivery');
-
             // @Todo : Reorder AddPanel()
             yield CollectionField::new('shop_info.shop_hour')->setLabel('admin.shop.field.shop_hour')
                 ->setCustomOption('allowAdd', false) //disable add field
@@ -261,6 +254,14 @@ class ShopCrudController extends AbstractCrudController
             yield FormField::addPanel('admin.shop.panel_shop_files')->renderCollapsed();
             yield CollectionField::new('shop_files')->setEntryType(ShopFileType::class)
                 ->setFormTypeOption('by_reference', false);
+
+            yield FormField::addPanel('admin.shop.panel_shop_services')->renderCollapsed();
+            yield BooleanField::new('shop_info.shipping_click')
+                ->setCustomOption('renderAsSwitch', false)
+                ->setLabel('admin.shop.field.shipping_click');
+            yield BooleanField::new('shop_info.shipping_delivery')
+                ->setCustomOption('renderAsSwitch', false)
+                ->setLabel('admin.shop.field.shipping_delivery');
 
             if (
                 (PermissionsAdmin::checkAdmin($this->getUser()))
