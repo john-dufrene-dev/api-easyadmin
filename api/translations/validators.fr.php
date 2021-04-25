@@ -27,6 +27,11 @@ return [
     'asserts.entity.postal_code' => 'La valeur {{ value }} n\'est pas un code postal valide',
     'asserts.entity.range_localization' => 'La valeur doit être comprise entre {{ min }} et {{ max }}',
     'asserts.entity.gender' => 'Le genre n\'existe pas',
+    'asserts.entity.valid.type' => 'La valeur {{ value }} ,\'est pas un type {{ type }}',
+    'asserts.entity.secret.not_null' => 'La clé secrète ne peut pas être nulle',
+    'asserts.entity.token.not_null' => 'La clé token ne peut pas être nulle',
+    'asserts.entity.requested_at.not_null' => 'La date de requête {{ value }} ne peux pas être nulle',
+    'asserts.entity.expired_at.not_null' => 'La date d\'expiration {{ value }} ne peux pas être nulle',
 
     // Form change password
     'asserts.change_password.require' => 'Veuillez entrer un mot de passe',

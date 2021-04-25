@@ -3,6 +3,8 @@
 namespace App\Entity\Customer;
 
 use App\Entity\Client\Shop;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Customer\UserInfo;
 use App\Service\Utils\ReferenceFactory;
@@ -146,6 +148,15 @@ class User implements UserInterface
     private $updated_at;
 
     /**
+     * reset_password - The User who want to reset password
+     *
+     * @var mixed
+     *
+     * @ORM\OneToMany(targetEntity=UserResetPassword::class, mappedBy="user", cascade={"remove"})
+     */
+    private $reset_password;
+
+    /**
      * __construct
      *
      * @return void
@@ -156,6 +167,7 @@ class User implements UserInterface
         $this->reference = (isset($reference)) ? $reference : $referencefactory->generateReference();
         $this->created_at = new \DateTime();
         $this->updated_at = new \DateTime();
+        $this->resetPassword = new ArrayCollection();
     }
 
     /**
@@ -411,7 +423,7 @@ class User implements UserInterface
     {
         return $this->shop;
     }
-    
+
     /**
      * setShop
      *
@@ -421,6 +433,48 @@ class User implements UserInterface
     public function setShop(?Shop $shop): self
     {
         $this->shop = $shop;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|UserResetPassword[]
+     */
+    public function getResetPassword(): Collection
+    {
+        return $this->reset_password;
+    }
+
+    /**
+     * addResetPassword
+     *
+     * @param  mixed $resetPassword
+     * @return self
+     */
+    public function addResetPassword(UserResetPassword $resetPassword): self
+    {
+        if (!$this->reset_password->contains($resetPassword)) {
+            $this->reset_password[] = $resetPassword;
+            $resetPassword->setUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * removeResetPassword
+     *
+     * @param  mixed $resetPassword
+     * @return self
+     */
+    public function removeResetPassword(UserResetPassword $resetPassword): self
+    {
+        if ($this->reset_password->removeElement($resetPassword)) {
+            // set the owning side to null (unless already changed)
+            if ($resetPassword->getUser() === $this) {
+                $resetPassword->setUser(null);
+            }
+        }
 
         return $this;
     }

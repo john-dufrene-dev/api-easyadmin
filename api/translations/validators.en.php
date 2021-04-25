@@ -27,6 +27,11 @@ return [
     'asserts.entity.postal_code' => 'The value {{ value }} is not a valid postal code',
     'asserts.entity.range_localization' => 'Value must be between {{ min }} and {{ max }}',
     'asserts.entity.gender' => 'Gender does not exist',
+    'asserts.entity.valid.type' => 'The value {{ value }} is not a valid {{ type }}',
+    'asserts.entity.secret.not_null' => 'Secret could not be null',
+    'asserts.entity.token.not_null' => 'Token could not be null',
+    'asserts.entity.requested_at.not_null' => 'Requested date {{ value }} could not be null',
+    'asserts.entity.expired_at.not_null' => 'Expired date {{ value }} could not be null',
 
     // Form change password
     'asserts.change_password.require' => 'Please enter a password',
