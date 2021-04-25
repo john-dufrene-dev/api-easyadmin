@@ -44,10 +44,12 @@ final class ComponentsOpenApiDecorator implements OpenApiFactoryInterface
             'properties' => [
                 'token' => [
                     'type' => 'string',
+                    'example' => 'tf5fggrg4g59g5g.b48b4tg8t4y84ds4gt84e8f4r8gr4tht4yh4d8g4ra8d55.F5z4hns54h',
                     'readOnly' => true,
                 ],
                 'refresh_token' => [
                     'type' => 'string',
+                    'example' => 'f5fggrg4g59g5g.b48b4tg8t4y84ds4gt84e8f4r8gr4tht4yh4d8g4ra8d55.F5z4hns54h',
                     'readOnly' => true,
                 ],
             ],
@@ -59,7 +61,7 @@ final class ComponentsOpenApiDecorator implements OpenApiFactoryInterface
             'properties' => [
                 'refresh_token' => [
                     'type' => 'string',
-                    'example' => 'your_refresh_token',
+                    'example' => 'f5fggrg4g59g5g.b48b4tg8t4y84ds4gt84e8f4r8gr4tht4yh4d8g4ra8d55.F5z4hns54h',
                 ],
             ],
         ]);
@@ -74,7 +76,7 @@ final class ComponentsOpenApiDecorator implements OpenApiFactoryInterface
                 ],
                 'password' => [
                     'type' => 'string',
-                    'example' => 'your_password',
+                    'example' => 'D8g8_#[dj58SSX_85',
                 ],
             ],
         ]);
@@ -94,16 +96,6 @@ final class ComponentsOpenApiDecorator implements OpenApiFactoryInterface
         $schemas['Auth.GetSecretToken'] = new \ArrayObject([
             'type' => 'object',
             'properties' => [
-                'code' => [
-                    'type' => 'integer',
-                    'example' => 200,
-                    'readOnly' => true,
-                ],
-                'message' => [
-                    'type' => 'string',
-                    'example' => 'Secret Successfully send secret password',
-                    'readOnly' => true,
-                ],
                 'token' => [
                     'type' => 'string',
                     'example' => '01F3R817DP5CNRGRC9H356CAQW',

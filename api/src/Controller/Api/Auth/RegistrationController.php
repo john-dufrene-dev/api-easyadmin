@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Service\Api\Builder\ApiResponseBuilder;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -26,8 +27,6 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
  */
 class RegistrationController extends AbstractController
 {
-    public const CONTENT_TYPE = ['application/json', 'application/ld+json'];
-
     /**
      * mailer
      *
@@ -84,7 +83,8 @@ class RegistrationController extends AbstractController
         UserPasswordEncoderInterface $passwordEncoder,
         ValidatorInterface $validator,
         JWTTokenManagerInterface $JWTManager,
-        RefreshTokenManagerInterface $refreshTokenManager
+        RefreshTokenManagerInterface $refreshTokenManager,
+        ApiResponseBuilder $apiResponseBuilder
     ): JsonResponse {
 
         $encoders = [new JsonEncoder()];
@@ -94,29 +94,17 @@ class RegistrationController extends AbstractController
 
         // Tcheck if POST Method
         if (!$request->isMethod('POST')) {
-
-            return $this->json([
-                "code" => Response::HTTP_METHOD_NOT_ALLOWED,
-                "message" => 'Method Not Allowed (Allow: {POST})'
-            ], Response::HTTP_METHOD_NOT_ALLOWED);
+            return $apiResponseBuilder->CheckIfMethodPost();
         }
 
         // Tcheck if it's json contentType
-        if (!\in_array($request->headers->get('content_type'), self::CONTENT_TYPE, true)) {
-
-            return $this->json([
-                "code" => Response::HTTP_UNSUPPORTED_MEDIA_TYPE,
-                "message" => 'Invalid content type Header (Allow: {application/json & application/ld+json})'
-            ], Response::HTTP_UNSUPPORTED_MEDIA_TYPE);
+        if (!\in_array($request->headers->get('content_type'), ApiResponseBuilder::CONTENT_TYPE, true)) {
+            return $apiResponseBuilder->checkIfAcceptContentType();
         }
 
         // Tcheck if content is empty
         if (empty($request->getContent())) {
-            // @Todo : translation
-            return $this->json([
-                "code" => Response::HTTP_BAD_REQUEST,
-                "message" => 'Bad Request : Body content is empty'
-            ], Response::HTTP_BAD_REQUEST);
+            return $apiResponseBuilder->checkIfBodyIsEmpty();
         }
 
         $content = $serializer->deserialize($request->getContent(), User::class, 'json');
@@ -129,11 +117,7 @@ class RegistrationController extends AbstractController
 
         // Tcheck if username or password are null
         if (null === $username || null === $password || !isset($username) || !isset($password)) {
-
-            return $this->json([
-                "code" => Response::HTTP_BAD_REQUEST,
-                "message" => 'Bad Request'
-            ], Response::HTTP_BAD_REQUEST);
+            return $apiResponseBuilder->checkIfBadRequest();
         }
 
         // Create The User Entity
@@ -209,10 +193,7 @@ class RegistrationController extends AbstractController
                 $errs = array_merge($errs, [$error->getMessage()]);
             }
 
-            return $this->json([
-                "code" => Response::HTTP_BAD_REQUEST,
-                "message" => array_values(array_unique($errs))
-            ], Response::HTTP_BAD_REQUEST);
+            return $apiResponseBuilder->checkIfErrorsBadRequest($errs);
         }
     }
 }
