@@ -144,4 +144,30 @@ class ApiResponseBuilder
             "message" => 'Bad Request : Too many try',
         ], Response::HTTP_BAD_REQUEST);
     }
+    
+    /**
+     * checkIfExpiredToken
+     *
+     * @return void
+     */
+    public function checkIfExpiredToken()
+    {
+        return new JsonResponse([
+            "code" => Response::HTTP_UNAUTHORIZED,
+            "message" => 'Bad Request : Token is expired',
+        ], Response::HTTP_UNAUTHORIZED);
+    }
+    
+    /**
+     * checkIfInvalidToken
+     *
+     * @return void
+     */
+    public function checkIfInvalidToken()
+    {
+        return new JsonResponse([
+            "code" => Response::HTTP_UNAUTHORIZED,
+            "message" => 'Bad Request : Token is invalid',
+        ], Response::HTTP_UNAUTHORIZED);
+    }
 }

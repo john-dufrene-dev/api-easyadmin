@@ -38,7 +38,7 @@ class UserFixtures extends Fixture
         $user_info->setPhone(self::DEFAULT_PHONE);
         $user->setUserInfo($user_info);
 
-        $password = $this->encoder->encodePassword($user, 'user'); // don't forget to change password
+        $password = $this->encoder->encodePassword($user, 'Azerty06,'); // don't forget to change password
         $user->setPassword($password);
         $user->setRoles(['ROLE__USER']);
         $user->setIsActive(1);
