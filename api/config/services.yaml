@@ -61,5 +61,20 @@ services:
         decorates: "api_platform.openapi.factory"
         autoconfigure: false
 
+    # Send request to get secret and token
+    App\OpenApi\Auth\ResetPassword\SendResetPasswordOpenApiDecorator:
+        decorates: "api_platform.openapi.factory"
+        autoconfigure: false
+    
+    # Check secret and token for reset password
+    App\OpenApi\Auth\ResetPassword\CheckResetPasswordOpenApiDecorator:
+        decorates: "api_platform.openapi.factory"
+        autoconfigure: false
+    
+    # Reset password with valid token auth
+    App\OpenApi\Auth\ResetPassword\ResetPasswordOpenApiDecorator:
+        decorates: "api_platform.openapi.factory"
+        autoconfigure: false
+
 imports:
     - { resource: "services_custom.yaml" } # Custom services

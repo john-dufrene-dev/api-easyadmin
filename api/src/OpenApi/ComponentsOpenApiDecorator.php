@@ -104,6 +104,48 @@ final class ComponentsOpenApiDecorator implements OpenApiFactoryInterface
             ],
         ]);
 
+        // Component Request check secret / token
+        $schemas['Auth.CheckResetPassword'] = new \ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'token' => [
+                    'type' => 'string',
+                    'example' => '01F3R817DP5CNRGRC9H356CAQW',
+                ],
+                'secret' => [
+                    'type' => 'string',
+                    'example' => '28-FNWAGXM2',
+                ],
+            ],
+        ]);
+
+        // Component Response check token / secret
+        $schemas['Auth.GetTokenResetPassword'] = new \ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'token' => [
+                    'type' => 'string',
+                    'example' => 'f5fggrg4g59g5g.b48b4tg8t4y84ds4gt84e8f4r8gr4tht4yh4d8g4ra8d55.F5z4hns54h',
+                    'readOnly' => true,
+                ],
+            ],
+        ]);
+
+        // Component Request check secret / token
+        $schemas['Auth.ResetPassword'] = new \ArrayObject([
+            'type' => 'object',
+            'properties' => [
+                'password' => [
+                    'type' => 'string',
+                    'example' => 'D8g8_#[dj58SSX_85',
+                ],
+                'plain_password' => [
+                    'type' => 'string',
+                    'example' => 'D8g8_#[dj58SSX_85',
+                ],
+            ],
+        ]);
+
         return $openApi;
     }
 }
