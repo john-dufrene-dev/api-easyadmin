@@ -170,12 +170,30 @@ class ApiResponseBuilder
             "message" => 'Bad Request : Token is invalid',
         ], Response::HTTP_UNAUTHORIZED);
     }
-
+    
+    /**
+     * checkIfValueAreEqualTo
+     *
+     * @return void
+     */
     public function checkIfValueAreEqualTo()
     {
         return new JsonResponse([
             "code" => Response::HTTP_BAD_REQUEST,
             "message" => 'Bad Request : Values are not equal',
+        ], Response::HTTP_BAD_REQUEST);
+    }
+    
+    /**
+     * checkIfValidUlid
+     *
+     * @return void
+     */
+    public function checkIfValidUlid()
+    {
+        return new JsonResponse([
+            "code" => Response::HTTP_BAD_REQUEST,
+            "message" => 'Bad Request : Invalid Ulid',
         ], Response::HTTP_BAD_REQUEST);
     }
 }
