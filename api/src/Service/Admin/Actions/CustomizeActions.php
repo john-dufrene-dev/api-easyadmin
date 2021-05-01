@@ -421,6 +421,27 @@ final class CustomizeActions
             ->setCssClass('btn')
             ->createAsGlobalAction();
     }
+    
+    /**
+     * batchToggleActive
+     *
+     * @param  mixed $action
+     * @param  mixed $active
+     * @return Action
+     */
+    public function batchToggleActive($action, $active = true): Action
+    {
+        // @todo : translations
+        if ($active) {
+            return Action::new($action . 'enable', 'admin.field.enable')
+                ->linkToCrudAction($action)
+                ->addCssClass('btn btn-primary')
+                ->setIcon('fa fa-check');
+        }
 
-    // @todo : Add active action - verified action
+        return Action::new($action . 'disable', 'admin.field.disable')
+            ->linkToCrudAction($action)
+            ->addCssClass('btn btn-danger')
+            ->setIcon('fa fa-times');
+    }
 }

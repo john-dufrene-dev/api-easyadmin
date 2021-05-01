@@ -98,6 +98,8 @@ return [
     'admin.field.reference' => 'Référence',
     'admin.field.created_at' => 'Crée le',
     'admin.field.updated_at' => 'Mis à jour le',
+    'admin.field.enable' => 'Activer',
+    'admin.field.disable' => 'Désactiver',
 
     // Shop Admin Page
     'Shop' => 'Shop',

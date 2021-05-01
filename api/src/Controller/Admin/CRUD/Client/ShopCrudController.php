@@ -26,16 +26,17 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
+use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CountryField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Factory\FilterFactory;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use Symfony\Component\Form\Extension\Core\Type\CountryType;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Factory\AdminContextFactory;
+use EasyCorp\Bundle\EasyAdminBundle\Event\AfterEntityUpdatedEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class ShopCrudController extends AbstractCrudController
@@ -106,6 +107,12 @@ class ShopCrudController extends AbstractCrudController
             $export = $this->actions->export('exportCsv', 'csv');
             $actions->add(Crud::PAGE_INDEX, $export);
         }
+
+        // Action Enable/disable
+        $enable = $this->actions->batchToggleActive('enableShops', true);
+        $disable = $this->actions->batchToggleActive('disableShops', false);
+        $actions->addBatchAction($enable);
+        $actions->addBatchAction($disable);
 
         // Default customize actions
         $this->actions->customize($actions);
@@ -361,5 +368,65 @@ class ShopCrudController extends AbstractCrudController
             $data,
             'export_shop_' . date_create()->format('dmyhis') . '.' . $this->export->format('csv')
         );
+    }
+
+    /**
+     * enableShops
+     *
+     * @param  mixed $batchActionDto
+     * @return void
+     */
+    public function enableShops(BatchActionDto $batchActionDto)
+    {
+        if (
+            !PermissionsAdmin::checkAdmin($this->getUser())
+            && !PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'EDIT')
+        ) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $entityManager = $this->getDoctrine()->getManagerForClass($batchActionDto->getEntityFqcn());
+
+        foreach ($batchActionDto->getEntityIds() as $uuid) {
+            $shop = $entityManager->find($batchActionDto->getEntityFqcn(), $uuid);
+            $shop->setIsActive(true);
+            $shop->setUpdatedAt(new \DateTime());
+
+            $this->get('event_dispatcher')->dispatch(new AfterEntityUpdatedEvent($shop));
+        }
+
+        $entityManager->flush();
+
+        return $this->redirect($batchActionDto->getReferrerUrl());
+    }
+
+    /**
+     * disableShops
+     *
+     * @param  mixed $batchActionDto
+     * @return void
+     */
+    public function disableShops(BatchActionDto $batchActionDto)
+    {
+        if (
+            !PermissionsAdmin::checkAdmin($this->getUser())
+            && !PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'EDIT')
+        ) {
+            throw $this->createAccessDeniedException();
+        }
+
+        $entityManager = $this->getDoctrine()->getManagerForClass($batchActionDto->getEntityFqcn());
+
+        foreach ($batchActionDto->getEntityIds() as $uuid) {
+            $shop = $entityManager->find($batchActionDto->getEntityFqcn(), $uuid);
+            $shop->setIsActive(false);
+            $shop->setUpdatedAt(new \DateTime());
+
+            $this->get('event_dispatcher')->dispatch(new AfterEntityUpdatedEvent($shop));
+        }
+
+        $entityManager->flush();
+
+        return $this->redirect($batchActionDto->getReferrerUrl());
     }
 }
