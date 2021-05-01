@@ -71,17 +71,17 @@ class ResetPasswordController extends AbstractController
 
         $serializer = new Serializer($normalizers, $encoders);
 
-        // Tcheck if POST Method
+        // Check if POST Method
         if (!$request->isMethod('POST')) {
             return $apiResponseBuilder->CheckIfMethodPost();
         }
 
-        // Tcheck if it's json contentType
+        // Check if it's json contentType
         if (!\in_array($request->headers->get('content_type'), ApiResponseBuilder::CONTENT_TYPE, true)) {
             return $apiResponseBuilder->checkIfAcceptContentType();
         }
 
-        // Tcheck if content is empty
+        // Check if content is empty
         if (empty($request->getContent())) {
             return $apiResponseBuilder->checkIfBodyIsEmpty();
         }
@@ -90,14 +90,14 @@ class ResetPasswordController extends AbstractController
         $password = $content->getPassword() ? $content->getPassword() : null;
         $confirm_password = $content->getPlainPassword() ? $content->getPlainPassword() : null;
 
-        // Tcheck if valid parameters
+        // Check if valid parameters
         if (null === $password || !isset($password) || null === $confirm_password || !isset($confirm_password)) {
             return $apiResponseBuilder->checkIfInvalidQueryParameters();
         }
 
         $user = $this->em->getRepository(User::class)->findOneBy(['email' => $this->getUser()->getEmail()]);
 
-        // Tcheck if User exist
+        // Check if User exist
         if (!$user) {
             return $apiResponseBuilder->checkIfInvalidUser();
         }
@@ -108,7 +108,7 @@ class ResetPasswordController extends AbstractController
         $errs = [];
         $errors_user = $validator->validate($user);
 
-        // Tcheck validations constraints
+        // Check validations constraints
         if (0 !== count($errors_user)) {
             foreach ($errors_user as $error) {
                 $errs = array_merge($errs, [$error->getMessage()]);
@@ -117,7 +117,7 @@ class ResetPasswordController extends AbstractController
             return $apiResponseBuilder->checkIfErrorsBadRequest($errs);
         }
 
-        // Tcheck if passwords are equal together
+        // Check if passwords are equal together
         if ($password !== $confirm_password) {
             return $apiResponseBuilder->checkIfValueAreEqualTo();
         }
@@ -128,7 +128,7 @@ class ResetPasswordController extends AbstractController
 
         $token = $JWTManager->create($user);
 
-        // Tcheck if token is valid
+        // Check if token is valid
         if (!$token) {
             return $apiResponseBuilder->checkIfInvalidToken();
         }

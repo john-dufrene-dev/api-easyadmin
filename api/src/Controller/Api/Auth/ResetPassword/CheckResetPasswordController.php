@@ -47,17 +47,17 @@ class CheckResetPasswordController extends AbstractController
         JWTTokenManagerInterface $JWTManager
     ): JsonResponse {
 
-        // Tcheck if POST Method
+        // Check if POST Method
         if (!$request->isMethod('POST')) {
             return $apiResponseBuilder->CheckIfMethodPost();
         }
 
-        // Tcheck if it's json contentType
+        // Check if it's json contentType
         if (!\in_array($request->headers->get('content_type'), ApiResponseBuilder::CONTENT_TYPE, true)) {
             return $apiResponseBuilder->checkIfAcceptContentType();
         }
 
-        // Tcheck if content is empty
+        // Check if content is empty
         if (empty($request->getContent())) {
             return $apiResponseBuilder->checkIfBodyIsEmpty();
         }
@@ -73,7 +73,7 @@ class CheckResetPasswordController extends AbstractController
             return $apiResponseBuilder->checkIfInvalidQueryParameters();
         }
 
-        // Tcheck signature of the Ulid
+        // Check signature of the Ulid
         $isValid = Ulid::isValid($hash_token);
 
         if (!$isValid) {
@@ -86,14 +86,14 @@ class CheckResetPasswordController extends AbstractController
             'hash_token' => $hash_token,
         ]);
 
-        // Tcheck if User exist
+        // Check if User exist
         if (!$user_identifier) {
             return $apiResponseBuilder->checkIfInvalidUser();
         }
 
         $user = $user_identifier->getUser();
 
-        // Tcheck if token is expired
+        // Check if token is expired
         if ($user_identifier->isExpired()) {
             $this->em->remove($user_identifier);
             $this->em->flush();
@@ -102,7 +102,7 @@ class CheckResetPasswordController extends AbstractController
 
         $token = $JWTManager->create($user);
 
-        // Tcheck if token is valid
+        // Check if token is valid
         if (!$token) {
             return $apiResponseBuilder->checkIfInvalidToken();
         }

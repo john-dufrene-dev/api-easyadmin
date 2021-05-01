@@ -41,17 +41,17 @@ class LogoutController extends AbstractController
      */
     public function logoutApi(Request $request, ApiResponseBuilder $apiResponseBuilder): JsonResponse
     {
-        // Tcheck if POST Method
+        // Check if POST Method
         if (!$request->isMethod('POST')) {
             return $apiResponseBuilder->CheckIfMethodPost();
         }
 
-        // Tcheck if it's json contentType
+        // Check if it's json contentType
         if (!\in_array($request->headers->get('content_type'), ApiResponseBuilder::CONTENT_TYPE, true)) {
             return $apiResponseBuilder->checkIfAcceptContentType();
         }
 
-        // Tcheck if user is granted
+        // Check if user is granted
         if (!$this->isGranted('ROLE__USER')) {
             return $apiResponseBuilder->checkIfUnauthorized();
         }

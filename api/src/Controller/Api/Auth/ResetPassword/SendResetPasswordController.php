@@ -59,22 +59,22 @@ class SendResetPasswordController extends AbstractController
 
         $serializer = new Serializer($normalizers, $encoders);
 
-        // Tcheck if POST Method
+        // Check if POST Method
         if (!$request->isMethod('POST')) {
             return $apiResponseBuilder->CheckIfMethodPost();
         }
 
-        // Tcheck if it's json contentType
+        // Check if it's json contentType
         if (!\in_array($request->headers->get('content_type'), ApiResponseBuilder::CONTENT_TYPE, true)) {
             return $apiResponseBuilder->checkIfAcceptContentType();
         }
 
-        // Tcheck if content is empty
+        // Check if content is empty
         if (empty($request->getContent())) {
             return $apiResponseBuilder->checkIfBodyIsEmpty();
         }
 
-        // Tcheck if email content exist
+        // Check if email content exist
         if (!isset($request->toArray()['email'])) {
             return $apiResponseBuilder->checkIfBadQueryParameters();
         }
@@ -82,14 +82,14 @@ class SendResetPasswordController extends AbstractController
         $content = $serializer->deserialize($request->getContent(), User::class, 'json');
         $email = $content->getEmail() ? $content->getEmail() : null;
 
-        // Tcheck if valid parameters
+        // Check if valid parameters
         if (null === $email || !isset($email)) {
             return $apiResponseBuilder->checkIfInvalidQueryParameters();
         }
 
         $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
 
-        // Tcheck if User exist
+        // Check if User exist
         if (!$user) {
             return $apiResponseBuilder->checkIfInvalidUser();
         }
@@ -114,7 +114,7 @@ class SendResetPasswordController extends AbstractController
 
             $this->em->flush();
 
-            // Tcheck if too many try
+            // Check if too many try
             return $apiResponseBuilder->checkIfTooManyTry();
         }
 

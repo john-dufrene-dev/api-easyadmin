@@ -92,17 +92,17 @@ class RegistrationController extends AbstractController
 
         $serializer = new Serializer($normalizers, $encoders);
 
-        // Tcheck if POST Method
+        // Check if POST Method
         if (!$request->isMethod('POST')) {
             return $apiResponseBuilder->CheckIfMethodPost();
         }
 
-        // Tcheck if it's json contentType
+        // Check if it's json contentType
         if (!\in_array($request->headers->get('content_type'), ApiResponseBuilder::CONTENT_TYPE, true)) {
             return $apiResponseBuilder->checkIfAcceptContentType();
         }
 
-        // Tcheck if content is empty
+        // Check if content is empty
         if (empty($request->getContent())) {
             return $apiResponseBuilder->checkIfBodyIsEmpty();
         }
@@ -115,7 +115,7 @@ class RegistrationController extends AbstractController
         $datetime = new \DateTime();
         $datetime->modify('+' . $this->params->get('gesdinet_jwt_refresh_token.ttl') . ' seconds');
 
-        // Tcheck if username or password are null
+        // Check if username or password are null
         if (null === $username || null === $password || !isset($username) || !isset($password)) {
             return $apiResponseBuilder->checkIfBadRequest();
         }
@@ -135,7 +135,7 @@ class RegistrationController extends AbstractController
         $errors_user = $validator->validate($user);
         $errors_token = $validator->validate($user);
 
-        // Tcheck validations constraints
+        // Check validations constraints
         if (0 === count($errors_user) && 0 === count($errors_token)) {
 
             $user->setPassword($passwordEncoder->encodePassword($user, $password));
