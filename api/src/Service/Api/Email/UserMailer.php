@@ -105,7 +105,7 @@ class UserMailer
 
         $context = $email->getContext();
         $context['signedUrl'] = $signatureComponents->getSignedUrl();
-        // @Todo : Change URL for frond-end
+        // @Todo : Change URL for frond-end and json format
         $context['expiresAt'] = $signatureComponents->getExpiresAt();
 
         $email->context($context);
@@ -129,5 +129,31 @@ class UserMailer
 
         $this->entityManager->persist($user);
         $this->entityManager->flush();
+    }
+
+    /**
+     * RegistationApi
+     *
+     * @return void
+     */
+    public function sendResetPasswordSecretApi(
+        $user,
+        $reset,
+        $minutes = 10,
+        $subject = 'Default reset password secret User', // Default message without translation, you can change it
+        $template = 'email/api/auth/reset_password/reset_password_secret.html.twig'
+    ) {
+        $email = (new TemplatedEmail())
+            ->from(new Address($this->params->get('mailer_user'), $subject))
+            ->to($user->getEmail())
+            ->subject($subject)
+            ->htmlTemplate($template)
+            ->context([
+                'user' => $user,
+                'reset' => $reset,
+                'minutes' => $minutes,
+            ]);
+
+        $this->mailer->send($email);
     }
 }
