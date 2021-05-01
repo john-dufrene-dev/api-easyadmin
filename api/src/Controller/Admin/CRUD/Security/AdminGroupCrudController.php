@@ -157,6 +157,7 @@ class AdminGroupCrudController extends AbstractCrudController
             ) {
                 yield ChoiceField::new('roles')->setChoices(PermissionsAdmin::getAllRoles())
                     ->allowMultipleChoices(true)
+                    ->setFormTypeOptions(['choice_translation_domain' => false])
                     ->autocomplete(true)
                     ->setRequired(false)
                     ->setLabel('admin.group.field.roles');

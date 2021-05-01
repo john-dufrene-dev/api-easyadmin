@@ -228,7 +228,7 @@ class ShopCrudController extends AbstractCrudController
             yield FormField::addPanel('admin.shop.panel_shop_info')->renderCollapsed();
 
             yield CountryField::new('shop_info.country')
-                ->setFormType(CountryType::class)
+                ->setFormTypeOptions(['choice_translation_domain' => false])
                 ->setLabel('admin.shop.field.country');
             yield TextField::new('shop_info.city')->setLabel('admin.shop.field.city');
             yield TextField::new('shop_info.postal_code')->setLabel('admin.shop.field.postal_code');

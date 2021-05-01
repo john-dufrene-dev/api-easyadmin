@@ -170,4 +170,12 @@ class ApiResponseBuilder
             "message" => 'Bad Request : Token is invalid',
         ], Response::HTTP_UNAUTHORIZED);
     }
+
+    public function checkIfValueAreEqualTo()
+    {
+        return new JsonResponse([
+            "code" => Response::HTTP_BAD_REQUEST,
+            "message" => 'Bad Request : Values are not equal',
+        ], Response::HTTP_BAD_REQUEST);
+    }
 }

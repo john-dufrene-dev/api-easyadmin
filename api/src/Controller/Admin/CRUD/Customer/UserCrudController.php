@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin\CRUD\Customer;
 
+use App\Entity\Client\Shop;
 use App\Entity\Customer\User;
 use Doctrine\ORM\QueryBuilder;
 use App\Service\Admin\Field\PasswordField;
@@ -19,6 +20,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -28,15 +30,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class UserCrudController extends AbstractCrudController
 {
-    protected $actions;
+    protected $translator;
 
-    protected $export;
-
-    protected $adminContextFactory;
-
-    public function __construct(CustomizeActions $actions)
+    public function __construct(CustomizeActions $actions, TranslatorInterface $translator)
     {
         $this->actions = $actions;
+        $this->translator = $translator;
     }
 
     public static function getEntityFqcn(): string
@@ -197,13 +196,21 @@ class UserCrudController extends AbstractCrudController
                 (PermissionsAdmin::checkAdmin($this->getUser()))
                 || (PermissionsAdmin::checkActions($this->getUser(), 'USER', 'EDIT'))
             ) {
+                // Configuration variables
                 $shop_disabled = (PermissionsAdmin::checkOwners($this->getUser(), 'USER', 'EDIT')
                     || PermissionsAdmin::checkAdmin($this->getUser())) ? false : true;
+                $shops = $this->getDoctrine()->getRepository(Shop::class);
+
                 yield FormField::addPanel('admin.user.panel_shop_id')->renderCollapsed();
-                yield AssociationField::new('shop')
-                    // ->autocomplete(true)
-                    ->setFormTypeOptions(['disabled' => $shop_disabled])
-                    ->setLabel('admin.user.field.shop');
+                yield ChoiceField::new('shop')
+                    ->autocomplete(true)
+                    ->setChoices($shops->findAll())
+                    ->setLabel('admin.user.field.shop')
+                    ->setFormTypeOptions([
+                        'choice_label' => 'getName',
+                        'disabled' => $shop_disabled,
+                        'choice_translation_domain' => false
+                    ]);
             }
 
             // @Todo : Add roles system ROLE__USER by default
