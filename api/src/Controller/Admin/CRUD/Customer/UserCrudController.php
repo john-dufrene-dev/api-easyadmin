@@ -256,6 +256,10 @@ class UserCrudController extends AbstractCrudController
             $uuid = $uuids;
         }
 
+        // @todo: Add user_shop_history table to have all latest Shop of the User with the condition
+        // $shops_history = $this->getUser()->getShopHistory();
+        // if(count($shops_history) !== 0) {}
+
         return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters)
             ->leftJoin('entity.shop', 's')
             ->addSelect('s')
