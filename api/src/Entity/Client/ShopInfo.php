@@ -25,9 +25,9 @@ class ShopInfo
     private $id;
 
     /**
-     * shop - Shop related of the infos
+     * shop - Shop related to this infos
      * 
-     * @ORM\OneToOne(targetEntity=Shop::class, inversedBy="shop_info")
+     * @ORM\OneToOne(targetEntity=Shop::class, inversedBy="shop_info", cascade={"persist", "remove"})
      * @ORM\JoinColumn(referencedColumnName="uuid")
      */
     private $shop;
@@ -113,7 +113,7 @@ class ShopInfo
      * @Assert\Range(
      *      min = -90,
      *      max = 90,
-     *      notInRangeMessage = "You must be between {{ min }} and {{ max }}",
+     *      notInRangeMessage = "asserts.entity.range.between",
      * )
      * 
      * @Groups({"shop:readOne"})
