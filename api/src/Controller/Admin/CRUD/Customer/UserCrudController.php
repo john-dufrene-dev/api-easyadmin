@@ -236,7 +236,7 @@ class UserCrudController extends AbstractCrudController
                 $shops = $this->getDoctrine()->getRepository(Shop::class);
                 $choices = (count($shops->findByAdmin($this->getUser()->getUuid()->toBinary())) !== 0
                     && !PermissionsAdmin::checkAdmin($this->getUser())
-                    && !PermissionsAdmin::checkOwners($this->getUser(), 'USER', 'EDIT'))
+                    && !PermissionsAdmin::checkOwners($this->getUser(), 'USER', 'NEW'))
                     ? $shops->findByAdmin($this->getUser()->getUuid()->toBinary())
                     : $shops->findAll();
 
