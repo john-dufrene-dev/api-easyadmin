@@ -36,6 +36,8 @@ class CreateOrUpdateUserSubscriber implements EventSubscriberInterface
 
         $entity->setCreatedAt(new \DateTime());
         $entity->setUpdatedAt(new \DateTime());
+
+        // @todo : add user_shop_history table to have all latest shop of the User
     }
 
     public function onBeforeEntityUpdatedEvent(BeforeEntityUpdatedEvent $event)
@@ -52,6 +54,8 @@ class CreateOrUpdateUserSubscriber implements EventSubscriberInterface
         }
 
         $entity->setUpdatedAt(new \DateTime());
+
+        // @todo : add user_shop_history table to have all latest shop of the User
     }
 
     public static function getSubscribedEvents()

@@ -41,10 +41,7 @@ class CreateOrUpdateShopSubscriber implements EventSubscriberInterface
         $entity->setUpdatedAt(new \DateTime());
     }
 
-    // @todo : 
-    // - Remove orphanremoval and {"remove"} in Shop Entity to not delete all User
-    // - Define Shop to null when delete a Shop  with BeforeEntityDeletedEvent
-    // - Add user_shop_history table to have all latest shop of the User
+    // @todo : add user_shop_history table to have all latest shop of the User
 
     public static function getSubscribedEvents()
     {

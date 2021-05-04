@@ -212,7 +212,7 @@ class Shop
     /**
      * users - Users linked to the Shop
      * 
-     * @ORM\OneToMany(targetEntity=User::class, mappedBy="shop", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=User::class, mappedBy="shop", cascade={"persist"})
      * 
      * @var Collection|User[]|null
      * 

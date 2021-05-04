@@ -18,6 +18,23 @@ class ShopRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Shop::class);
     }
+    
+    /**
+     * findByAdmin
+     *
+     * @param  mixed $admin
+     * @return void
+     */
+    public function findByAdmin($admin)
+    {
+        return $this->createQueryBuilder('s')
+            ->leftJoin('s.admins', 'a')
+            ->addSelect('a')
+            ->andWhere('a.uuid IN (:admin)')
+            ->setParameter('admin', $admin)
+            ->getQuery()
+            ->getResult();
+    }
 
     // /**
     //  * @return Shop[] Returns an array of Shop objects

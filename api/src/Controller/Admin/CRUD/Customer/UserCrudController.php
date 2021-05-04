@@ -197,18 +197,21 @@ class UserCrudController extends AbstractCrudController
                 || (PermissionsAdmin::checkActions($this->getUser(), 'USER', 'EDIT'))
             ) {
                 // Configuration variables
-                $shop_disabled = (PermissionsAdmin::checkOwners($this->getUser(), 'USER', 'EDIT')
-                    || PermissionsAdmin::checkAdmin($this->getUser())) ? false : true;
                 $shops = $this->getDoctrine()->getRepository(Shop::class);
+                $choices = (count($shops->findByAdmin($this->getUser()->getUuid()->toBinary())) !== 0
+                    && !PermissionsAdmin::checkAdmin($this->getUser())
+                    && !PermissionsAdmin::checkOwners($this->getUser(), 'USER', 'EDIT'))
+                    ? $shops->findByAdmin($this->getUser()->getUuid()->toBinary())
+                    : $shops->findAll();
 
                 yield FormField::addPanel('admin.user.panel_shop_id')->renderCollapsed();
                 yield ChoiceField::new('shop')
                     ->autocomplete(true)
-                    ->setChoices($shops->findAll())
+                    ->setChoices($choices)
                     ->setLabel('admin.user.field.shop')
                     ->setFormTypeOptions([
                         'choice_label' => 'getName',
-                        'disabled' => $shop_disabled,
+                        // 'disabled' => true, @todo : disable if another Shop but in history of the Shop
                         'choice_translation_domain' => false
                     ]);
             }
@@ -229,8 +232,23 @@ class UserCrudController extends AbstractCrudController
                 (PermissionsAdmin::checkAdmin($this->getUser()))
                 || (PermissionsAdmin::checkActions($this->getUser(), 'USER', 'NEW'))
             ) {
+                // Configuration variables
+                $shops = $this->getDoctrine()->getRepository(Shop::class);
+                $choices = (count($shops->findByAdmin($this->getUser()->getUuid()->toBinary())) !== 0
+                    && !PermissionsAdmin::checkAdmin($this->getUser())
+                    && !PermissionsAdmin::checkOwners($this->getUser(), 'USER', 'EDIT'))
+                    ? $shops->findByAdmin($this->getUser()->getUuid()->toBinary())
+                    : $shops->findAll();
+
                 yield FormField::addPanel('admin.user.panel_shop_id')->renderCollapsed();
-                yield AssociationField::new('shop')->setLabel('admin.user.field.shop');
+                yield ChoiceField::new('shop')
+                    ->autocomplete(true)
+                    ->setChoices($choices)
+                    ->setLabel('admin.user.field.shop')
+                    ->setFormTypeOptions([
+                        'choice_label' => 'getName',
+                        'choice_translation_domain' => false
+                    ]);
             }
         }
     }
