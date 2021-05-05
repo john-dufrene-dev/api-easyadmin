@@ -154,13 +154,19 @@ return [
 
     // Admin Admin Page
     'Admin' => 'Admin',
-    'admin.admin.title' => 'Admin Informations',
+    'admin.admin.panel_informations' => 'Admin Informations',
+    'admin.admin.panel_config' => 'Admin Configurations',
+    'admin.admin.panel_roles' => 'Admin Roles',
+    'admin.admin.panel_groups' => 'Admin Groupes',
+    'admin.admin.panel_shop' => 'Admin Shop',
     'admin.admin.field.email' => 'Email',
     'admin.admin.field.roles' => 'Roles',
     'admin.admin.field.groups' => 'Groups',
     'admin.admin.field.shops' => 'Shops',
     'admin.admin.field.password' => 'Mot de passe',
     'admin.admin.field.plain_password' => 'Mot de passe',
+    'admin.admin.field.dashboard_title' => 'Titre du tableau de bord',
+    'admin.admin.field.crud_paginator' => 'Nombre d\'entités par page',
     'admin.admin.flash.no_delete.shop' => 'Impossible de supprimer Admin tant qu\'un Shop est associé',
 
     // Group Admin Page

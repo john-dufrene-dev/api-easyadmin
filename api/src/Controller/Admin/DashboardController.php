@@ -105,7 +105,7 @@ class DashboardController extends AbstractDashboardController
         return Crud::new()
             // this defines the pagination size for all CRUD controllers
             // (each CRUD controller can override this value if needed)
-            ->setPaginatorPageSize($this->config->get('CONF_DEFAULT_PAGINATOR') ?? self::SET_PAGINATOR_PAGE_SIZE)
+            ->setPaginatorPageSize($this->getPaginator())
             // the first argument is the "template name", which is the same as the
             // Twig path but without the `@EasyAdmin/` prefix
             ->overrideTemplates([
@@ -119,7 +119,7 @@ class DashboardController extends AbstractDashboardController
     {
         return Dashboard::new()
             ->setTranslationDomain('admin')
-            ->setTitle($this->config->get('CONF_DASHBOARD_TITLE') ?? '')
+            ->setTitle($this->getDashboardTitle())
             // ->setTitle('<img src="..."> Easy <span class="text-small">Admin.</span>')
             ->setFaviconPath('favicon.ico');
     }
@@ -212,5 +212,33 @@ class DashboardController extends AbstractDashboardController
                     ->setAction('edit')
                     ->setEntityId($this->getUser()->getUuid()->toRfc4122()),
             ]);
+    }
+
+    /**
+     * getDashboardTitle
+     *
+     * @return string
+     */
+    public function getDashboardTitle(): ?string
+    {
+        if (null !== $this->getUser() && null !== $this->getUser()->getAdminConfig()->getDashboardTitle()) {
+            return $this->getUser()->getAdminConfig()->getDashboardTitle();
+        }
+
+        return $this->config->get('CONF_DASHBOARD_TITLE') ?? '';
+    }
+
+    /**
+     * getPaginator
+     *
+     * @return int
+     */
+    public function getPaginator(): ?int
+    {
+        if (null !== $this->getUser() && null !== $this->getUser()->getAdminConfig()->getCrudPaginator()) {
+            return $this->getUser()->getAdminConfig()->getCrudPaginator();
+        }
+
+        return $this->config->get('CONF_DEFAULT_PAGINATOR') ?? self::SET_PAGINATOR_PAGE_SIZE;
     }
 }

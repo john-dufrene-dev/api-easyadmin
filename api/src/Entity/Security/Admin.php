@@ -4,6 +4,7 @@ namespace App\Entity\Security;
 
 use App\Entity\Client\Shop;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Security\AdminConfig;
 use App\Service\Utils\ReferenceFactory;
 use App\Service\Traits\Entity\UuidTrait;
 use Doctrine\Common\Collections\Collection;
@@ -137,6 +138,17 @@ class Admin implements UserInterface
      * @ORM\OneToMany(targetEntity=AdminResetPassword::class, mappedBy="user", cascade={"remove"})
      */
     private $reset_password;
+
+    /**
+     * admin_config - Config of the Admin entity
+     * 
+     * @ORM\OneToOne(targetEntity=AdminConfig::class, mappedBy="admin", cascade={"persist", "remove"})
+     * 
+     * @var AdminConfig|null
+     * 
+     * @Assert\Valid
+     */
+    private $admin_config;
 
     /**
      * created_at - Date of created Admin
@@ -574,6 +586,34 @@ class Admin implements UserInterface
                 $resetPassword->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * getAdminConfig
+     *
+     * @return AdminConfig
+     */
+    public function getAdminConfig(): ?AdminConfig
+    {
+        return $this->admin_config;
+    }
+
+    /**
+     * setAdminConfig
+     *
+     * @param  mixed $adminConfig
+     * @return self
+     */
+    public function setAdminConfig(AdminConfig $adminConfig): self
+    {
+        // set the owning side of the relation if necessary
+        if ($adminConfig->getAdmin() !== $this) {
+            $adminConfig->setAdmin($this);
+        }
+
+        $this->admin_config = $adminConfig;
 
         return $this;
     }

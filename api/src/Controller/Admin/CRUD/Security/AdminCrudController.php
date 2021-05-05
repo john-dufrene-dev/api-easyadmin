@@ -4,6 +4,7 @@ namespace App\Controller\Admin\CRUD\Security;
 
 use App\Entity\Security\Admin;
 use Doctrine\ORM\QueryBuilder;
+use App\Service\Utils\PaginatorFactory;
 use App\Service\Admin\Field\PasswordField;
 use App\Service\Admin\Actions\CustomizeActions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -20,6 +21,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
@@ -29,11 +31,14 @@ class AdminCrudController extends AbstractCrudController
 {
     protected $actions;
 
+    protected $paginator;
+
     public const ACTIVE_CUSTOM_ROLES = false; // Enable or disable custom roles
 
-    public function __construct(CustomizeActions $actions)
+    public function __construct(CustomizeActions $actions, PaginatorFactory $paginator)
     {
         $this->actions = $actions;
+        $this->paginator = $paginator;
     }
 
     public static function getEntityFqcn(): string
@@ -105,8 +110,6 @@ class AdminCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield FormField::addPanel('admin.admin.title');
-
         // INDEX
         if (Crud::PAGE_INDEX === $pageName) {
             if (
@@ -124,6 +127,7 @@ class AdminCrudController extends AbstractCrudController
 
         // DETAIL
         if (Crud::PAGE_DETAIL === $pageName) {
+            yield FormField::addPanel('admin.admin.panel_informations')->renderCollapsed(false);
             if (
                 PermissionsAdmin::checkAdmin($this->getUser())
                 || PermissionsAdmin::checkOwners($this->getUser(), 'ADMIN', 'DETAIL')
@@ -134,12 +138,21 @@ class AdminCrudController extends AbstractCrudController
 
             yield TextField::new('reference')->setLabel('admin.field.reference');
             yield EmailField::new('email')->setLabel('admin.admin.field.email');
+            yield DateField::new('created_at')->setLabel('admin.field.created_at');
+            yield DateField::new('updated_at')->setLabel('admin.field.updated_at');
+
+            yield FormField::addPanel('admin.admin.panel_config')->renderCollapsed();
+            yield TextField::new('admin_config.dashboard_title')->setLabel('admin.admin.field.dashboard_title');
+            yield IntegerField::new('admin_config.crud_paginator')
+                ->setLabel('admin.admin.field.crud_paginator')
+                ->setFormTypeOptions(['choice_translation_domain' => false]);
 
             if (
                 (PermissionsAdmin::checkAdmin($this->getUser()))
                 || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'DETAIL'))
                 && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_ROLES))
             ) {
+                yield FormField::addPanel('admin.admin.panel_roles')->renderCollapsed();
                 yield ArrayField::new('roles')->setLabel('admin.admin.field.roles');
             }
 
@@ -148,6 +161,7 @@ class AdminCrudController extends AbstractCrudController
                 || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'DETAIL'))
                 && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_GROUPS))
             ) {
+                yield FormField::addPanel('admin.admin.panel_groups')->renderCollapsed();
                 yield ArrayField::new('groups')->setLabel('admin.admin.field.groups');
             }
 
@@ -156,20 +170,26 @@ class AdminCrudController extends AbstractCrudController
                 || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'DETAIL'))
                 && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_ADMINS_SHOPS))
             ) {
+                yield FormField::addPanel('admin.admin.panel_shop')->renderCollapsed();
                 yield ArrayField::new('shops')->setLabel('admin.admin.field.shops');
             }
-
-            yield DateField::new('created_at')->setLabel('admin.field.created_at');
-            yield DateField::new('updated_at')->setLabel('admin.field.updated_at');
         }
 
         // EDIT
         if (Crud::PAGE_EDIT === $pageName) {
+            yield FormField::addPanel('admin.admin.panel_informations')->renderCollapsed(false);
             yield TextField::new('reference')->setFormTypeOptions([
                 'disabled' => true,
             ])->setLabel('admin.field.reference');
             yield EmailField::new('email')->setLabel('admin.admin.field.email');
             yield PasswordField::new('plainPassword')->setLabel('admin.admin.field.plain_password');
+
+            yield FormField::addPanel('admin.admin.panel_config')->renderCollapsed();
+            yield TextField::new('admin_config.dashboard_title')->setLabel('admin.admin.field.dashboard_title');
+            yield ChoiceField::new('admin_config.crud_paginator')
+                ->setLabel('admin.admin.field.crud_paginator')
+                ->setChoices($this->paginator->choicePaginator())
+                ->setFormTypeOptions(['choice_translation_domain' => false]);
 
             // You can use it if you want to customize roles without using AdminGroup
             // By default this field is disabled
@@ -179,10 +199,12 @@ class AdminCrudController extends AbstractCrudController
                     || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'EDIT'))
                     && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_ROLES))
                 ) {
+                    yield FormField::addPanel('admin.admin.panel_roles')->renderCollapsed();
                     yield ChoiceField::new('roles')->setChoices(PermissionsAdmin::getAllRoles())
                         ->allowMultipleChoices(true)
                         ->autocomplete(true)
                         ->setRequired(false)
+                        ->setFormTypeOptions(['choice_translation_domain' => false])
                         ->setLabel('admin.admin.field.roles');
                 }
             }
@@ -192,12 +214,14 @@ class AdminCrudController extends AbstractCrudController
                 || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'EDIT'))
                 && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_GROUPS))
             ) {
+                yield FormField::addPanel('admin.admin.panel_groups')->renderCollapsed();
                 yield AssociationField::new('groups')->setLabel('admin.admin.field.groups');
             }
         }
 
         // NEW
         if (Crud::PAGE_NEW === $pageName) {
+            yield FormField::addPanel('admin.admin.panel_informations')->renderCollapsed(false);
             yield EmailField::new('email')->setLabel('admin.admin.field.email');
             yield PasswordField::new('password')->setLabel('admin.admin.field.password');
 
@@ -209,10 +233,12 @@ class AdminCrudController extends AbstractCrudController
                     || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'NEW'))
                     && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_ROLES))
                 ) {
+                    yield FormField::addPanel('admin.admin.panel_roles')->renderCollapsed();
                     yield ChoiceField::new('roles')->setChoices(PermissionsAdmin::getAllRoles())
                         ->allowMultipleChoices(true)
                         ->autocomplete(true)
                         ->setRequired(false)
+                        ->setFormTypeOptions(['choice_translation_domain' => false])
                         ->setLabel('admin.admin.field.roles');
                 }
             }
@@ -222,6 +248,7 @@ class AdminCrudController extends AbstractCrudController
                 || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'NEW'))
                 && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_GROUPS))
             ) {
+                yield FormField::addPanel('admin.admin.panel_groups')->renderCollapsed();
                 yield AssociationField::new('groups')->setLabel('admin.admin.field.groups');
             }
         }

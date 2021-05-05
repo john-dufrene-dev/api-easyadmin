@@ -3,6 +3,7 @@
 namespace App\EventSubscriber\Admin\Security\Admin;
 
 use App\Entity\Security\Admin;
+use App\Entity\Security\AdminConfig;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityUpdatedEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityPersistedEvent;
@@ -27,6 +28,12 @@ class CreateOrUpdateAdminSubscriber implements EventSubscriberInterface
 
         $password = $this->encoder->encodePassword($entity, $entity->getPassword());
         $entity->setPassword($password);
+
+        $admin_config = new AdminConfig();
+        $admin_config->setAdmin($entity);
+
+        // @todo : add default AdminConfig values
+        $entity->setAdminConfig($admin_config);
 
         $entity->setCreatedAt(new \DateTime());
         $entity->setUpdatedAt(new \DateTime());

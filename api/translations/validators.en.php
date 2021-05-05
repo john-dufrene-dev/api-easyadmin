@@ -32,6 +32,8 @@ return [
     'asserts.entity.token.not_null' => 'Token could not be null',
     'asserts.entity.requested_at.not_null' => 'Requested date {{ value }} could not be null',
     'asserts.entity.expired_at.not_null' => 'Expired date {{ value }} could not be null',
+    'asserts.entity.int.less_than' => 'This value should be less than {{ compared_value }}',
+    'asserts.entity.range.between' => 'You must be between {{ min }} and {{ max }}',
 
     // Form change password
     'asserts.change_password.require' => 'Please enter a password',
