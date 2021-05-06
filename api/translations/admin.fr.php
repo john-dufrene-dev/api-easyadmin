@@ -151,6 +151,9 @@ return [
     'admin.user.field.gender_male' => 'Homme',
     'admin.user.field.gender_female' => 'Femme',
     'admin.user.field.gender_other' => 'Autre',
+    'admin.user.field.linked_shop' => 'Shop lié à User',
+    'admin.user.field.change_linked_shop' => 'User a changé son défaut Shop',
+    'admin.user.field.is_linked_shop' => 'Pas de Shop',
 
     // Admin Admin Page
     'Admin' => 'Admin',

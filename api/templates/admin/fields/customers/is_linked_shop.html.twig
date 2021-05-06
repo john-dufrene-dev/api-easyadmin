@@ -1,0 +1,22 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{% trans_default_domain 'admin' %}
+
+{% set render_as_html = field.customOptions.get('renderAsHtml') %}
+{% set linked_shop = 'admin.user.field.is_linked_shop'|trans %}
+{% set change_linked_shop = 'admin.user.field.change_linked_shop'|trans %}
+
+{% if ea.crud.currentAction == 'detail' %}
+    <span class="badge badge-pill 
+        badge-{{ field.formattedValue == linked_shop or field.formattedValue == change_linked_shop
+        ? 'danger' : 'info' }}" title="{{ field.value }}">
+        {{ render_as_html ? field.formattedValue|raw|nl2br : field.formattedValue|nl2br }}
+    </span>
+{% else %}
+    <span class="badge badge-pill 
+        badge-{{ field.formattedValue == linked_shop or field.formattedValue == change_linked_shop
+        ? 'danger' : 'info' }}" title="{{ field.value }}">
+        {{ render_as_html ? field.formattedValue|raw : field.formattedValue|striptags }}
+    </span>
+{% endif %}

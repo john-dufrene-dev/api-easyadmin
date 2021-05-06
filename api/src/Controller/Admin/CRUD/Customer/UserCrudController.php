@@ -21,9 +21,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use App\Service\Admin\Field\Customer\IsLinkedShopField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -115,6 +115,27 @@ class UserCrudController extends AbstractCrudController
             yield DateField::new('updated_at')->setLabel('admin.field.updated_at');
             yield BooleanField::new('is_active')->setLabel('admin.user.field.is_active');
             yield BooleanField::new('is_verified')->setLabel('admin.user.field.is_verified');
+            yield IsLinkedShopField::new('shop.name')
+                ->setLabel('admin.user.field.linked_shop')
+                ->formatValue(function ($value, $entity) {
+                    // Verify if Shop exist
+                    if (null === $value) {
+                        return $this->translator->trans('admin.user.field.is_linked_shop', [], 'admin');
+                    }
+                    // verify if Shop linked to the good User
+                    if (0 !== $this->getUser()->getShops()) {
+                        $user_uuid = $entity->getUuid()->toRfc4122();
+                        foreach ($this->getUser()->getShops() as $shop) {
+                            foreach ($shop->getUsers() as $user) {
+                                if ($user->getUuid()->toRfc4122() === $user_uuid) {
+                                    return $value;
+                                }
+                            }
+                        }
+                    }
+                    // If Shop is not linked to this User - @todo history system
+                    return $this->translator->trans('admin.user.field.change_linked_shop', [], 'admin');
+                });
         }
 
         // DETAIL
@@ -158,7 +179,27 @@ class UserCrudController extends AbstractCrudController
                 || (PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'DETAIL'))
             ) {
                 yield FormField::addPanel('admin.user.panel_shop_id')->renderCollapsed();
-                yield TextField::new('shop')->setLabel('admin.user.field.shop');
+                yield IsLinkedShopField::new('shop.name')
+                    ->setLabel('admin.user.field.linked_shop')
+                    ->formatValue(function ($value, $entity) {
+                        // Verify if Shop exist
+                        if (null === $value) {
+                            return $this->translator->trans('admin.user.field.is_linked_shop', [], 'admin');
+                        }
+                        // verify if Shop linked to the good User
+                        if (0 !== $this->getUser()->getShops()) {
+                            $user_uuid = $entity->getUuid()->toRfc4122();
+                            foreach ($this->getUser()->getShops() as $shop) {
+                                foreach ($shop->getUsers() as $user) {
+                                    if ($user->getUuid()->toRfc4122() === $user_uuid) {
+                                        return $value;
+                                    }
+                                }
+                            }
+                        }
+                        // If Shop is not linked to this User - @todo history system
+                        return $this->translator->trans('admin.user.field.change_linked_shop', [], 'admin');
+                    });
             }
         }
 
