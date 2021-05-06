@@ -15,7 +15,7 @@ final class PasswordField implements FieldInterface
         return (new self())
             ->setProperty($propertyName)
             ->setLabel($label)
-            ->setTemplatePath('admin/field/password.html.twig')
+            ->setTemplatePath('admin/fields/password.html.twig')
             ->setFormType(PasswordType::class);
     }
 }
