@@ -199,13 +199,15 @@ class LogCrudController extends AbstractCrudController
         }
 
         $context = $request->attributes->get(EA::CONTEXT_REQUEST_ATTRIBUTE);
-
-        // recreate searchDto so that it takes into account the querystring 'filters'
-        $searchDto = (!isset($referrerQuery[EA::FILTERS]))
-            ? $context->getSearch()
-            : $this->adminContextFactory->getSearchDto($request, $context->getCrud());
         $fields = FieldCollection::new($this->configureFields(Crud::PAGE_INDEX));
         $filters = $this->get(FilterFactory::class)->create($context->getCrud()->getFiltersConfig(), $fields, $context->getEntity());
+
+        \parse_str(\parse_url($request->query->get(EA::REFERRER))[EA::QUERY], $referrerQuery);
+        $query = isset($referrerQuery[EA::QUERY]) ? $referrerQuery[EA::QUERY] : null;
+        $request->query->set(EA::QUERY, $query);
+        // recreate searchDto so that it takes into account the querystring 'query'
+        $searchDto = $this->adminContextFactory->getSearchDto($request, $context->getCrud());
+        
         $logs = $this->createIndexQueryBuilder($searchDto, $context->getEntity(), $fields, $filters)
             ->getQuery()
             ->getResult();
