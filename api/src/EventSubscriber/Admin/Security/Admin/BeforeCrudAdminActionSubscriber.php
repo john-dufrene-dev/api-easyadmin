@@ -16,6 +16,8 @@ class BeforeCrudAdminActionSubscriber implements EventSubscriberInterface
 {
     public const REDIRECT_ADMIN_NO_INDEX = 'admin_dashboard';
 
+    protected $router;
+
     public function __construct(RouterInterface $router)
     {
         $this->router = $router;

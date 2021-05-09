@@ -3,13 +3,13 @@
 namespace App\Entity\Customer;
 
 use App\Entity\Client\Shop;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Customer\UserInfo;
 use App\Service\Utils\ReferenceFactory;
 use App\Service\Traits\Entity\UuidTrait;
 use App\Repository\Customer\UserRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -152,7 +152,7 @@ class User implements UserInterface
      *
      * @var mixed
      *
-     * @ORM\OneToMany(targetEntity=UserResetPassword::class, mappedBy="user", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity=UserResetPassword::class, mappedBy="user", cascade={"remove"}, orphanRemoval=true)
      */
     private $reset_password;
 
