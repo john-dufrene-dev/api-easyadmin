@@ -76,7 +76,14 @@ class Admin implements UserInterface
      *
      * @ORM\Column(type="string")
      *
-     * @Assert\NotCompromisedPassword(message="asserts.admin.password.not_compromise")
+     * @Assert\Regex(
+     *     pattern="/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*([^a-zA-Z\d\s])).{8,}$/",
+     *     message="asserts.entity.password_invalid"
+     * )
+     * @Assert\Length(
+     *      min = 8,
+     *      minMessage = "asserts.entity.min_length"
+     * )
      */
     private $password;
 
@@ -85,7 +92,14 @@ class Admin implements UserInterface
      *
      * @var string The plain password
      *
-     * @Assert\NotCompromisedPassword(message="asserts.admin.password.not_compromise")
+     * @Assert\Regex(
+     *     pattern="/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*([^a-zA-Z\d\s])).{8,}$/",
+     *     message="asserts.entity.password_invalid"
+     * )
+     * @Assert\Length(
+     *      min = 8,
+     *      minMessage = "asserts.entity.min_length"
+     * )
      */
     private $plainPassword;
 

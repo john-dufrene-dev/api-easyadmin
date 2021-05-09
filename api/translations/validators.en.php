@@ -34,6 +34,7 @@ return [
     'asserts.entity.expired_at.not_null' => 'Expired date {{ value }} could not be null',
     'asserts.entity.int.less_than' => 'This value should be less than {{ compared_value }}',
     'asserts.entity.range.between' => 'You must be between {{ min }} and {{ max }}',
+    'asserts.entity.password_invalid' => 'Your password must be at least eight characters long, including upper and lower case letters, a number, and a symbol',
 
     // Form change password
     'asserts.change_password.require' => 'Please enter a password',

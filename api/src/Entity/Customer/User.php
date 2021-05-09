@@ -74,8 +74,14 @@ class User implements UserInterface
      * @var string The hashed password
      *
      * @ORM\Column(type="string")
-     * 
-     * @Assert\NotCompromisedPassword(message="asserts.user.password.not_compromise")
+     * @Assert\Regex(
+     *     pattern="/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*([^a-zA-Z\d\s])).{8,}$/",
+     *     message="asserts.entity.password_invalid"
+     * )
+     * @Assert\Length(
+     *      min = 8,
+     *      minMessage = "asserts.entity.min_length"
+     * )
      */
     private $password;
 
@@ -83,8 +89,15 @@ class User implements UserInterface
      * plainPassword - Verify if password is correct
      *
      * @var string The plain password
-     * 
-     * @Assert\NotCompromisedPassword(message="asserts.user.password.not_compromise")
+     *
+     * @Assert\Regex(
+     *     pattern="/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*([^a-zA-Z\d\s])).{8,}$/",
+     *     message="asserts.entity.password_invalid"
+     * )
+     * @Assert\Length(
+     *      min = 8,
+     *      minMessage = "asserts.entity.min_length"
+     * )
      */
     private $plainPassword;
 
