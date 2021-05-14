@@ -5,6 +5,8 @@ namespace App\Controller\Admin\CRUD\Customer;
 use App\Entity\Client\Shop;
 use App\Entity\Customer\User;
 use Doctrine\ORM\QueryBuilder;
+use App\Entity\Customer\UserShopHistory;
+use Doctrine\ORM\EntityManagerInterface;
 use App\Service\Admin\Field\PasswordField;
 use App\Service\Admin\Actions\CustomizeActions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -12,6 +14,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use App\Service\Admin\Actions\Customer\ShopActions;
 use App\Service\Admin\Permissions\PermissionsAdmin;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
@@ -19,6 +22,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
+use App\Repository\Customer\UserShopHistoryRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use App\Service\Admin\Field\Customer\IsLinkedShopField;
@@ -30,12 +34,24 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class UserCrudController extends AbstractCrudController
 {
+    protected $actions;
+
     protected $translator;
 
-    public function __construct(CustomizeActions $actions, TranslatorInterface $translator)
-    {
+    protected $em;
+
+    protected $shopActions;
+
+    public function __construct(
+        CustomizeActions $actions,
+        TranslatorInterface $translator,
+        EntityManagerInterface $em,
+        ShopActions $shopActions
+    ) {
         $this->actions = $actions;
         $this->translator = $translator;
+        $this->em = $em;
+        $this->shopActions = $shopActions;
     }
 
     public static function getEntityFqcn(): string
@@ -84,6 +100,9 @@ class UserCrudController extends AbstractCrudController
             return $actions;
         }
 
+        // Disable edit User when is not Shop Linked
+        $this->shopActions->relatedShop($actions);
+
         if ($this->isGranted(PermissionsAdmin::ROLE_USER_ACTION_ALL)) {
             return $actions;
         }
@@ -118,10 +137,20 @@ class UserCrudController extends AbstractCrudController
             yield IsLinkedShopField::new('shop.name')
                 ->setLabel('admin.user.field.linked_shop')
                 ->formatValue(function ($value, $entity) {
+
                     // Verify if Shop exist
                     if (null === $value) {
                         return $this->translator->trans('admin.user.field.is_linked_shop', [], 'admin');
                     }
+
+                    // Verify if is Granted to show Shop
+                    if (
+                        PermissionsAdmin::checkAdmin($this->getUser())
+                        || PermissionsAdmin::checkOwners($this->getUser(), 'USER', 'INDEX')
+                    ) {
+                        return $value;
+                    }
+
                     // verify if Shop linked to the good User
                     if (0 !== $this->getUser()->getShops()) {
                         $user_uuid = $entity->getUuid()->toRfc4122();
@@ -133,6 +162,7 @@ class UserCrudController extends AbstractCrudController
                             }
                         }
                     }
+
                     // If Shop is not linked to this User - @todo history system
                     return $this->translator->trans('admin.user.field.change_linked_shop', [], 'admin');
                 });
@@ -182,10 +212,20 @@ class UserCrudController extends AbstractCrudController
                 yield IsLinkedShopField::new('shop.name')
                     ->setLabel('admin.user.field.linked_shop')
                     ->formatValue(function ($value, $entity) {
+
                         // Verify if Shop exist
                         if (null === $value) {
                             return $this->translator->trans('admin.user.field.is_linked_shop', [], 'admin');
                         }
+
+                        // Verify if is Granted to show Shop
+                        if (
+                            PermissionsAdmin::checkAdmin($this->getUser())
+                            || PermissionsAdmin::checkOwners($this->getUser(), 'USER', 'DETAIL')
+                        ) {
+                            return $value;
+                        }
+
                         // verify if Shop linked to the good User
                         if (0 !== $this->getUser()->getShops()) {
                             $user_uuid = $entity->getUuid()->toRfc4122();
@@ -197,6 +237,7 @@ class UserCrudController extends AbstractCrudController
                                 }
                             }
                         }
+
                         // If Shop is not linked to this User - @todo history system
                         return $this->translator->trans('admin.user.field.change_linked_shop', [], 'admin');
                     });
@@ -274,12 +315,20 @@ class UserCrudController extends AbstractCrudController
                 || (PermissionsAdmin::checkActions($this->getUser(), 'USER', 'NEW'))
             ) {
                 // Configuration variables
+                $required = true;
                 $shops = $this->getDoctrine()->getRepository(Shop::class);
                 $choices = (count($shops->findByAdmin($this->getUser()->getUuid()->toBinary())) !== 0
                     && !PermissionsAdmin::checkAdmin($this->getUser())
                     && !PermissionsAdmin::checkOwners($this->getUser(), 'USER', 'NEW'))
                     ? $shops->findByAdmin($this->getUser()->getUuid()->toBinary())
                     : $shops->findAll();
+
+                if (
+                    (PermissionsAdmin::checkAdmin($this->getUser()))
+                    || (PermissionsAdmin::checkOwners($this->getUser(), 'USER', 'NEW'))
+                ) {
+                    $required = false;
+                }
 
                 yield FormField::addPanel('admin.user.panel_shop_id')->renderCollapsed();
                 yield ChoiceField::new('shop')
@@ -288,7 +337,8 @@ class UserCrudController extends AbstractCrudController
                     ->setLabel('admin.user.field.shop')
                     ->setFormTypeOptions([
                         'choice_label' => 'getName',
-                        'choice_translation_domain' => false
+                        'choice_translation_domain' => false,
+                        'required' => $required,
                     ]);
             }
         }
@@ -304,26 +354,38 @@ class UserCrudController extends AbstractCrudController
             return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
         }
 
-        $uuid = null;
+        $uuid_shop = null;
+        $uuid_user = null;
         $shops = $this->getUser()->getShops();
 
         if (count($shops) !== 0) {
-            $uuids = [];
-            foreach ($this->getUser()->getShops() as $shop) {
-                \array_push($uuids, $shop->getUuid()->toBinary());
-            }
-            $uuid = $uuids;
-        }
+            $uuids_shop = [];
+            $uuids_users = [];
 
-        // @todo: Add user_shop_history table to have all latest Shop of the User with the condition
-        // $shops_history = $this->getUser()->getShopHistory();
-        // if(count($shops_history) !== 0) {}
+            foreach ($shops as $shop) {
+                // verify all shops
+                \array_push($uuids_shop, $shop->getUuid()->toBinary());
+
+                $shops_history_manager = $this->em->getRepository(UserShopHistory::class);
+                $users_histories = $shops_history_manager->findBy(['shop_reference' => $shop->getReference()]);
+
+                // Verify all histories shops
+                if (count($users_histories) !== 0) {
+                    foreach ($users_histories as $user) {
+                        \array_push($uuids_users, $user->getUserReference());
+                    }
+                }
+            }
+
+            $uuid_shop = $uuids_shop;
+            $uuid_user = $uuids_users;
+        }
 
         return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters)
             ->leftJoin('entity.shop', 's')
             ->addSelect('s')
-            ->andWhere('entity.shop IN (:shops)')
-            ->setParameter('shops', $uuid) // put your user id connected here
-        ;
+            ->andwhere('entity.shop IN (:shops) OR entity.reference IN (:users)')
+            ->setParameter('shops', $uuid_shop)
+            ->setParameter('users', $uuid_user);
     }
 }
