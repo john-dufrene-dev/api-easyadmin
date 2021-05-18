@@ -5,6 +5,7 @@ namespace App\Entity\Customer;
 use App\Entity\Customer\User;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\Customer\UserInfoRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -46,6 +47,8 @@ class UserInfo
      *      minMessage = "asserts.entity.min_length",
      *      maxMessage = "asserts.entity.max_length"
      * )
+     * 
+     * @Groups({"user:readOne", "user:update"})
      */
     private $firstname;
 
@@ -62,6 +65,8 @@ class UserInfo
      *      minMessage = "asserts.entity.min_length",
      *      maxMessage = "asserts.entity.max_length"
      * )
+     * 
+     * @Groups({"user:readOne", "user:update"})
      */
     private $lastname;
 
@@ -71,6 +76,8 @@ class UserInfo
      * @var \DateTimeInterface|null
      *
      * @ORM\Column(type="datetime", nullable=true)
+     * 
+     * @Groups({"user:readOne", "user:update"})
      */
     private $birthday;
 
@@ -82,6 +89,8 @@ class UserInfo
      * @ORM\Column(type="string", length=10, nullable=true)
      * 
      * @Assert\Choice(choices=UserInfo::GENDERS, message="asserts.entity.gender")
+     * 
+     * @Groups({"user:readOne", "user:update"})
      */
     private $gender;
 
@@ -100,6 +109,8 @@ class UserInfo
      *     pattern="/^([0-9\(\)\/\+ \-]*)$/",
      *     message="asserts.entity.phone"
      * )
+     * 
+     * @Groups({"user:readOne", "user:update"})
      */
     private $phone;
 
@@ -233,7 +244,8 @@ class UserInfo
     public function setGender(?string $gender): self
     {
         if (!\in_array($gender, self::GENDERS)) {
-            throw new \InvalidArgumentException('Error with gender');
+            // throw new \InvalidArgumentException('Error with gender');
+            return $this;
         }
 
         $this->gender = $gender;

@@ -9,7 +9,9 @@ use App\Service\Utils\ReferenceFactory;
 use App\Service\Traits\Entity\UuidTrait;
 use App\Repository\Customer\UserRepository;
 use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -25,6 +27,142 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *     fields={"reference"},
  *     message="asserts.unique.reference"
  * )
+ * 
+ * @ApiResource(
+ *    normalizationContext={
+ *        "groups"={
+ *            "user:update",
+ *            "user:readOne",
+ *            "user:shop",
+ *         },
+ *    },
+ *    denormalizationContext={
+ *        "groups"={
+ *            "user:update",
+ *            "user:password",
+ *            "user:shop",
+ *         }
+ *    },
+ *    collectionOperations={},
+ *    itemOperations={
+ *         "user_get_uuid"={
+ *             "method"="GET",
+ *             "normalization_context"={"groups"={"user:readOne"}, "openapi_definition_name"= "detail"},
+ *             "security"="object == user",
+ *         },
+ *         "user_put_uuid"={
+ *             "method"="PUT",
+ *             "path"="/users/{uuid}",
+ *             "normalization_context"={"groups"={"user:update"}, "openapi_definition_name"= "update"},
+ *             "openapi_context"={
+ *                  "requestBody" = {
+ *                      "content"= {
+ *                          "application/ld+json"= {
+ *                              "schema" = {
+ *                                  "type": "object",
+ *                                  "properties": {
+ *                                      "email": {"type": "string", "example": "email@email.com"},
+ *                                      "firstname": {"type": "string", "example": "firstname"},
+ *                                      "lastname": {"type": "string", "example": "lastname"},
+ *                                      "birthday": {"type": "datetime", "example": "1996-06-08T00:00:00+00:00"},
+ *                                      "gender": {"type": "string", "enum": {"M", "F", "O"}, "example": "M"},
+ *                                      "phone": {"type": "string", "example": "+33666666666"},
+ *                                  },
+ *                              }
+ *                          },
+ *                          "application/json"= {
+ *                              "schema" = {
+ *                                  "type": "object",
+ *                                  "properties": {
+ *                                      "email": {"type": "string", "example": "email@email.com"},
+ *                                      "firstname": {"type": "string", "example": "firstname"},
+ *                                      "lastname": {"type": "string", "example": "lastname"},
+ *                                      "birthday": {"type": "datetime", "example": "1996-06-08T00:00:00+00:00"},
+ *                                      "gender": {"type": "string", "enum": {"M", "F", "O"}, "example": "M"},
+ *                                      "phone": {"type": "string", "example": "+33666666666"},
+ *                                  },
+ *                              }
+ *                          },
+ *                      },
+ *                  },
+ *              },
+ *             "security"="object == user",
+ *         },
+ *         "user_put_password"={
+ *             "method"="PUT",
+ *             "path"="/users/{uuid}/password",
+ *             "normalization_context"={"groups"={"user:password"}, "openapi_definition_name"= "update_password"},
+ *             "openapi_context"={
+ *                  "summary"="Update User password resource.",
+ *                  "description"="Replaces the User password resource",
+ *                  "responses" = {
+ *                      "200" = {
+ *                          "description" = "User password resource updated",
+ *                          "content"= {
+ *                              "application/ld+json"= {
+ *                                  "schema" = {
+ *                                      "type": "object",
+ *                                      "properties": {
+ *                                          "code": {"type": "integer", "example": "200", "readonly": "true"},
+ *                                          "message": {
+ *                                              "type": "string", 
+ *                                              "example": "User password successfully updated", 
+ *                                              "readonly": "true"
+ *                                          },
+ *                                      },
+ *                                  }
+ *                              },
+ *                              "application/json"= {
+ *                                  "schema" = {
+ *                                      "type": "object",
+ *                                      "properties": {
+ *                                          "code": {"type": "integer", "example": "200", "readonly": "true"},
+ *                                          "message": {
+ *                                              "type": "string", 
+ *                                              "example": "User password successfully updated", 
+ *                                              "readonly": "true"
+ *                                          },
+ *                                      },
+ *                                  }
+ *                              }
+ *                          }
+ *                      },
+ *                  },
+ *              },
+ *             "security"="object == user",
+ *          },
+ *          "user_put_shop"={
+ *             "method"="PUT",
+ *             "path"="/users/{uuid}/shop",
+ *             "normalization_context"={"groups"={"user:shop"}, "openapi_definition_name"= "update_shop"},
+ *             "openapi_context"={
+ *                  "summary"="Update User Shop resource.",
+ *                  "description"="Replaces the User Shop resource",
+ *                  "requestBody" = {
+ *                      "content"= {
+ *                          "application/ld+json"= {
+ *                              "schema" = {
+ *                                  "type": "object",
+ *                                  "properties": {
+ *                                      "shop": {"type": "string", "example": "/api/shops/3fa85f64-5717-4562-b3fc-2c963f66afa6"},
+ *                                  },
+ *                              }
+ *                          },
+ *                          "application/json"= {
+ *                              "schema" = {
+ *                                  "type": "object",
+ *                                  "properties": {
+ *                                      "shop": {"type": "string", "example": "/api/shops/3fa85f64-5717-4562-b3fc-2c963f66afa6"},
+ *                                  },
+ *                              }
+ *                          },
+ *                      },
+ *                  },
+ *              },
+ *             "security"="object == user",
+ *         },
+ *    }
+ * )
  */
 class User implements UserInterface
 {
@@ -38,6 +176,8 @@ class User implements UserInterface
      * @ORM\Column(type="string", length=40, unique=true)
      *
      * @Assert\NotNull(message="asserts.entity.ulid.not_null")
+     * 
+     * @Groups({"user:readOne"})
      */
     private $reference;
 
@@ -56,6 +196,8 @@ class User implements UserInterface
      *      minMessage = "asserts.entity.min_length",
      *      maxMessage = "asserts.entity.max_length"
      * )
+     * 
+     * @Groups({"user:readOne"})
      */
     private $email;
 
@@ -65,6 +207,8 @@ class User implements UserInterface
      * @var array
      *
      * @ORM\Column(type="json")
+     * 
+     * @Groups({"user:readOne"})
      */
     private $roles = [];
 
@@ -82,6 +226,8 @@ class User implements UserInterface
      *      min = 8,
      *      minMessage = "asserts.entity.min_length"
      * )
+     * 
+     * @Groups({"user:password"})
      */
     private $password;
 
@@ -98,6 +244,8 @@ class User implements UserInterface
      *      min = 8,
      *      minMessage = "asserts.entity.min_length"
      * )
+     * 
+     * @Groups({"user:password"})
      */
     private $plainPassword;
 
@@ -107,6 +255,8 @@ class User implements UserInterface
      * @var bool
      * 
      * @ORM\Column(type="boolean")
+     * 
+     * @Groups({"user:readOne"})
      */
     private $is_active = true;
 
@@ -116,6 +266,8 @@ class User implements UserInterface
      * @var bool
      * 
      * @ORM\Column(type="boolean")
+     * 
+     * @Groups({"user:readOne"})
      */
     private $is_verified = true;
 
@@ -127,6 +279,8 @@ class User implements UserInterface
      * @var User|null
      * 
      * @Assert\Valid
+     * 
+     * @Groups({"user:readOne", "user:update"})
      */
     private $user_info;
 
@@ -135,6 +289,8 @@ class User implements UserInterface
      * 
      * @ORM\ManyToOne(targetEntity=Shop::class, inversedBy="users")
      * @ORM\JoinColumn(referencedColumnName="uuid")
+     * 
+     * @Groups({"user:shop"})
      */
     private $shop;
 
@@ -146,6 +302,8 @@ class User implements UserInterface
      * @ORM\Column(type="datetime")
      * 
      * @Assert\NotNull(message="asserts.entity.created_at.not_null")
+     * 
+     * @Groups({"user:readOne"})
      */
     private $created_at;
 
@@ -157,6 +315,8 @@ class User implements UserInterface
      * @ORM\Column(type="datetime")
      * 
      * @Assert\NotNull(message="asserts.entity.created_at.not_null")
+     * 
+     * @Groups({"user:readOne"})
      */
     private $updated_at;
 

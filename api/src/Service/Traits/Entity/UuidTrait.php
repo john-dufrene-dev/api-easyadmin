@@ -41,7 +41,7 @@ trait UuidTrait
      *
      * @Assert\Uuid
      * 
-     * @Groups({"shop:readOne", "shop:readAll"})
+     * @Groups({"shop:readOne", "shop:readAll", "user:readOne", "user:update"})
      *
      * @ApiProperty(identifier=true)
      */
