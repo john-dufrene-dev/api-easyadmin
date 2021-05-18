@@ -1,3 +1,4 @@
 # TODO
 
--   Add admin notification system
+-   Add Admin notification system
+-   Add optin/notification User system
