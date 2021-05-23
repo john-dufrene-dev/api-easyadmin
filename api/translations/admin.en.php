@@ -45,6 +45,9 @@ return [
     // Configuration general informations
     'admin.general.title.edit' => 'Edit of - ',
     'admin.general.title.detail' => 'Detail of - ',
+    'admin.flash_message.create' => 'The content "%name%" has been created successfully',
+    'admin.flash_message.update' => 'The content "%name%" has been updated successfully',
+    'admin.flash_message.delete' => 'The content "%name%" has been deleted successfully',
 
     // Configuration Days
     'admin.field.monday' => 'Monday',
