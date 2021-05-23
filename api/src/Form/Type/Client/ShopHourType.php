@@ -46,7 +46,7 @@ final class ShopHourType extends AbstractType
             ])
             ->add('startTime', TimeType::class, [
                 'input'  => 'string',
-                'widget' => 'choice',
+                'widget' => 'single_text',
                 'label' => false,
                 'minutes' => range(0, 59, 5),
                 'attr' => [
@@ -56,7 +56,7 @@ final class ShopHourType extends AbstractType
             ])
             ->add('endTime', TimeType::class, [
                 'input'  => 'string',
-                'widget' => 'choice',
+                'widget' => 'single_text',
                 'label' => false,
                 'minutes' => range(0, 59, 5),
                 'attr' => [
@@ -66,7 +66,7 @@ final class ShopHourType extends AbstractType
             ])
             ->add('startBreakTime', TimeType::class, [
                 'input'  => 'string',
-                'widget' => 'choice',
+                'widget' => 'single_text',
                 'label' => false,
                 'minutes' => range(0, 59, 5),
                 'attr' => [
@@ -76,7 +76,7 @@ final class ShopHourType extends AbstractType
             ])
             ->add('endBreakTime', TimeType::class, [
                 'input'  => 'string',
-                'widget' => 'choice',
+                'widget' => 'single_text',
                 'label' => false,
                 'minutes' => range(0, 59, 5),
                 'attr' => [
