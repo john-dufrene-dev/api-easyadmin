@@ -20,3 +20,9 @@ And go to https://localhost.
 
 Loading Fixtures
 ================
+
+Bugs
+================
+
+- Break batch actions :
+https://github.com/EasyCorp/EasyAdminBundle/issues/4399 : waiting for fix, now in 3.3.0 version of easyadmin
