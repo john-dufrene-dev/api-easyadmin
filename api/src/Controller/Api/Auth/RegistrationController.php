@@ -18,7 +18,7 @@ use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Gesdinet\JWTRefreshTokenBundle\Model\RefreshTokenManagerInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -80,7 +80,7 @@ class RegistrationController extends AbstractController
      */
     public function registerApi(
         Request $request,
-        UserPasswordEncoderInterface $passwordEncoder,
+        UserPasswordHasherInterface $passwordEncoder,
         ValidatorInterface $validator,
         JWTTokenManagerInterface $JWTManager,
         RefreshTokenManagerInterface $refreshTokenManager,
@@ -138,7 +138,7 @@ class RegistrationController extends AbstractController
         // Check validations constraints
         if (0 === count($errors_user) && 0 === count($errors_token)) {
 
-            $user->setPassword($passwordEncoder->encodePassword($user, $password));
+            $user->setPassword($passwordEncoder->hashPassword($user, $password));
 
             // If false the User is already verified
             if (!$this->params->get('active_confirm_user')) {
@@ -172,7 +172,7 @@ class RegistrationController extends AbstractController
 
             // Create the refresh token User
             $refreshToken = $refreshTokenManager->create();
-            $refreshToken->setUsername($user->getUsername());
+            $refreshToken->setUsername($user->getUserIdentifier());
             $refreshToken->setRefreshToken();
             $refreshToken->setValid($datetime);
 

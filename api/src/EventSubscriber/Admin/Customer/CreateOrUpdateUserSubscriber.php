@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityUpdatedEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityPersistedEvent;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class CreateOrUpdateUserSubscriber implements EventSubscriberInterface
 {
@@ -17,7 +17,7 @@ class CreateOrUpdateUserSubscriber implements EventSubscriberInterface
 
     private $em;
 
-    public function __construct(UserPasswordEncoderInterface $encoder, EntityManagerInterface $em)
+    public function __construct(UserPasswordHasherInterface $encoder, EntityManagerInterface $em)
     {
         $this->encoder = $encoder;
         $this->em = $em;
@@ -45,7 +45,7 @@ class CreateOrUpdateUserSubscriber implements EventSubscriberInterface
         }
 
         // Encode password
-        $password = $this->encoder->encodePassword($entity, $entity->getPassword());
+        $password = $this->encoder->hashPassword($entity, $entity->getPassword());
         $entity->setPassword($password);
         $entity->setRoles(['ROLE__USER']);
 
@@ -63,7 +63,7 @@ class CreateOrUpdateUserSubscriber implements EventSubscriberInterface
 
         // Encode password
         if (null != $entity->getPlainPassword()) {
-            $password = $this->encoder->encodePassword($entity, $entity->getPlainPassword());
+            $password = $this->encoder->hashPassword($entity, $entity->getPlainPassword());
             $entity->setPassword($password);
         }
 

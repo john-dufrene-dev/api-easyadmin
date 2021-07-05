@@ -14,6 +14,7 @@ use App\Service\Admin\Permissions\PermissionsAdmin;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=AdminRepository::class)
@@ -27,7 +28,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *     message="asserts.unique.reference"
  * )
  */
-class Admin implements UserInterface
+class Admin implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use UuidTrait;
 
@@ -209,7 +210,7 @@ class Admin implements UserInterface
      */
     public function __toString(): string
     {
-        return $this->getUsername();
+        return $this->getUserIdentifier();
     }
 
     /**
@@ -262,10 +263,21 @@ class Admin implements UserInterface
      * getUsername
      * A visual identifier that represents this user.
      *
+     * @deprecated
      * @return string
      * @see UserInterface
      */
     public function getUsername(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
     {
         return (string) $this->email;
     }

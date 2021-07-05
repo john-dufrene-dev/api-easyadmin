@@ -12,7 +12,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserPasswordDataPersister implements ContextAwareDataPersisterInterface
 {
@@ -27,7 +27,7 @@ class UserPasswordDataPersister implements ContextAwareDataPersisterInterface
     public function __construct(
         RequestStack $request,
         EntityManagerInterface $entityManager,
-        UserPasswordEncoderInterface $userPasswordEncoder,
+        UserPasswordHasherInterface $userPasswordEncoder,
         ValidatorInterface $validator
     ) {
         $this->request = $request;
@@ -89,7 +89,7 @@ class UserPasswordDataPersister implements ContextAwareDataPersisterInterface
 
         if ($data->getPlainPassword()) {
             $data->setPassword(
-                $this->userPasswordEncoder->encodePassword($data, $data->getPlainPassword())
+                $this->userPasswordEncoder->hashPassword($data, $data->getPlainPassword())
             );
         }
 

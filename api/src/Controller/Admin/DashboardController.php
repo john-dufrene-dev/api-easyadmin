@@ -205,7 +205,7 @@ class DashboardController extends AbstractDashboardController
     public function configureUserMenu(UserInterface $user): UserMenu
     {
         return parent::configureUserMenu($user)
-            ->setName($user->getUsername())
+            ->setName($user->getUserIdentifier())
             ->displayUserName(true)
             ->addMenuItems([
                 MenuItem::linkToCrud('admin.dashboard.my_profile', 'fa fa-id-card', Admin::class)

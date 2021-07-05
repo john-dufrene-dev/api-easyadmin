@@ -6,13 +6,13 @@ use App\Entity\Security\Admin;
 use App\Entity\Security\AdminConfig;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AdminFixtures extends Fixture
 {
     private $encoder;
 
-    public function __construct(UserPasswordEncoderInterface $encoder)
+    public function __construct(UserPasswordHasherInterface $encoder)
     {
         $this->encoder = $encoder;
     }
@@ -25,7 +25,7 @@ class AdminFixtures extends Fixture
 
         $admin->setEmail('admin@admin.com'); // don't forget to change address
 
-        $password = $this->encoder->encodePassword($admin, 'admin'); // don't forget to change password
+        $password = $this->encoder->hashPassword($admin, 'admin'); // don't forget to change password
         $admin->setPassword($password);
         $admin->setRoles(['ROLE_ADMIN', 'ROLE_SUPER_ADMIN']);
         $admin->setIsAdmin(1);
@@ -44,7 +44,7 @@ class AdminFixtures extends Fixture
         $test_config = new AdminConfig();
         $test->setEmail('default@default.com');
 
-        $password = $this->encoder->encodePassword($test, 'test'); // don't forget to change password
+        $password = $this->encoder->hashPassword($test, 'test'); // don't forget to change password
         $test->setPassword($password);
         $test->setCreatedAt(new \DateTime());
         $test->setUpdatedAt(new \DateTime());

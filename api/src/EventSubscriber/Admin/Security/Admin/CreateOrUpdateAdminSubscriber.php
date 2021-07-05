@@ -7,13 +7,13 @@ use App\Entity\Security\AdminConfig;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityUpdatedEvent;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityPersistedEvent;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class CreateOrUpdateAdminSubscriber implements EventSubscriberInterface
 {
     private $encoder;
 
-    public function __construct(UserPasswordEncoderInterface $encoder)
+    public function __construct(UserPasswordHasherInterface $encoder)
     {
         $this->encoder = $encoder;
     }
@@ -26,7 +26,7 @@ class CreateOrUpdateAdminSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $password = $this->encoder->encodePassword($entity, $entity->getPassword());
+        $password = $this->encoder->hashPassword($entity, $entity->getPassword());
         $entity->setPassword($password);
 
         $admin_config = new AdminConfig();
@@ -48,7 +48,7 @@ class CreateOrUpdateAdminSubscriber implements EventSubscriberInterface
         }
 
         if (null != $entity->getPlainPassword()) {
-            $password = $this->encoder->encodePassword($entity, $entity->getPlainPassword());
+            $password = $this->encoder->hashPassword($entity, $entity->getPlainPassword());
             $entity->setPassword($password);
         }
 

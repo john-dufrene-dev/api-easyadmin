@@ -1,5 +1,8 @@
 security:
-    encoders:
+
+    enable_authenticator_manager: true
+
+    password_hashers:
         App\Entity\Security\Admin:
             algorithm: auto
         App\Entity\Customer\User:
@@ -22,12 +25,10 @@ security:
         refresh:
             pattern: ^/api/auth/refresh_token
             stateless: true
-            anonymous: true
             lazy: true
         customer:
             pattern: ^/(api(?!/docs|/index))
             stateless: true
-            anonymous: true
             lazy: true
             provider: customer_user
             json_login:
@@ -36,16 +37,11 @@ security:
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
-            guard:
-                authenticators:
-                    - lexik_jwt_authentication.jwt_token_authenticator
+            jwt: ~
         admin:
-            anonymous: true
             lazy: true
             provider: admin_user
-            guard:
-                authenticators:
-                    - App\Security\Admin\AdminAuthenticator
+            custom_authenticator: App\Security\Admin\AdminAuthenticator
             logout:
                 path: admin_logout
                 target: admin_login
@@ -66,9 +62,9 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/api/auth/*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/shops, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/shops/*, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/auth/*, roles: PUBLIC_ACCESS  }
+        - { path: ^/api/shops, roles: PUBLIC_ACCESS  }
+        - { path: ^/api/shops/*, roles: PUBLIC_ACCESS  }
         - { path: ^/api/(docs|index).*, roles: ROLE_API_DOCUMENTATION }
         - { path: ^/api, roles: ROLE__USER }
 

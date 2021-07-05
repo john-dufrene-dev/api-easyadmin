@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Gesdinet\JWTRefreshTokenBundle\Model\RefreshTokenManagerInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
@@ -62,7 +62,7 @@ class ResetPasswordController extends AbstractController
         Request $request,
         ApiResponseBuilder $apiResponseBuilder,
         ValidatorInterface $validator,
-        UserPasswordEncoderInterface $passwordEncoder,
+        UserPasswordHasherInterface $passwordEncoder,
         JWTTokenManagerInterface $JWTManager,
         RefreshTokenManagerInterface $refreshTokenManager
     ): JsonResponse {
@@ -123,7 +123,7 @@ class ResetPasswordController extends AbstractController
         }
 
         // Encode the plain password, and set it.
-        $encodedPassword = $passwordEncoder->encodePassword($user, $confirm_password);
+        $encodedPassword = $passwordEncoder->hashPassword($user, $confirm_password);
         $user->setPassword($encodedPassword);
 
         $token = $JWTManager->create($user);
@@ -138,7 +138,7 @@ class ResetPasswordController extends AbstractController
 
         // Create the refresh token User
         $refreshToken = $refreshTokenManager->create();
-        $refreshToken->setUsername($user->getUsername());
+        $refreshToken->setUsername($user->getUserIdentifier());
         $refreshToken->setRefreshToken();
         $refreshToken->setValid($datetime);
 

@@ -13,7 +13,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use App\Form\Type\Security\ResetPasswordRequestFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use SymfonyCasts\Bundle\ResetPassword\Controller\ResetPasswordControllerTrait;
 use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
@@ -72,7 +72,7 @@ class SecurityResetPasswordController extends AbstractController
     {
         // We prevent users from directly accessing this page
         if (null === ($resetToken = $this->getTokenObjectFromSession())) {
-            return $this->redirectToRoute('admin_forgot_password_request');
+            $resetToken = $this->resetPasswordHelper->generateFakeResetToken();
         }
 
         return $this->render('admin/security/reset_password/check_email.html.twig', [
@@ -85,7 +85,7 @@ class SecurityResetPasswordController extends AbstractController
      *
      * @Route("/reset/{token}", name="admin_reset_password")
      */
-    public function reset(Request $request, UserPasswordEncoderInterface $passwordEncoder, string $token = null): Response
+    public function reset(Request $request, UserPasswordHasherInterface $passwordEncoder, string $token = null): Response
     {
         if ($token) {
             // We store the token in session and remove it from the URL, to avoid the URL being
@@ -121,7 +121,7 @@ class SecurityResetPasswordController extends AbstractController
             $this->resetPasswordHelper->removeResetRequest($token);
 
             // Encode the plain password, and set it.
-            $encodedPassword = $passwordEncoder->encodePassword(
+            $encodedPassword = $passwordEncoder->hashPassword(
                 $user,
                 $form->get('plainPassword')->getData()
             );

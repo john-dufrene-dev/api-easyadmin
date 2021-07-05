@@ -7,6 +7,7 @@ use App\Service\Admin\Log\AdminLogger;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -14,16 +15,20 @@ use Symfony\Component\Security\Http\Util\TargetPathTrait;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Component\Security\Guard\PasswordAuthenticatedInterface;
+use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\InvalidCsrfTokenException;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\Security\Guard\Authenticator\AbstractFormLoginAuthenticator;
+use Symfony\Component\Security\Http\Authenticator\Passport\PassportInterface;
+use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
+use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
+use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 
-class AdminAuthenticator extends AbstractFormLoginAuthenticator implements PasswordAuthenticatedInterface
+class AdminAuthenticator extends AbstractLoginFormAuthenticator
 {
     use TargetPathTrait;
 
@@ -36,7 +41,7 @@ class AdminAuthenticator extends AbstractFormLoginAuthenticator implements Passw
     private $passwordEncoder;
     private $params;
     private $logger;
-    
+
     /**
      * __construct
      *
@@ -46,7 +51,7 @@ class AdminAuthenticator extends AbstractFormLoginAuthenticator implements Passw
         EntityManagerInterface $entityManager,
         UrlGeneratorInterface $urlGenerator,
         CsrfTokenManagerInterface $csrfTokenManager,
-        UserPasswordEncoderInterface $passwordEncoder,
+        UserPasswordHasherInterface $passwordEncoder,
         ParameterBagInterface $params,
         AdminLogger $adminLogger
     ) {
@@ -58,17 +63,18 @@ class AdminAuthenticator extends AbstractFormLoginAuthenticator implements Passw
         $this->logger = $adminLogger;
     }
 
-    public function supports(Request $request)
+    public function supports(Request $request): bool
     {
-        return self::LOGIN_ROUTE === $request->attributes->get('_route')
-            && $request->isMethod('POST');
+        return $request->isMethod('POST')
+            && $this->getLoginUrl($request) === $request->getPathInfo()
+            && self::LOGIN_ROUTE === $request->attributes->get('_route');
     }
 
-    public function getCredentials(Request $request)
+    public function authenticate(Request $request): PassportInterface
     {
         $credentials = [
             'email' => $request->request->get('email'),
-            'password' => $request->request->get('password'),
+            'password' => $request->request->get('password', ''),
             'csrf_token' => $request->request->get('_csrf_token'),
         ];
         $request->getSession()->set(
@@ -76,7 +82,13 @@ class AdminAuthenticator extends AbstractFormLoginAuthenticator implements Passw
             $credentials['email']
         );
 
-        return $credentials;
+        return new Passport(
+            new UserBadge($credentials['email']),
+            new PasswordCredentials($credentials['password']),
+            [
+                new CsrfTokenBadge('authenticate', $credentials['csrf_token']),
+            ]
+        );
     }
 
     public function getUser($credentials, UserProviderInterface $userProvider)
@@ -109,21 +121,22 @@ class AdminAuthenticator extends AbstractFormLoginAuthenticator implements Passw
         return $credentials['password'];
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        // Logger for Admin connection informations
-        $this->logger->adminConnection($this->params->get('admin.log.register_in_database'));
-
-        if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
+        if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
 
         return new RedirectResponse($this->urlGenerator->generate('admin_dashboard'));
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
-        parent::onAuthenticationFailure($request, $exception);
+        if ($request->hasSession()) {
+            $request->getSession()->set(Security::AUTHENTICATION_ERROR, $exception);
+        }
+
+        $url = $this->getLoginUrl($request);
 
         if ($this->params->get('admin.log.register_failure_in_database')) {
             // Logger for Admin failure connection informations
@@ -135,9 +148,11 @@ class AdminAuthenticator extends AbstractFormLoginAuthenticator implements Passw
                 ['exception' => $exception->getMessage()]
             );
         }
+
+        return new RedirectResponse($url);
     }
 
-    protected function getLoginUrl()
+    protected function getLoginUrl(Request $request): string
     {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);
     }

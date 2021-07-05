@@ -6,7 +6,7 @@ use App\Entity\Customer\User;
 use App\Entity\Customer\UserInfo;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture
 {
@@ -17,7 +17,7 @@ class UserFixtures extends Fixture
 
     protected $encoder;
 
-    public function __construct(UserPasswordEncoderInterface $encoder)
+    public function __construct(UserPasswordHasherInterface $encoder)
     {
         $this->encoder = $encoder;
     }
@@ -38,7 +38,7 @@ class UserFixtures extends Fixture
         $user_info->setPhone(self::DEFAULT_PHONE);
         $user->setUserInfo($user_info);
 
-        $password = $this->encoder->encodePassword($user, 'Azerty06,'); // don't forget to change password
+        $password = $this->encoder->hashPassword($user, 'Azerty06,'); // don't forget to change password
         $user->setPassword($password);
         $user->setRoles(['ROLE__USER']);
         $user->setIsActive(1);
