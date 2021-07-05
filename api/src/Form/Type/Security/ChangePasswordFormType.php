@@ -38,6 +38,7 @@ class ChangePasswordFormType extends AbstractType
                         'class' => 'form-group field-text'
                     ],
                     'attr' => [
+                        'autocomplete' => 'new-password',
                         'class' => 'form-control',
                         'placeholder' => 'reset.new_password.placeholder',
                     ],
@@ -48,6 +49,7 @@ class ChangePasswordFormType extends AbstractType
                         'class' => 'form-group field-text'
                     ],
                     'attr' => [
+                        'autocomplete' => 'new-password',
                         'class' => 'form-control',
                         'placeholder' => 'reset.repeat_password.placeholder',
                     ],

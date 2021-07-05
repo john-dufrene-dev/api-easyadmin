@@ -9,7 +9,7 @@
     <div class="login-wrapper">
         
         <h6 class="mb-4"> {{ 'check.email.info_1'|trans }}
-            {{ 'check.email.info_2'|trans }} {{ tokenLifetime|date('g') }} {{ 'check.email.hour'|trans }}
+            {{ 'check.email.info_2'|trans }} {{ tokenLifetime.expirationMessageKey|trans(tokenLifetime.expirationMessageData, 'ResetPasswordBundle') }} {{ 'check.email.hour'|trans }}
         </h6>
 
         <div class="alert alert-dark" role="alert">

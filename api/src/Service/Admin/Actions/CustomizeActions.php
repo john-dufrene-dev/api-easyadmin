@@ -209,9 +209,7 @@ final class CustomizeActions
                 });
             })
             ->update(Crud::PAGE_INDEX, Action::BATCH_DELETE, function (Action $a) {
-                return $a->setIcon('fa fa-trash')->setLabel(false)->displayIf(function ($e) {
-                    return true;
-                });
+                return $a->setIcon('fa fa-trash');
             });
 
         $actions
@@ -383,7 +381,7 @@ final class CustomizeActions
             ->setIcon('fa fa-fw fa-user-lock')
             ->setLabel(false)
             ->linkToUrl(function (Admin $e) {
-                return '?' . $this->params->get('route_for_switch_user') . '=' . $e->getUsername();
+                return '?' . $this->params->get('route_for_switch_user') . '=' . $e->getUserIdentifier();
             })
             ->displayIf(function ($e) {
                 if ($e instanceof Admin) {
@@ -421,7 +419,7 @@ final class CustomizeActions
             ->setCssClass('btn')
             ->createAsGlobalAction();
     }
-    
+
     /**
      * batchToggleActive
      *
