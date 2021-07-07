@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a7a93a871e871439377e1f0671e0eba5",
+    "content-hash": "a473cc65e34a4a7a92c96b6916a62091",
     "packages": [
         {
             "name": "api-platform/core",
@@ -1597,16 +1597,16 @@
         },
         {
             "name": "easycorp/easyadmin-bundle",
-            "version": "v3.4.1",
+            "version": "v3.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/EasyCorp/EasyAdminBundle.git",
-                "reference": "b4b17bf13e954ac61badd5286d9ea247676c0a9c"
+                "reference": "19d977b7522759492bfc2c3c0c3fd24e125946a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/EasyCorp/EasyAdminBundle/zipball/b4b17bf13e954ac61badd5286d9ea247676c0a9c",
-                "reference": "b4b17bf13e954ac61badd5286d9ea247676c0a9c",
+                "url": "https://api.github.com/repos/EasyCorp/EasyAdminBundle/zipball/19d977b7522759492bfc2c3c0c3fd24e125946a7",
+                "reference": "19d977b7522759492bfc2c3c0c3fd24e125946a7",
                 "shasum": ""
             },
             "require": {
@@ -1680,7 +1680,7 @@
             ],
             "support": {
                 "issues": "https://github.com/EasyCorp/EasyAdminBundle/issues",
-                "source": "https://github.com/EasyCorp/EasyAdminBundle/tree/v3.4.1"
+                "source": "https://github.com/EasyCorp/EasyAdminBundle/tree/v3.4.2"
             },
             "funding": [
                 {
@@ -1688,7 +1688,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-07-05T17:42:38+00:00"
+            "time": "2021-07-06T18:33:30+00:00"
         },
         {
             "name": "egulias/email-validator",
@@ -3285,16 +3285,16 @@
         },
         {
             "name": "sensio/framework-extra-bundle",
-            "version": "v5.6.1",
+            "version": "v6.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sensiolabs/SensioFrameworkExtraBundle.git",
-                "reference": "430d14c01836b77c28092883d195a43ce413ee32"
+                "reference": "62c5909f49cf74dccdf50a294511cc24be2f969c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/SensioFrameworkExtraBundle/zipball/430d14c01836b77c28092883d195a43ce413ee32",
-                "reference": "430d14c01836b77c28092883d195a43ce413ee32",
+                "url": "https://api.github.com/repos/sensiolabs/SensioFrameworkExtraBundle/zipball/62c5909f49cf74dccdf50a294511cc24be2f969c",
+                "reference": "62c5909f49cf74dccdf50a294511cc24be2f969c",
                 "shasum": ""
             },
             "require": {
@@ -3313,7 +3313,6 @@
                 "doctrine/dbal": "^2.10|^3.0",
                 "doctrine/doctrine-bundle": "^1.11|^2.0",
                 "doctrine/orm": "^2.5",
-                "nyholm/psr7": "^1.1",
                 "symfony/browser-kit": "^4.4|^5.0",
                 "symfony/doctrine-bridge": "^4.4|^5.0",
                 "symfony/dom-crawler": "^4.4|^5.0",
@@ -3322,7 +3321,6 @@
                 "symfony/monolog-bridge": "^4.0|^5.0",
                 "symfony/monolog-bundle": "^3.2",
                 "symfony/phpunit-bridge": "^4.4.9|^5.0.9",
-                "symfony/psr-http-message-bridge": "^1.1",
                 "symfony/security-bundle": "^4.4|^5.0",
                 "symfony/twig-bundle": "^4.4|^5.0",
                 "symfony/yaml": "^4.4|^5.0",
@@ -3331,7 +3329,7 @@
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.6.x-dev"
+                    "dev-master": "6.1.x-dev"
                 }
             },
             "autoload": {
@@ -3359,9 +3357,9 @@
             ],
             "support": {
                 "issues": "https://github.com/sensiolabs/SensioFrameworkExtraBundle/issues",
-                "source": "https://github.com/sensiolabs/SensioFrameworkExtraBundle/tree/v5.6.1"
+                "source": "https://github.com/sensiolabs/SensioFrameworkExtraBundle/tree/v6.1.5"
             },
-            "time": "2020-08-25T19:10:18+00:00"
+            "time": "2021-05-31T10:40:46+00:00"
         },
         {
             "name": "symfony/amqp-messenger",
@@ -7285,6 +7283,83 @@
             "time": "2021-05-26T17:43:10+00:00"
         },
         {
+            "name": "symfony/runtime",
+            "version": "v5.3.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/runtime.git",
+                "reference": "4ee1e32575a6b8fc45441fa83bce4817509dc866"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/runtime/zipball/4ee1e32575a6b8fc45441fa83bce4817509dc866",
+                "reference": "4ee1e32575a6b8fc45441fa83bce4817509dc866",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0|^2.0",
+                "php": ">=7.2.5",
+                "symfony/polyfill-php80": "^1.15"
+            },
+            "conflict": {
+                "symfony/dotenv": "<5.1"
+            },
+            "require-dev": {
+                "composer/composer": "^1.0.2|^2.0",
+                "symfony/console": "^4.4|^5",
+                "symfony/dotenv": "^5.1",
+                "symfony/http-foundation": "^4.4|^5",
+                "symfony/http-kernel": "^4.4|^5"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Symfony\\Component\\Runtime\\Internal\\ComposerPlugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Runtime\\": "",
+                    "Symfony\\Runtime\\Symfony\\Component\\": "Internal/"
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Enables decoupling PHP applications from global state",
+            "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/runtime/tree/v5.3.3"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2021-06-17T20:24:56+00:00"
+        },
+        {
             "name": "symfony/security-bundle",
             "version": "v5.3.3",
             "source": {
@@ -9921,5 +9996,5 @@
         "ext-iconv": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.0.0"
 }

@@ -1,5 +1,5 @@
 security:
-
+    # https://symfony.com/doc/current/security/experimental_authenticators.html
     enable_authenticator_manager: true
 
     password_hashers:
@@ -62,9 +62,9 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/api/auth/*, roles: PUBLIC_ACCESS  }
-        - { path: ^/api/shops, roles: PUBLIC_ACCESS  }
-        - { path: ^/api/shops/*, roles: PUBLIC_ACCESS  }
+        - { path: ^/api/auth/*, roles: PUBLIC_ACCESS }
+        - { path: ^/api/shops, roles: PUBLIC_ACCESS }
+        - { path: ^/api/shops/*, roles: PUBLIC_ACCESS }
         - { path: ^/api/(docs|index).*, roles: ROLE_API_DOCUMENTATION }
         - { path: ^/api, roles: ROLE__USER }
 

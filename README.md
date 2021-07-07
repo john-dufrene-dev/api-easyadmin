@@ -23,6 +23,3 @@ Loading Fixtures
 
 Bugs
 ================
-
-- Image edit in shopController :
-Impossible to click to display modal image

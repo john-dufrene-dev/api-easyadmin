@@ -6,3 +6,8 @@ framework:
         # See https://symfony.com/doc/current/routing.html#generating-urls-in-commands
         default_uri: "%env(resolve:ADMIN_URL)%" # Default ADMIN URL value => If you want to redirect mail to ADMIN
         # default_uri: "%env(resolve:CLIENT_URL)%" # Default ADMIN URL value => If you want to redirect mail to CLIENT
+
+when@prod:
+    framework:
+        router:
+            strict_requirements: null
