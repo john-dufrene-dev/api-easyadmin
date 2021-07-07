@@ -1,0 +1,8 @@
+<div id="flash-messages">
+    {% for flash in app.flashes('admin_default_flashes') %}
+        <div class="alert alert-{{ flash.class }}" role="alert">
+            <button type="button" class="alert-close" onclick="this.closest('div').style.display='none'">&times;</button>
+            {{ flash.message }}
+        </div>
+    {% endfor %}
+</div>

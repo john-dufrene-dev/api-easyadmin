@@ -4,13 +4,15 @@
 <!DOCTYPE html>
 <html lang="{{ app.getRequest().getLocale() }}">
     <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="robots" content="index, follow" />
-        <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-        <meta name="generator" content="EasyAdmin" />
+        {% block head_metas %}
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="robots" content="index, follow" />
+            <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+            <meta name="generator" content="EasyAdmin" />
+        {% endblock head_metas %}
 
-        <title>{{ block('page_title')|striptags|raw }}</title>
+        <title>{% block page_title %}{{ block('page_title')|striptags|raw }}{% endblock %}</title>
 
         {% block head_stylesheets %}
             <link rel="stylesheet" href="{{ asset('bundles/easyadmin/app.css') }}">
@@ -25,5 +27,6 @@
 
     <body id="{% block body_id %}{% endblock %}" class="ea {% block body_class %}{% endblock %}">
         {% block wrapper_wrapper %}{% endblock wrapper_wrapper %}
+        {% block body_javascript %}{% endblock body_javascript %}
     </body>
 </html>

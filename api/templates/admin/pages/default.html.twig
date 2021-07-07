@@ -12,9 +12,9 @@
             <div id="header-logo"> <h4 class="logo">{{ 'pages.default.title'|trans }}</h4> </div>
         </header>
 
-        {% for flash in app.flashes('admin_default_flashes') %}
-            <div class="alert alert-{{ flash.class }}" role="alert">{{ flash.message }}</div>
-        {% endfor %}
+        {% block flash_messages %}
+            {% include '/admin/includes/flash/default_flash_messages.html.twig' %}
+        {% endblock flash_messages %}
 
         <section class="content default-content">
 
@@ -33,7 +33,7 @@
 
         </section>
 
-        <div class="col-md-10">
+        <div class="d-grid gap-2">
             <a 
                 href="{{ path('admin_dashboard') }}" 
                 class="btn btn-primary btn-lg btn-block">{{ 'pages.default.member'|trans }}
