@@ -1,0 +1,17 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+
+{%- apply spaceless -%}
+    {% if field.formattedValue is not null %}
+        <pre class="pre-scrollable w-100" style="max-width:55vw;">
+            <code>{{ field.formattedValue|json_encode(constant('JSON_PRETTY_PRINT')) }}</code>
+        </pre>
+    {% elseif field.value is not null %}
+        <pre class="pre-scrollable" style="max-width:55vw;">
+            <code>{{ field.value|json_encode(constant('JSON_PRETTY_PRINT')) }}</code>
+        </pre>
+    {% else %}
+        {% include '@EasyAdmin/label/null.html.twig' %}
+    {% endif %}
+{% endapply %}
