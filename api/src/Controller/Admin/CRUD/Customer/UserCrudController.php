@@ -62,6 +62,12 @@ class UserCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
+            ->setPageTitle('edit', function (?User $user) {
+                return $user ? $user->getUserIdentifier() : null;
+            })
+            ->setPageTitle('detail', function (?User $user) {
+                return $user ? $user->getUserIdentifier() : null;
+            })
             ->setDefaultSort(['id' => 'ASC'])
             ->setDateFormat('full')
             ->setTimeFormat('full');

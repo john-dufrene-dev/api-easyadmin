@@ -55,6 +55,12 @@ class AdminGroupCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
+            ->setPageTitle('edit', function (?AdminGroup $group) {
+                return $group ? $group->getName() : null;
+            })
+            ->setPageTitle('detail', function (?AdminGroup $group) {
+                return $group ? $group->getName() : null;
+            })
             ->setDefaultSort(['id' => 'ASC'])
             ->setDateFormat('full')
             ->setTimeFormat('full');

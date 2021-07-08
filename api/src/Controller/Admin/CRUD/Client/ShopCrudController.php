@@ -70,6 +70,12 @@ class ShopCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
+            ->setPageTitle('edit', function (?Shop $shop) {
+                return $shop ? $shop->getName() : null;
+            })
+            ->setPageTitle('detail', function (?Shop $shop) {
+                return $shop ? $shop->getName() : null;
+            })
             ->setDefaultSort(['id' => 'ASC'])
             ->setDateFormat('full')
             ->setTimeFormat('full');

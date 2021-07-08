@@ -105,6 +105,16 @@ class Log
     }
 
     /**
+     * getName
+     *
+     * @return string
+     */
+    public function getIdentifier(): ?string
+    {
+        return $this->getId() . ' [' . $this->getMessage() . ']';
+    }
+
+    /**
      * getMessage
      *
      * @return string

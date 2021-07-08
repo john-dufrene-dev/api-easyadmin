@@ -48,6 +48,12 @@ class ConfigGeneralCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
+            ->setPageTitle('edit', function (?Config $config) {
+                return $config ? $config->getName() : null;
+            })
+            ->setPageTitle('detail', function (?Config $config) {
+                return $config ? $config->getName() : null;
+            })
             ->setDefaultSort(['id' => 'ASC'])
             ->setDateFormat('full')
             ->setTimeFormat('full');

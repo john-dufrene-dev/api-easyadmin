@@ -54,6 +54,9 @@ class LogCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
+            ->setPageTitle('detail', function (?Log $log) {
+                return $log ? $log->getIdentifier() : null;
+            })
             ->setDefaultSort(['id' => 'DESC'])
             ->setDateFormat('full')
             ->setTimeFormat('full');
@@ -207,7 +210,7 @@ class LogCrudController extends AbstractCrudController
         $request->query->set(EA::QUERY, $query);
         // recreate searchDto so that it takes into account the querystring 'query'
         $searchDto = $this->adminContextFactory->getSearchDto($request, $context->getCrud());
-        
+
         $logs = $this->createIndexQueryBuilder($searchDto, $context->getEntity(), $fields, $filters)
             ->getQuery()
             ->getResult();

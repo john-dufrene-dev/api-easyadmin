@@ -49,6 +49,12 @@ class AdminCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
+            ->setPageTitle('edit', function (?Admin $admin) {
+                return $admin ? $admin->getUserIdentifier() : null;
+            })
+            ->setPageTitle('detail', function (?Admin $admin) {
+                return $admin ? $admin->getUserIdentifier() : null;
+            })
             ->setDefaultSort(['id' => 'ASC'])
             ->setDateFormat('full')
             ->setTimeFormat('full');
