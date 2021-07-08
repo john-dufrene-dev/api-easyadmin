@@ -6,6 +6,7 @@ use App\Entity\Monitoring\Log;
 use App\Service\Admin\Builder\ExportBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use App\Service\Admin\Actions\CustomizeActions;
+use App\Service\Admin\Field\JsonField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
@@ -171,8 +172,7 @@ class LogCrudController extends AbstractCrudController
                     -1 => 'secondary',
                     1 => 'secondary',
                 ]);
-            // @Todo : transform in array to show extra
-            // yield ArrayField::new('extra')->setLabel('admin.log.field.extra');
+            yield JsonField::new('extra')->setLabel('admin.log.field.extra');
             yield DateField::new('created_at')->setLabel('admin.field.created_at');
         }
     }

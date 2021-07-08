@@ -202,6 +202,7 @@ return [
     'admin.log.badge_1' => '1',
     'admin.log.badge_error' => 'ERROR',
     'admin.log.badge_notice' => 'NOTICE',
+    'admin.log.field.extra' => 'extra',
 
     /* APP PAGES */
 
