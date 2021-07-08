@@ -12,6 +12,7 @@ use App\Entity\Configuration\Config;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use App\Service\Admin\Builder\ConfigurationBuilder;
 use App\Service\Admin\Permissions\PermissionsAdmin;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -98,6 +99,11 @@ class DashboardController extends AbstractDashboardController
         // ]);
 
         return parent::index();
+    }
+
+    public function configureAssets(): Assets
+    {
+        return Assets::new()->addWebpackEncoreEntry('admin');
     }
 
     public function configureCrud(): Crud
