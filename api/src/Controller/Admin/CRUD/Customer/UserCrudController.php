@@ -6,51 +6,33 @@ use App\Entity\Client\Shop;
 use App\Entity\Customer\User;
 use Doctrine\ORM\QueryBuilder;
 use App\Entity\Customer\UserShopHistory;
-use Doctrine\ORM\EntityManagerInterface;
 use App\Service\Admin\Field\PasswordField;
-use App\Service\Admin\Actions\CustomizeActions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use App\Service\Admin\Actions\Customer\ShopActions;
-use App\Service\Admin\Permissions\PermissionsAdmin;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
+use App\Controller\Admin\AbstractBaseCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
-use App\Repository\Customer\UserShopHistoryRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use App\Service\Admin\Field\Customer\IsLinkedShopField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
-class UserCrudController extends AbstractCrudController
+class UserCrudController extends AbstractBaseCrudController
 {
-    protected $actions;
-
-    protected $translator;
-
-    protected $em;
-
     protected $shopActions;
 
-    public function __construct(
-        CustomizeActions $actions,
-        TranslatorInterface $translator,
-        EntityManagerInterface $em,
-        ShopActions $shopActions
-    ) {
-        $this->actions = $actions;
-        $this->translator = $translator;
-        $this->em = $em;
+    public function __construct(ShopActions $shopActions)
+    {
         $this->shopActions = $shopActions;
     }
 
@@ -77,8 +59,8 @@ class UserCrudController extends AbstractCrudController
     public function configureFilters(Filters $filters): Filters
     {
         if (
-            PermissionsAdmin::checkAdmin($this->getUser())
-            || PermissionsAdmin::checkOwners($this->getUser(), 'USER', 'INDEX')
+            $this->pms()->isAdmin($this->getUser())
+            || $this->pms()->canUseOwners($this->getUser(), 'USER', 'INDEX')
         ) {
             $filters->add('id');
             $filters->add('uuid');
@@ -95,33 +77,33 @@ class UserCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         // Actions adding by default
-        $this->actions->all($actions);
+        $this->adminCustomizeActions()->all($actions);
 
         // Default customize actions
-        $this->actions->customize($actions);
+        $this->adminCustomizeActions()->customize($actions);
 
         // Default reorder actions
-        $this->actions->reorder($actions);
+        $this->adminCustomizeActions()->reorder($actions);
 
-        if ($this->isGranted(PermissionsAdmin::IS_ADMIN)) {
+        if ($this->isGranted($this->pms()->isAdmin)) {
             return $actions;
         }
 
         // Disable edit User when is not Shop Linked
         $this->shopActions->relatedShop($actions);
 
-        if ($this->isGranted(PermissionsAdmin::ROLE_USER_ACTION_ALL)) {
+        if ($this->isGranted($this->pms()->getAction('USER'))) {
             return $actions;
         }
 
-        $actions->setPermission(Action::NEW, PermissionsAdmin::ROLE_USER_ACTION_NEW);
-        $actions->setPermission(Action::SAVE_AND_ADD_ANOTHER, PermissionsAdmin::ROLE_USER_ACTION_NEW);
-        $actions->setPermission(Action::EDIT, PermissionsAdmin::ROLE_USER_ACTION_EDIT);
-        $actions->setPermission(Action::SAVE_AND_RETURN, PermissionsAdmin::ROLE_USER_ACTION_EDIT);
-        $actions->setPermission(Action::SAVE_AND_CONTINUE, PermissionsAdmin::ROLE_USER_ACTION_EDIT);
-        $actions->setPermission(Action::DELETE, PermissionsAdmin::ROLE_USER_ACTION_DELETE);
-        $actions->setPermission(Action::DETAIL, PermissionsAdmin::ROLE_USER_ACTION_DETAIL);
-        $actions->setPermission(Action::INDEX, PermissionsAdmin::ROLE_USER_ACTION_INDEX);
+        $actions->setPermission(Action::NEW, $this->pms()->getAction('USER', 'NEW'));
+        $actions->setPermission(Action::SAVE_AND_ADD_ANOTHER, $this->pms()->getAction('USER', 'NEW'));
+        $actions->setPermission(Action::EDIT, $this->pms()->getAction('USER', 'EDIT'));
+        $actions->setPermission(Action::SAVE_AND_RETURN, $this->pms()->getAction('USER', 'EDIT'));
+        $actions->setPermission(Action::SAVE_AND_CONTINUE, $this->pms()->getAction('USER', 'EDIT'));
+        $actions->setPermission(Action::DELETE, $this->pms()->getAction('USER', 'DELETE'));
+        $actions->setPermission(Action::DETAIL, $this->pms()->getAction('USER', 'DETAIL'));
+        $actions->setPermission(Action::INDEX, $this->pms()->getAction('USER', 'INDEX'));
 
         return $actions;
     }
@@ -131,7 +113,10 @@ class UserCrudController extends AbstractCrudController
         // @todo : Finish all the model User
         // INDEX
         if (Crud::PAGE_INDEX === $pageName) {
-            if (PermissionsAdmin::checkAdmin($this->getUser())) {
+            if (
+                $this->pms()->isAdmin($this->getUser())
+                || $this->pms()->canUseOwners($this->getUser(), 'USER', 'INDEX')
+            ) {
                 yield IdField::new('id')->setLabel('admin.field.id');
             }
 
@@ -147,13 +132,13 @@ class UserCrudController extends AbstractCrudController
 
                     // Verify if Shop exist
                     if (null === $value) {
-                        return $this->translator->trans('admin.user.field.is_linked_shop', [], 'admin');
+                        return $this->translator()->trans('admin.user.field.is_linked_shop', [], 'admin');
                     }
 
                     // Verify if is Granted to show Shop
                     if (
-                        PermissionsAdmin::checkAdmin($this->getUser())
-                        || PermissionsAdmin::checkOwners($this->getUser(), 'USER', 'INDEX')
+                        $this->pms()->isAdmin($this->getUser())
+                        || $this->pms()->canUseOwners($this->getUser(), 'USER', 'INDEX')
                     ) {
                         return $value;
                     }
@@ -171,7 +156,7 @@ class UserCrudController extends AbstractCrudController
                     }
 
                     // If Shop is not linked to this User - @todo history system
-                    return $this->translator->trans('admin.user.field.change_linked_shop', [], 'admin');
+                    return $this->translator()->trans('admin.user.field.change_linked_shop', [], 'admin');
                 });
         }
 
@@ -179,8 +164,8 @@ class UserCrudController extends AbstractCrudController
         if (Crud::PAGE_DETAIL === $pageName) {
             yield FormField::addPanel('admin.user.panel_user')->renderCollapsed(false);
             if (
-                PermissionsAdmin::checkAdmin($this->getUser())
-                || PermissionsAdmin::checkOwners($this->getUser(), 'USER', 'DETAIL')
+                $this->pms()->isAdmin($this->getUser())
+                || $this->pms()->canUseOwners($this->getUser(), 'USER', 'DETAIL')
             ) {
                 yield IdField::new('id')->setLabel('admin.field.id');
                 yield TextField::new('displayuuid')->setLabel('admin.field.displayuuid');
@@ -212,8 +197,8 @@ class UserCrudController extends AbstractCrudController
             yield TelephoneField::new('user_info.phone')->setLabel('admin.user.field.phone');
 
             if (
-                (PermissionsAdmin::checkAdmin($this->getUser()))
-                || (PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'DETAIL'))
+                $this->pms()->isAdmin($this->getUser())
+                || $this->pms()->canUseActions($this->getUser(), 'SHOP', 'DETAIL')
             ) {
                 yield FormField::addPanel('admin.user.panel_shop_id')->renderCollapsed();
                 yield IsLinkedShopField::new('shop.name')
@@ -222,13 +207,13 @@ class UserCrudController extends AbstractCrudController
 
                         // Verify if Shop exist
                         if (null === $value) {
-                            return $this->translator->trans('admin.user.field.is_linked_shop', [], 'admin');
+                            return $this->translator()->trans('admin.user.field.is_linked_shop', [], 'admin');
                         }
 
                         // Verify if is Granted to show Shop
                         if (
-                            PermissionsAdmin::checkAdmin($this->getUser())
-                            || PermissionsAdmin::checkOwners($this->getUser(), 'USER', 'DETAIL')
+                            $this->pms()->isAdmin($this->getUser())
+                            || $this->pms()->canUseOwners($this->getUser(), 'USER', 'DETAIL')
                         ) {
                             return $value;
                         }
@@ -246,7 +231,7 @@ class UserCrudController extends AbstractCrudController
                         }
 
                         // If Shop is not linked to this User - @todo history system
-                        return $this->translator->trans('admin.user.field.change_linked_shop', [], 'admin');
+                        return $this->translator()->trans('admin.user.field.change_linked_shop', [], 'admin');
                     });
             }
         }
@@ -282,14 +267,14 @@ class UserCrudController extends AbstractCrudController
             yield TelephoneField::new('user_info.phone')->setLabel('admin.user.field.phone');
 
             if (
-                (PermissionsAdmin::checkAdmin($this->getUser()))
-                || (PermissionsAdmin::checkActions($this->getUser(), 'USER', 'EDIT'))
+                $this->pms()->isAdmin($this->getUser())
+                || $this->pms()->canUseActions($this->getUser(), 'USER', 'EDIT')
             ) {
                 // Configuration variables
                 $shops = $this->getDoctrine()->getRepository(Shop::class);
                 $choices = (count($shops->findByAdmin($this->getUser()->getUuid()->toBinary())) !== 0
-                    && !PermissionsAdmin::checkAdmin($this->getUser())
-                    && !PermissionsAdmin::checkOwners($this->getUser(), 'USER', 'EDIT'))
+                    && !$this->pms()->isAdmin($this->getUser())
+                    && !$this->pms()->canUseOwners($this->getUser(), 'USER', 'EDIT'))
                     ? $shops->findByAdmin($this->getUser()->getUuid()->toBinary())
                     : $shops->findAll();
 
@@ -318,21 +303,21 @@ class UserCrudController extends AbstractCrudController
             yield BooleanField::new('is_verified')->setLabel('admin.user.field.is_verified');
 
             if (
-                (PermissionsAdmin::checkAdmin($this->getUser()))
-                || (PermissionsAdmin::checkActions($this->getUser(), 'USER', 'NEW'))
+                ($this->pms()->isAdmin($this->getUser()))
+                || ($this->pms()->canUseActions($this->getUser(), 'USER', 'NEW'))
             ) {
                 // Configuration variables
                 $required = true;
                 $shops = $this->getDoctrine()->getRepository(Shop::class);
                 $choices = (count($shops->findByAdmin($this->getUser()->getUuid()->toBinary())) !== 0
-                    && !PermissionsAdmin::checkAdmin($this->getUser())
-                    && !PermissionsAdmin::checkOwners($this->getUser(), 'USER', 'NEW'))
+                    && !$this->pms()->isAdmin($this->getUser())
+                    && !$this->pms()->canUseOwners($this->getUser(), 'USER', 'NEW'))
                     ? $shops->findByAdmin($this->getUser()->getUuid()->toBinary())
                     : $shops->findAll();
 
                 if (
-                    (PermissionsAdmin::checkAdmin($this->getUser()))
-                    || (PermissionsAdmin::checkOwners($this->getUser(), 'USER', 'NEW'))
+                    ($this->pms()->isAdmin($this->getUser()))
+                    || ($this->pms()->canUseOwners($this->getUser(), 'USER', 'NEW'))
                 ) {
                     $required = false;
                 }
@@ -353,11 +338,11 @@ class UserCrudController extends AbstractCrudController
 
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
     {
-        if ($this->isGranted(PermissionsAdmin::IS_ADMIN)) {
+        if ($this->isGranted($this->pms()->isAdmin)) {
             return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
         }
 
-        if (PermissionsAdmin::checkOwners($this->getUser(), 'USER', 'INDEX')) {
+        if ($this->pms()->canUseOwners($this->getUser(), 'USER', 'INDEX')) {
             return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
         }
 
@@ -373,7 +358,7 @@ class UserCrudController extends AbstractCrudController
                 // verify all shops
                 \array_push($uuids_shop, $shop->getUuid()->toBinary());
 
-                $shops_history_manager = $this->em->getRepository(UserShopHistory::class);
+                $shops_history_manager = $this->adminEm()->getRepository(UserShopHistory::class);
                 $users_histories = $shops_history_manager->findBy(['shop_reference' => $shop->getReference()]);
 
                 // Verify all histories shops

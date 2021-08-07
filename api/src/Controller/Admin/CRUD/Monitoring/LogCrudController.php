@@ -3,49 +3,25 @@
 namespace App\Controller\Admin\CRUD\Monitoring;
 
 use App\Entity\Monitoring\Log;
-use App\Service\Admin\Builder\ExportBuilder;
-use Symfony\Component\HttpFoundation\Request;
-use App\Service\Admin\Actions\CustomizeActions;
 use App\Service\Admin\Field\JsonField;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use App\Service\Admin\Permissions\PermissionsAdmin;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
+use App\Controller\Admin\AbstractBaseCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
-use EasyCorp\Bundle\EasyAdminBundle\Factory\FilterFactory;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
-use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Factory\AdminContextFactory;
 
-class LogCrudController extends AbstractCrudController
+class LogCrudController extends AbstractBaseCrudController
 {
     public const DISPLAY_ERROR = 'ERROR';
     public const DISPLAY_NOTICE = 'NOTICE';
-
-    protected $actions;
-
-    protected $export;
-
-    protected $adminContextFactory;
-
-    public function __construct(
-        CustomizeActions $actions,
-        ExportBuilder $export,
-        AdminContextFactory $adminContextFactory
-    ) {
-        $this->actions = $actions;
-        $this->export = $export;
-        $this->adminContextFactory = $adminContextFactory;
-    }
 
     public static function getEntityFqcn(): string
     {
@@ -58,6 +34,7 @@ class LogCrudController extends AbstractCrudController
             ->setPageTitle('detail', function (?Log $log) {
                 return $log ? $log->getIdentifier() : null;
             })
+            ->showEntityActionsInlined()
             ->setDefaultSort(['id' => 'DESC'])
             ->setDateFormat('full')
             ->setTimeFormat('full');
@@ -90,19 +67,19 @@ class LogCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         // Actions adding by just for show index and detail (limited)
-        $this->actions->limitedToShow($actions);
-        $this->actions->limitedToShowCustomize($actions);
+        $this->adminCustomizeActions()->limitedToShow($actions);
+        $this->adminCustomizeActions()->limitedToShowCustomize($actions);
 
-        if ($this->isGranted(PermissionsAdmin::IS_ADMIN)) {
-            $export = $this->actions->export('exportCsv', 'csv');
+        if ($this->isGranted($this->pms()->isAdmin)) {
+            $export = $this->adminCustomizeActions()->export('exportCsv', 'csv');
             $actions->add(Crud::PAGE_INDEX, $export);
 
             return $actions;
         }
 
-        $actions->setPermission(Action::DETAIL, PermissionsAdmin::IS_ADMIN);
-        $actions->setPermission(Action::INDEX, PermissionsAdmin::IS_ADMIN);
-        $actions->setPermission($this->actions::EXPORT_CSV, PermissionsAdmin::IS_ADMIN);
+        $actions->setPermission(Action::DETAIL, $this->pms()->isAdmin);
+        $actions->setPermission(Action::INDEX, $this->pms()->isAdmin);
+        $actions->setPermission($this->actions::EXPORT_CSV, $this->pms()->isAdmin);
 
         return $actions;
     }
@@ -175,59 +152,5 @@ class LogCrudController extends AbstractCrudController
             yield JsonField::new('extra')->setLabel('admin.log.field.extra');
             yield DateField::new('created_at')->setLabel('admin.field.created_at');
         }
-    }
-
-    /*************** -- Custom Actions -- ***************/
-    /***************************************************/
-    /**************************************************/
-    /*************************************************/
-
-    /**
-     * exportCsv
-     *
-     * @param  mixed $request
-     * @return void
-     */
-    public function exportCsv(Request $request)
-    {
-        if (!PermissionsAdmin::checkAdmin($this->getUser())) {
-            throw $this->createAccessDeniedException();
-        }
-
-        // retrieve referrer's querystring 'filters'
-        \parse_str(\parse_url($request->query->get(EA::REFERRER))[EA::QUERY], $referrerQuery);
-
-        if (isset($referrerQuery[EA::FILTERS])) {
-            $request->query->set(EA::FILTERS, $referrerQuery[EA::FILTERS]);
-        }
-
-        $context = $request->attributes->get(EA::CONTEXT_REQUEST_ATTRIBUTE);
-        $fields = FieldCollection::new($this->configureFields(Crud::PAGE_INDEX));
-        $filters = $this->get(FilterFactory::class)->create($context->getCrud()->getFiltersConfig(), $fields, $context->getEntity());
-
-        \parse_str(\parse_url($request->query->get(EA::REFERRER))[EA::QUERY], $referrerQuery);
-        $query = isset($referrerQuery[EA::QUERY]) ? $referrerQuery[EA::QUERY] : null;
-        $request->query->set(EA::QUERY, $query);
-        // recreate searchDto so that it takes into account the querystring 'query'
-        $searchDto = $this->adminContextFactory->getSearchDto($request, $context->getCrud());
-
-        $logs = $this->createIndexQueryBuilder($searchDto, $context->getEntity(), $fields, $filters)
-            ->getQuery()
-            ->getResult();
-
-        $data = [];
-        foreach ($logs as $log) {
-            $data[] = $log->getExportData();
-        }
-
-        // @todo : translation
-        if (empty($data)) {
-            $data[] = ['error' => 'empty file'];
-        }
-
-        return $this->export->exportCsv(
-            $data,
-            'export_log_' . date_create()->format('dmyhis') . '.' . $this->export->format('csv')
-        );
     }
 }

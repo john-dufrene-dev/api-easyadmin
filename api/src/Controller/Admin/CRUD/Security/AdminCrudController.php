@@ -4,17 +4,15 @@ namespace App\Controller\Admin\CRUD\Security;
 
 use App\Entity\Security\Admin;
 use Doctrine\ORM\QueryBuilder;
-use App\Service\Utils\PaginatorFactory;
 use App\Service\Admin\Field\PasswordField;
-use App\Service\Admin\Actions\CustomizeActions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use App\Service\Admin\Permissions\PermissionsAdmin;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
+use App\Controller\Admin\AbstractBaseCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -25,21 +23,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
-class AdminCrudController extends AbstractCrudController
+class AdminCrudController extends AbstractBaseCrudController
 {
-    protected $actions;
-
-    protected $paginator;
-
     public const ACTIVE_CUSTOM_ROLES = false; // Enable or disable custom roles
-
-    public function __construct(CustomizeActions $actions, PaginatorFactory $paginator)
-    {
-        $this->actions = $actions;
-        $this->paginator = $paginator;
-    }
 
     public static function getEntityFqcn(): string
     {
@@ -55,6 +42,7 @@ class AdminCrudController extends AbstractCrudController
             ->setPageTitle('detail', function (?Admin $admin) {
                 return $admin ? $admin->getUserIdentifier() : null;
             })
+            ->showEntityActionsInlined()
             ->setDefaultSort(['id' => 'ASC'])
             ->setDateFormat('full')
             ->setTimeFormat('full');
@@ -63,8 +51,8 @@ class AdminCrudController extends AbstractCrudController
     public function configureFilters(Filters $filters): Filters
     {
         if (
-            PermissionsAdmin::checkAdmin($this->getUser())
-            || PermissionsAdmin::checkOwners($this->getUser(), 'ADMIN', 'INDEX')
+            $this->pms()->isAdmin($this->getUser())
+            || $this->pms()->canUseOwners($this->getUser(), 'ADMIN', 'INDEX')
         ) {
             $filters->add('id');
             $filters->add('uuid');
@@ -79,37 +67,37 @@ class AdminCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         // Actions adding by default
-        $this->actions->all($actions);
+        $this->adminCustomizeActions()->all($actions);
 
         // Action new impersonation route
-        if ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_SWITCH)) {
-            $switch_user = $this->actions->impersonate($actions);
+        if ($this->isGranted($this->pms()->roleAllowedToSwitch)) {
+            $switch_user = $this->adminCustomizeActions()->impersonate($actions);
             $actions->add(Crud::PAGE_INDEX, $switch_user);
-            $actions->setPermission($this->actions::IMPERSONATE, PermissionsAdmin::ROLE_ALLOWED_TO_SWITCH);
+            $actions->setPermission($this->adminCustomizeActions()::IMPERSONATE, $this->pms()->roleAllowedToSwitch);
         }
 
         // Default customize actions
-        $this->actions->customize($actions);
+        $this->adminCustomizeActions()->customize($actions);
 
         // Default reorder actions
-        $this->actions->reorder($actions);
+        $this->adminCustomizeActions()->reorder($actions);
 
-        if ($this->isGranted(PermissionsAdmin::IS_ADMIN)) {
+        if ($this->isGranted($this->pms()->isAdmin)) {
             return $actions;
         }
 
-        if ($this->isGranted(PermissionsAdmin::ROLE_ADMIN_ACTION_ALL)) {
+        if ($this->isGranted($this->pms()->getAction('ADMIN'))) {
             return $actions;
         }
 
-        $actions->setPermission(Action::NEW, PermissionsAdmin::ROLE_ADMIN_ACTION_NEW);
-        $actions->setPermission(Action::SAVE_AND_ADD_ANOTHER, PermissionsAdmin::ROLE_ADMIN_ACTION_NEW);
-        $actions->setPermission(Action::EDIT, PermissionsAdmin::ROLE_ADMIN_ACTION_EDIT);
-        $actions->setPermission(Action::SAVE_AND_RETURN, PermissionsAdmin::ROLE_ADMIN_ACTION_EDIT);
-        $actions->setPermission(Action::SAVE_AND_CONTINUE, PermissionsAdmin::ROLE_ADMIN_ACTION_EDIT);
-        $actions->setPermission(Action::DELETE, PermissionsAdmin::ROLE_ADMIN_ACTION_DELETE);
-        $actions->setPermission(Action::DETAIL, PermissionsAdmin::ROLE_ADMIN_ACTION_DETAIL);
-        $actions->setPermission(Action::INDEX, PermissionsAdmin::ROLE_ADMIN_ACTION_INDEX);
+        $actions->setPermission(Action::NEW, $this->pms()->getAction('ADMIN', 'NEW'));
+        $actions->setPermission(Action::SAVE_AND_ADD_ANOTHER, $this->pms()->getAction('ADMIN', 'NEW'));
+        $actions->setPermission(Action::EDIT, $this->pms()->getAction('ADMIN', 'EDIT'));
+        $actions->setPermission(Action::SAVE_AND_RETURN, $this->pms()->getAction('ADMIN', 'EDIT'));
+        $actions->setPermission(Action::SAVE_AND_CONTINUE, $this->pms()->getAction('ADMIN', 'EDIT'));
+        $actions->setPermission(Action::DELETE, $this->pms()->getAction('ADMIN', 'DELETE'));
+        $actions->setPermission(Action::DETAIL, $this->pms()->getAction('ADMIN', 'DETAIL'));
+        $actions->setPermission(Action::INDEX, $this->pms()->getAction('ADMIN', 'INDEX'));
 
         return $actions;
     }
@@ -119,8 +107,8 @@ class AdminCrudController extends AbstractCrudController
         // INDEX
         if (Crud::PAGE_INDEX === $pageName) {
             if (
-                PermissionsAdmin::checkAdmin($this->getUser())
-                || PermissionsAdmin::checkOwners($this->getUser(), 'ADMIN', 'INDEX')
+                $this->pms()->isAdmin($this->getUser())
+                || $this->pms()->canUseOwners($this->getUser(), 'ADMIN', 'INDEX')
             ) {
                 yield IdField::new('id')->setLabel('admin.field.id');
             }
@@ -135,8 +123,8 @@ class AdminCrudController extends AbstractCrudController
         if (Crud::PAGE_DETAIL === $pageName) {
             yield FormField::addPanel('admin.admin.panel_informations')->renderCollapsed(false);
             if (
-                PermissionsAdmin::checkAdmin($this->getUser())
-                || PermissionsAdmin::checkOwners($this->getUser(), 'ADMIN', 'DETAIL')
+                $this->pms()->isAdmin($this->getUser())
+                || $this->pms()->canUseOwners($this->getUser(), 'ADMIN', 'DETAIL')
             ) {
                 yield IdField::new('id')->setLabel('admin.field.id');
                 yield TextField::new('displayuuid')->setLabel('admin.field.displayuuid');
@@ -154,27 +142,27 @@ class AdminCrudController extends AbstractCrudController
                 ->setFormTypeOptions(['choice_translation_domain' => false]);
 
             if (
-                (PermissionsAdmin::checkAdmin($this->getUser()))
-                || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'DETAIL'))
-                && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_ROLES))
+                ($this->pms()->isAdmin($this->getUser()))
+                || ($this->pms()->canUseActions($this->getUser(), 'ADMIN', 'DETAIL'))
+                && ($this->isGranted($this->pms()->roleAllowedToEditRoles))
             ) {
                 yield FormField::addPanel('admin.admin.panel_roles')->renderCollapsed();
                 yield ArrayField::new('roles')->setLabel('admin.admin.field.roles');
             }
 
             if (
-                (PermissionsAdmin::checkAdmin($this->getUser()))
-                || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'DETAIL'))
-                && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_GROUPS))
+                ($this->pms()->isAdmin($this->getUser()))
+                || ($this->pms()->canUseActions($this->getUser(), 'ADMIN', 'DETAIL'))
+                && ($this->isGranted($this->pms()->roleAllowedToEditGroups))
             ) {
                 yield FormField::addPanel('admin.admin.panel_groups')->renderCollapsed();
                 yield ArrayField::new('groups')->setLabel('admin.admin.field.groups');
             }
 
             if (
-                (PermissionsAdmin::checkAdmin($this->getUser()))
-                || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'DETAIL'))
-                && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_ADMINS_SHOPS))
+                ($this->pms()->isAdmin($this->getUser()))
+                || ($this->pms()->canUseActions($this->getUser(), 'ADMIN', 'DETAIL'))
+                && ($this->isGranted($this->pms()->roleAllowedToEditAdminShops))
             ) {
                 yield FormField::addPanel('admin.admin.panel_shop')->renderCollapsed();
                 yield ArrayField::new('shops')->setLabel('admin.admin.field.shops');
@@ -194,19 +182,19 @@ class AdminCrudController extends AbstractCrudController
             yield TextField::new('admin_config.dashboard_title')->setLabel('admin.admin.field.dashboard_title');
             yield ChoiceField::new('admin_config.crud_paginator')
                 ->setLabel('admin.admin.field.crud_paginator')
-                ->setChoices($this->paginator->choicePaginator())
+                ->setChoices($this->adminpaginatorFactory()->choicePaginator())
                 ->setFormTypeOptions(['choice_translation_domain' => false]);
 
             // You can use it if you want to customize roles without using AdminGroup
             // By default this field is disabled
             if (self::ACTIVE_CUSTOM_ROLES) {
                 if (
-                    (PermissionsAdmin::checkAdmin($this->getUser()))
-                    || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'EDIT'))
-                    && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_ROLES))
+                    ($this->pms()->isAdmin($this->getUser()))
+                    || ($this->pms()->canUseActions($this->getUser(), 'ADMIN', 'EDIT'))
+                    && ($this->isGranted($this->pms()->roleAllowedToEditRoles))
                 ) {
                     yield FormField::addPanel('admin.admin.panel_roles')->renderCollapsed();
-                    yield ChoiceField::new('roles')->setChoices(PermissionsAdmin::getAllRoles())
+                    yield ChoiceField::new('roles')->setChoices($this->pms()->getRoles())
                         ->allowMultipleChoices(true)
                         ->autocomplete(true)
                         ->setRequired(false)
@@ -216,9 +204,9 @@ class AdminCrudController extends AbstractCrudController
             }
 
             if (
-                (PermissionsAdmin::checkAdmin($this->getUser()))
-                || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'EDIT'))
-                && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_GROUPS))
+                ($this->pms()->isAdmin($this->getUser()))
+                || ($this->pms()->canUseActions($this->getUser(), 'ADMIN', 'EDIT'))
+                && ($this->isGranted($this->pms()->roleAllowedToEditGroups))
             ) {
                 yield FormField::addPanel('admin.admin.panel_groups')->renderCollapsed();
                 yield AssociationField::new('groups')->setLabel('admin.admin.field.groups');
@@ -235,12 +223,12 @@ class AdminCrudController extends AbstractCrudController
             // By default this field is disabled
             if (self::ACTIVE_CUSTOM_ROLES) {
                 if (
-                    (PermissionsAdmin::checkAdmin($this->getUser()))
-                    || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'NEW'))
-                    && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_ROLES))
+                    ($this->pms()->isAdmin($this->getUser()))
+                    || ($this->pms()->canUseActions($this->getUser(), 'ADMIN', 'NEW'))
+                    && ($this->isGranted($this->pms()->roleAllowedToEditRoles))
                 ) {
                     yield FormField::addPanel('admin.admin.panel_roles')->renderCollapsed();
-                    yield ChoiceField::new('roles')->setChoices(PermissionsAdmin::getAllRoles())
+                    yield ChoiceField::new('roles')->setChoices($this->pms()->getRoles())
                         ->allowMultipleChoices(true)
                         ->autocomplete(true)
                         ->setRequired(false)
@@ -250,9 +238,9 @@ class AdminCrudController extends AbstractCrudController
             }
 
             if (
-                (PermissionsAdmin::checkAdmin($this->getUser()))
-                || (PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'NEW'))
-                && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_GROUPS))
+                ($this->pms()->isAdmin($this->getUser()))
+                || ($this->pms()->canUseActions($this->getUser(), 'ADMIN', 'NEW'))
+                && ($this->isGranted($this->pms()->roleAllowedToEditGroups))
             ) {
                 yield FormField::addPanel('admin.admin.panel_groups')->renderCollapsed();
                 yield AssociationField::new('groups')->setLabel('admin.admin.field.groups');
@@ -262,11 +250,11 @@ class AdminCrudController extends AbstractCrudController
 
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
     {
-        if ($this->isGranted(PermissionsAdmin::IS_ADMIN)) {
+        if ($this->isGranted($this->pms()->isAdmin)) {
             return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
         }
 
-        if (PermissionsAdmin::checkOwners($this->getUser(), 'ADMIN', 'INDEX')) {
+        if ($this->pms()->canUseOwners($this->getUser(), 'ADMIN', 'INDEX')) {
             return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
         }
 

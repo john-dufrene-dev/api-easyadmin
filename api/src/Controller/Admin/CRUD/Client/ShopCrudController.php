@@ -6,23 +6,18 @@ use App\Entity\Client\Shop;
 use Doctrine\ORM\QueryBuilder;
 use App\Form\Type\Client\ShopFileType;
 use App\Form\Type\Client\ShopHourType;
-use App\Service\Admin\Builder\ExportBuilder;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use App\Service\Admin\Actions\CustomizeActions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use App\Service\Admin\Permissions\PermissionsAdmin;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
+use App\Controller\Admin\AbstractBaseCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Option\EA;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
@@ -30,33 +25,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\BatchActionDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CountryField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TelephoneField;
-use EasyCorp\Bundle\EasyAdminBundle\Factory\FilterFactory;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
-use EasyCorp\Bundle\EasyAdminBundle\Factory\AdminContextFactory;
 use EasyCorp\Bundle\EasyAdminBundle\Event\AfterEntityUpdatedEvent;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
-class ShopCrudController extends AbstractCrudController
+class ShopCrudController extends AbstractBaseCrudController
 {
-    protected $actions;
-
-    protected $export;
-
-    protected $adminContextFactory;
-
-    public function __construct(
-        CustomizeActions $actions,
-        ExportBuilder $export,
-        AdminContextFactory $adminContextFactory
-    ) {
-        $this->actions = $actions;
-        $this->export = $export;
-        $this->adminContextFactory = $adminContextFactory;
-    }
-
     public static function getEntityFqcn(): string
     {
         return Shop::class;
@@ -76,6 +52,7 @@ class ShopCrudController extends AbstractCrudController
             ->setPageTitle('detail', function (?Shop $shop) {
                 return $shop ? $shop->getName() : null;
             })
+            ->showEntityActionsInlined()
             ->setDefaultSort(['id' => 'ASC'])
             ->setDateFormat('full')
             ->setTimeFormat('full');
@@ -84,8 +61,8 @@ class ShopCrudController extends AbstractCrudController
     public function configureFilters(Filters $filters): Filters
     {
         if (
-            PermissionsAdmin::checkAdmin($this->getUser())
-            || PermissionsAdmin::checkOwners($this->getUser(), 'SHOP', 'INDEX')
+            $this->pms()->isAdmin($this->getUser())
+            || $this->pms()->canUseOwners($this->getUser(), 'SHOP', 'INDEX')
         ) {
             $filters->add('id');
             $filters->add('uuid');
@@ -103,45 +80,45 @@ class ShopCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         // Actions adding by default
-        $this->actions->all($actions);
+        $this->adminCustomizeActions()->all($actions);
 
         // Action new export csv
         if (
-            PermissionsAdmin::checkAdmin($this->getUser())
-            || PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'EXPORT')
+            $this->pms()->isAdmin($this->getUser())
+            || $this->pms()->canUseActions($this->getUser(), 'SHOP', 'EXPORT')
         ) {
-            $export = $this->actions->export('exportCsv', 'csv');
+            $export = $this->adminCustomizeActions()->export('exportCsv', 'csv');
             $actions->add(Crud::PAGE_INDEX, $export);
         }
 
         // Action Enable/disable
-        $enable = $this->actions->batchToggleActive('enableShops', true);
-        $disable = $this->actions->batchToggleActive('disableShops', false);
+        $enable = $this->adminCustomizeActions()->batchToggleActive('enableShops', true);
+        $disable = $this->adminCustomizeActions()->batchToggleActive('disableShops', false);
         $actions->addBatchAction($enable);
         $actions->addBatchAction($disable);
 
         // Default customize actions
-        $this->actions->customize($actions);
+        $this->adminCustomizeActions()->customize($actions);
 
         // Default reorder actions
-        $this->actions->reorder($actions);
+        $this->adminCustomizeActions()->reorder($actions);
 
-        if ($this->isGranted(PermissionsAdmin::IS_ADMIN)) {
+        if ($this->isGranted($this->pms()->isAdmin)) {
             return $actions;
         }
 
-        if ($this->isGranted(PermissionsAdmin::ROLE_SHOP_ACTION_ALL)) {
+        if ($this->isGranted($this->pms()->getAction('SHOP'))) {
             return $actions;
         }
 
-        $actions->setPermission(Action::NEW, PermissionsAdmin::ROLE_SHOP_ACTION_NEW);
-        $actions->setPermission(Action::SAVE_AND_ADD_ANOTHER, PermissionsAdmin::ROLE_SHOP_ACTION_NEW);
-        $actions->setPermission(Action::EDIT, PermissionsAdmin::ROLE_SHOP_ACTION_EDIT);
-        $actions->setPermission(Action::SAVE_AND_RETURN, PermissionsAdmin::ROLE_SHOP_ACTION_EDIT);
-        $actions->setPermission(Action::SAVE_AND_CONTINUE, PermissionsAdmin::ROLE_SHOP_ACTION_EDIT);
-        $actions->setPermission(Action::DELETE, PermissionsAdmin::ROLE_SHOP_ACTION_DELETE);
-        $actions->setPermission(Action::DETAIL, PermissionsAdmin::ROLE_SHOP_ACTION_DETAIL);
-        $actions->setPermission(Action::INDEX, PermissionsAdmin::ROLE_SHOP_ACTION_INDEX);
+        $actions->setPermission(Action::NEW, $this->pms()->getAction('SHOP', 'NEW'));
+        $actions->setPermission(Action::SAVE_AND_ADD_ANOTHER, $this->pms()->getAction('SHOP', 'NEW'));
+        $actions->setPermission(Action::EDIT, $this->pms()->getAction('SHOP', 'EDIT'));
+        $actions->setPermission(Action::SAVE_AND_RETURN, $this->pms()->getAction('SHOP', 'EDIT'));
+        $actions->setPermission(Action::SAVE_AND_CONTINUE, $this->pms()->getAction('SHOP', 'EDIT'));
+        $actions->setPermission(Action::DELETE, $this->pms()->getAction('SHOP', 'DELETE'));
+        $actions->setPermission(Action::DETAIL, $this->pms()->getAction('SHOP', 'DETAIL'));
+        $actions->setPermission(Action::INDEX, $this->pms()->getAction('SHOP', 'INDEX'));
 
         return $actions;
     }
@@ -150,7 +127,7 @@ class ShopCrudController extends AbstractCrudController
     {
         // INDEX
         if (Crud::PAGE_INDEX === $pageName) {
-            if (PermissionsAdmin::checkAdmin($this->getUser())) {
+            if ($this->pms()->isAdmin($this->getUser())) {
                 yield IdField::new('id')->setLabel('admin.field.id');
             }
 
@@ -160,7 +137,7 @@ class ShopCrudController extends AbstractCrudController
             yield DateField::new('created_at')->setLabel('admin.field.created_at');
             yield DateField::new('updated_at')->setLabel('admin.field.updated_at');
 
-            if (PermissionsAdmin::checkAdmin($this->getUser())) {
+            if ($this->pms()->isAdmin($this->getUser())) {
                 yield BooleanField::new('is_active')->setLabel('admin.shop.field.is_active');
             }
         }
@@ -169,8 +146,8 @@ class ShopCrudController extends AbstractCrudController
         if (Crud::PAGE_DETAIL === $pageName) {
             yield FormField::addPanel('admin.shop.panel_shop')->renderCollapsed(false);
             if (
-                PermissionsAdmin::checkAdmin($this->getUser())
-                || PermissionsAdmin::checkOwners($this->getUser(), 'SHOP', 'DETAIL')
+                $this->pms()->isAdmin($this->getUser())
+                || $this->pms()->canUseOwners($this->getUser(), 'SHOP', 'DETAIL')
             ) {
                 yield IdField::new('id')->setLabel('admin.field.id');
                 yield TextField::new('displayuuid')->setLabel('admin.field.displayuuid');
@@ -180,7 +157,7 @@ class ShopCrudController extends AbstractCrudController
             yield TextField::new('name')->setLabel('admin.shop.field.name');
             yield EmailField::new('email')->setLabel('admin.shop.field.email');
 
-            if (PermissionsAdmin::checkAdmin($this->getUser())) {
+            if ($this->pms()->isAdmin($this->getUser())) {
                 yield BooleanField::new('is_active')->setLabel('admin.shop.field.is_active');
             }
 
@@ -215,9 +192,9 @@ class ShopCrudController extends AbstractCrudController
                 ->setLabel('admin.shop.field.shipping_delivery');
 
             if (
-                (PermissionsAdmin::checkAdmin($this->getUser()))
-                || (PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'DETAIL'))
-                && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_ADMINS_SHOPS))
+                ($this->pms()->isAdmin($this->getUser()))
+                || ($this->pms()->canUseActions($this->getUser(), 'SHOP', 'DETAIL'))
+                && ($this->isGranted($this->pms()->roleAllowedToEditAdminShops))
             ) {
                 yield FormField::addPanel('admin.shop.panel_shop_admin')->renderCollapsed();
                 yield ArrayField::new('admins')->setLabel('admin.shop.field.admins');
@@ -230,11 +207,11 @@ class ShopCrudController extends AbstractCrudController
 
             yield TextField::new('reference')->setFormTypeOptions([
                 'disabled' => true,
-            ])->setLabel('admin.field.reference');
-            yield TextField::new('name')->setLabel('admin.shop.field.name');
-            yield EmailField::new('email')->setLabel('admin.shop.field.email');
+            ])->setLabel('admin.field.reference')->setColumns(4);
+            yield TextField::new('name')->setLabel('admin.shop.field.name')->setColumns(4);
+            yield EmailField::new('email')->setLabel('admin.shop.field.email')->setColumns(4);
 
-            if (PermissionsAdmin::checkAdmin($this->getUser())) {
+            if ($this->pms()->isAdmin($this->getUser())) {
                 yield BooleanField::new('is_active')->setLabel('admin.shop.field.is_active');
             }
 
@@ -242,18 +219,20 @@ class ShopCrudController extends AbstractCrudController
 
             yield CountryField::new('shop_info.country')
                 ->setFormTypeOptions(['choice_translation_domain' => false])
-                ->setLabel('admin.shop.field.country');
-            yield TextField::new('shop_info.city')->setLabel('admin.shop.field.city');
-            yield TextField::new('shop_info.postal_code')->setLabel('admin.shop.field.postal_code');
-            yield TextField::new('shop_info.address')->setLabel('admin.shop.field.address');
+                ->setLabel('admin.shop.field.country')->setColumns(4);
+            yield TextField::new('shop_info.city')->setLabel('admin.shop.field.city')->setColumns(4);
+            yield TextField::new('shop_info.postal_code')->setLabel('admin.shop.field.postal_code')->setColumns(4);
+            yield TextField::new('shop_info.address')->setLabel('admin.shop.field.address')->setColumns(12);
             yield NumberField::new('shop_info.latitude')->setLabel('admin.shop.field.latitude')
-                ->setNumDecimals(8);
+                ->setNumDecimals(8)->setColumns(6);
             yield NumberField::new('shop_info.longitude')->setLabel('admin.shop.field.longitude')
-                ->setNumDecimals(8);
+                ->setNumDecimals(8)->setColumns(6);
             yield TelephoneField::new('shop_info.phone')->setLabel('admin.shop.field.phone');
 
             // @Todo : Reorder AddPanel()
             yield CollectionField::new('shop_info.shop_hour')->setLabel('admin.shop.field.shop_hour')
+                ->setColumns(12)
+                ->renderExpanded(true)
                 ->setCustomOption('allowAdd', false) //disable add field
                 ->setCustomOption('allowDelete', false) //disable remove field
                 ->setFormTypeOptions([
@@ -267,7 +246,8 @@ class ShopCrudController extends AbstractCrudController
 
             yield FormField::addPanel('admin.shop.panel_shop_files')->renderCollapsed();
             yield CollectionField::new('shop_files')->setEntryType(ShopFileType::class)
-                ->setFormTypeOption('by_reference', false);
+            ->showEntryLabel(false)
+                ->setFormTypeOption('by_reference', false)->setColumns(12);
 
             yield FormField::addPanel('admin.shop.panel_shop_services')->renderCollapsed();
             yield BooleanField::new('shop_info.shipping_click')
@@ -278,12 +258,12 @@ class ShopCrudController extends AbstractCrudController
                 ->setLabel('admin.shop.field.shipping_delivery');
 
             if (
-                (PermissionsAdmin::checkAdmin($this->getUser()))
-                || (PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'EDIT'))
-                && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_ADMINS_SHOPS))
+                ($this->pms()->isAdmin($this->getUser()))
+                || ($this->pms()->canUseActions($this->getUser(), 'SHOP', 'EDIT'))
+                && ($this->isGranted($this->pms()->roleAllowedToEditAdminShops))
             ) {
                 yield FormField::addPanel('admin.shop.panel_shop_admin')->renderCollapsed();
-                yield AssociationField::new('admins')->setLabel('admin.shop.field.admins');
+                yield AssociationField::new('admins')->setLabel('admin.shop.field.admins')->setColumns(12);
             }
         }
 
@@ -293,14 +273,14 @@ class ShopCrudController extends AbstractCrudController
             yield TextField::new('name')->setLabel('admin.shop.field.name');
             yield EmailField::new('email')->setLabel('admin.shop.field.email');
 
-            if (PermissionsAdmin::checkAdmin($this->getUser())) {
+            if ($this->pms()->isAdmin($this->getUser())) {
                 yield BooleanField::new('is_active')->setLabel('admin.shop.field.is_active');
             }
 
             if (
-                (PermissionsAdmin::checkAdmin($this->getUser()))
-                || (PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'NEW'))
-                && ($this->isGranted(PermissionsAdmin::ROLE_ALLOWED_TO_EDIT_ADMINS_SHOPS))
+                ($this->pms()->isAdmin($this->getUser()))
+                || ($this->pms()->canUseActions($this->getUser(), 'SHOP', 'NEW'))
+                && ($this->isGranted($this->pms()->roleAllowedToEditAdminShops))
             ) {
                 yield FormField::addPanel('admin.shop.panel_shop_admin')->renderCollapsed();
                 yield AssociationField::new('admins')->setLabel('admin.shop.field.admins');
@@ -310,11 +290,11 @@ class ShopCrudController extends AbstractCrudController
 
     public function createIndexQueryBuilder(SearchDto $searchDto, EntityDto $entityDto, FieldCollection $fields, FilterCollection $filters): QueryBuilder
     {
-        if ($this->isGranted(PermissionsAdmin::IS_ADMIN)) {
+        if ($this->isGranted($this->pms()->isAdmin)) {
             return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
         }
 
-        if (PermissionsAdmin::checkOwners($this->getUser(), 'SHOP', 'INDEX')) {
+        if ($this->pms()->canUseOwners($this->getUser(), 'SHOP', 'INDEX')) {
             return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters);
         }
 
@@ -332,51 +312,6 @@ class ShopCrudController extends AbstractCrudController
     /*************************************************/
 
     /**
-     * exportCsv
-     *
-     * @param  mixed $request
-     * @return Response
-     */
-    public function exportCsv(Request $request): Response
-    {
-        if (
-            !PermissionsAdmin::checkAdmin($this->getUser())
-            && !PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'EXPORT')
-        ) {
-            throw $this->createAccessDeniedException();
-        }
-
-        $context = $request->attributes->get(EA::CONTEXT_REQUEST_ATTRIBUTE);
-        $fields = FieldCollection::new($this->configureFields(Crud::PAGE_INDEX));
-        $filters = $this->get(FilterFactory::class)->create($context->getCrud()->getFiltersConfig(), $fields, $context->getEntity());
-
-        \parse_str(\parse_url($request->query->get(EA::REFERRER))[EA::QUERY], $referrerQuery);
-        $query = isset($referrerQuery[EA::QUERY]) ? $referrerQuery[EA::QUERY] : null;
-        $request->query->set(EA::QUERY, $query);
-        // recreate searchDto so that it takes into account the querystring 'query'
-        $searchDto = $this->adminContextFactory->getSearchDto($request, $context->getCrud());
-
-        $shops = $this->createIndexQueryBuilder($searchDto, $context->getEntity(), $fields, $filters)
-            ->getQuery()
-            ->getResult();
-
-        $data = [];
-        foreach ($shops as $shop) {
-            $data[] = $shop->getExportData();
-        }
-
-        // @todo : translation
-        if (empty($data)) {
-            $data[] = ['error' => 'empty file'];
-        }
-
-        return $this->export->exportCsv(
-            $data,
-            'export_shop_' . date_create()->format('dmyhis') . '.' . $this->export->format('csv')
-        );
-    }
-
-    /**
      * enableShops
      *
      * @param  mixed $batchActionDto
@@ -385,8 +320,8 @@ class ShopCrudController extends AbstractCrudController
     public function enableShops(BatchActionDto $batchActionDto)
     {
         if (
-            !PermissionsAdmin::checkAdmin($this->getUser())
-            && !PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'EDIT')
+            !$this->pms()->isAdmin($this->getUser())
+            && !$this->pms()->canUseActions($this->getUser(), 'SHOP', 'EDIT')
         ) {
             throw $this->createAccessDeniedException();
         }
@@ -415,8 +350,8 @@ class ShopCrudController extends AbstractCrudController
     public function disableShops(BatchActionDto $batchActionDto)
     {
         if (
-            !PermissionsAdmin::checkAdmin($this->getUser())
-            && !PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'EDIT')
+            !$this->pms()->isAdmin($this->getUser())
+            && !$this->pms()->canUseActions($this->getUser(), 'SHOP', 'EDIT')
         ) {
             throw $this->createAccessDeniedException();
         }

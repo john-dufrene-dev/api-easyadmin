@@ -10,12 +10,12 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 class ConfigurationBuilder
 {
-    public const TEXT_TYPE = 'text';
-    public const CHOICE_TYPE = 'choice';
-    public const BOOLEAN_TYPE = 'bool';
-    public const TEXT_EDITOR_TYPE = 'editor';
-    public const TEXTAREA_TYPE = 'textarea';
-    public const INTEGER_TYPE = 'int';
+    public $textType = 'text';
+    public $choiceType = 'choice';
+    public $booleanType = 'bool';
+    public $textEditorType = 'editor';
+    public $textareaType = 'textarea';
+    public $integerType = 'int';
 
     /**
      * em
@@ -83,31 +83,31 @@ class ConfigurationBuilder
         switch ($typing) {
             case 0:
                 // Use yield TextField::new('value');
-                return self::TEXT_TYPE;
+                return $this->textType;
                 break;
             case 1:
                 // Use yield ChoiceField::new('value')->setChoices(['false' => 0, 'true' => 1]);
-                return self::BOOLEAN_TYPE;
+                return $this->booleanType;
                 break;
             case 2:
                 // Use yield ChoiceField::new('value')->setChoices(['false' => 0, 'true' => 1]);
-                return self::CHOICE_TYPE;
+                return $this->choiceType;
                 break;
             case 3:
                 // Use yield TextEditorField::new('value');
-                return self::TEXT_EDITOR_TYPE;
+                return $this->textEditorType;
                 break;
             case 4:
                 // Use yield TextAreaField::new('value');
-                return self::TEXTAREA_TYPE;
+                return $this->textareaType;
                 break;
             case 5:
                 // Use yield IntegerField::new('value');
-                return self::INTEGER_TYPE;
+                return $this->integerType;
                 break;
             default:
                 // Use yield TextField::new('value');
-                return self::TEXT_TYPE;
+                return $this->textType;
                 break;
         }
     }

@@ -13,55 +13,26 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
-use App\Service\Admin\Builder\ConfigurationBuilder;
-use App\Service\Admin\Permissions\PermissionsAdmin;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Config\UserMenu;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
-use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use App\Controller\Admin\AbstractBaseDashboardController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\Controller\Admin\CRUD\Configuration\ConfigGeneralCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 
 /**
  * @IsGranted("ROLE_ADMIN")
  */
-class DashboardController extends AbstractDashboardController
+class DashboardController extends AbstractBaseDashboardController
 {
-    /**
-     * config
-     *
-     * @var mixed
-     */
-    protected $config;
-
-    /**
-     * chartBuilder
-     *
-     * @var mixed
-     */
-    protected $chartBuilder;
-
-    public const SET_PAGINATOR_PAGE_SIZE = 15; // Default pagination
-    public const SET_DEFAULT_FOLDER_EASYADMIN = 'admin/_easyadmin/'; // Default folder to override template EasyAdminBundle
-    public const SET_DEFAULT_ROUTE_API_DOC = '/api/docs'; // Default route API documentation
-
-    public function __construct(
-        ConfigurationBuilder $config,
-        ChartBuilderInterface $chartBuilder
-    ) {
-        $this->config = $config;
-        $this->chartBuilder = $chartBuilder;
-    }
-
     /**
      * @Route("%url_for_admin%", name="admin_dashboard")
      */
     public function index(): Response
     {
         // @todo add chartJS system
-        // $chart = $this->chartBuilder->createChart(Chart::TYPE_BAR);
+        // $chart = $this->adminChartBuilder()->createChart(Chart::TYPE_BAR);
         // $chart->setData([
         //     'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
         //     'datasets' => [
@@ -94,7 +65,7 @@ class DashboardController extends AbstractDashboardController
         //     ],
         // ]);
 
-        // return $this->render(self::SET_DEFAULT_FOLDER_EASYADMIN . 'welcome.html.twig', [
+        // return $this->render($this->defaultFolderEasyAdmin . 'welcome.html.twig', [
         //     'chart' => $chart,
         // ]);
 
@@ -115,9 +86,9 @@ class DashboardController extends AbstractDashboardController
             // the first argument is the "template name", which is the same as the
             // Twig path but without the `@EasyAdmin/` prefix
             ->overrideTemplates([
-                'layout' => self::SET_DEFAULT_FOLDER_EASYADMIN . 'layout.html.twig',
-                'crud/detail' => self::SET_DEFAULT_FOLDER_EASYADMIN . 'crud/detail.html.twig',
-                'crud/edit' => self::SET_DEFAULT_FOLDER_EASYADMIN . 'crud/edit.html.twig',
+                'layout' => $this->defaultFolderEasyAdmin . 'layout.html.twig',
+                'crud/detail' => $this->defaultFolderEasyAdmin . 'crud/detail.html.twig',
+                'crud/edit' => $this->defaultFolderEasyAdmin . 'crud/edit.html.twig',
             ]);
     }
 
@@ -137,73 +108,73 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToLogout('admin.dashboard.logout', 'fa fa-sign-out');
 
         /*************** -- SHOP LINK -- ***************/
-        if (PermissionsAdmin::checkAdmin($this->getUser()) || PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'INDEX')) {
+        if ($this->pms()->isAdmin($this->getUser()) || $this->pms()->canUseActions($this->getUser(), 'SHOP', 'INDEX')) {
             yield MenuItem::section('admin.dashboard.menu.shop');
         }
 
         if (
-            PermissionsAdmin::checkAdmin($this->getUser())
-            || PermissionsAdmin::checkActions($this->getUser(), 'SHOP', 'INDEX')
+            $this->pms()->isAdmin($this->getUser())
+            || $this->pms()->canUseActions($this->getUser(), 'SHOP', 'INDEX')
         ) {
             yield MenuItem::linkToCrud('admin.dashboard.menu.shops', 'fas fa-cart-plus', Shop::class);
         }
 
         /*************** -- USER LINK -- ***************/
-        if (PermissionsAdmin::checkAdmin($this->getUser()) || PermissionsAdmin::checkActions($this->getUser(), 'USER', 'INDEX')) {
+        if ($this->pms()->isAdmin($this->getUser()) || $this->pms()->canUseActions($this->getUser(), 'USER', 'INDEX')) {
             yield MenuItem::section('admin.dashboard.menu.user');
         }
 
         if (
-            PermissionsAdmin::checkAdmin($this->getUser())
-            || PermissionsAdmin::checkActions($this->getUser(), 'USER', 'INDEX')
+            $this->pms()->isAdmin($this->getUser())
+            || $this->pms()->canUseActions($this->getUser(), 'USER', 'INDEX')
         ) {
             yield MenuItem::linkToCrud('admin.dashboard.menu.users', 'fas fa-user', User::class);
         }
 
         /*************** -- ADMIN LINK -- ***************/
         if (
-            PermissionsAdmin::checkAdmin($this->getUser())
-            || PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'INDEX')
-            || PermissionsAdmin::checkActions($this->getUser(), 'ADMIN_GROUP', 'INDEX')
+            $this->pms()->isAdmin($this->getUser())
+            || $this->pms()->canUseActions($this->getUser(), 'ADMIN', 'INDEX')
+            || $this->pms()->canUseActions($this->getUser(), 'ADMIN_GROUP', 'INDEX')
         ) {
             yield MenuItem::section('admin.dashboard.menu.admin');
         }
 
         if (
-            PermissionsAdmin::checkAdmin($this->getUser())
-            || PermissionsAdmin::checkActions($this->getUser(), 'ADMIN', 'INDEX')
+            $this->pms()->isAdmin($this->getUser())
+            || $this->pms()->canUseActions($this->getUser(), 'ADMIN', 'INDEX')
         ) {
             yield MenuItem::linkToCrud('admin.dashboard.menu.admins', 'fas fa-users-cog', Admin::class);
         }
 
         if (
-            PermissionsAdmin::checkAdmin($this->getUser())
-            || PermissionsAdmin::checkActions($this->getUser(), 'ADMIN_GROUP', 'INDEX')
+            $this->pms()->isAdmin($this->getUser())
+            || $this->pms()->canUseActions($this->getUser(), 'ADMIN_GROUP', 'INDEX')
         ) {
             yield MenuItem::linkToCrud('admin.dashboard.menu.groups', 'fas fa-users', AdminGroup::class);
         }
 
         /*************** -- SETTINGS CORE LINK -- ***************/
         // @todo : Add some configurations system
-        if (PermissionsAdmin::checkAdmin($this->getUser())) {
+        if ($this->pms()->isAdmin($this->getUser())) {
             yield MenuItem::section('admin.dashboard.menu.settings');
             yield MenuItem::linkToCrud('admin.dashboard.menu.settings_general', 'fas fa-receipt', Config::class)
                 ->setController(ConfigGeneralCrudController::class);
         }
 
         /*************** -- MONITORING LINK -- ***************/
-        if (PermissionsAdmin::checkAdmin($this->getUser())) {
+        if ($this->pms()->isAdmin($this->getUser())) {
             yield MenuItem::section('admin.dashboard.menu.monitoring');
             yield MenuItem::linkToCrud('admin.dashboard.menu.logs', 'fas fa-book-reader', Log::class);
         }
 
         /*************** -- DOCUMENTATION LINK -- ***************/
-        if (PermissionsAdmin::checkAdmin($this->getUser()) || $this->isGranted(PermissionsAdmin::ROLE_API_DOCUMENTATION)) {
+        if ($this->pms()->isAdmin($this->getUser()) || $this->isGranted($this->pms()->roleApiDocumentation)) {
             yield MenuItem::section('admin.dashboard.menu.documentation');
         }
 
-        if (PermissionsAdmin::checkAdmin($this->getUser()) || $this->isGranted(PermissionsAdmin::ROLE_API_DOCUMENTATION)) {
-            yield MenuItem::linkToUrl('admin.dashboard.menu.api_doc', 'fas fa-spider', self::SET_DEFAULT_ROUTE_API_DOC)
+        if ($this->pms()->isAdmin($this->getUser()) || $this->isGranted($this->pms()->roleApiDocumentation)) {
+            yield MenuItem::linkToUrl('admin.dashboard.menu.api_doc', 'fas fa-spider', $this->defaultRouteApiDoc)
                 ->setLinkTarget('_blank');
         }
     }
@@ -231,7 +202,7 @@ class DashboardController extends AbstractDashboardController
             return $this->getUser()->getAdminConfig()->getDashboardTitle();
         }
 
-        return $this->config->get('CONF_DASHBOARD_TITLE') ?? '';
+        return $this->adminConfig()->get('CONF_DASHBOARD_TITLE') ?? '';
     }
 
     /**
@@ -245,6 +216,6 @@ class DashboardController extends AbstractDashboardController
             return $this->getUser()->getAdminConfig()->getCrudPaginator();
         }
 
-        return $this->config->get('CONF_DEFAULT_PAGINATOR') ?? self::SET_PAGINATOR_PAGE_SIZE;
+        return $this->adminConfig()->get('CONF_DEFAULT_PAGINATOR') ?? $this->paginationPageSize;
     }
 }

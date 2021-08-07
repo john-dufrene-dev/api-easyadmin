@@ -12,6 +12,13 @@ use EasyCorp\Bundle\EasyAdminBundle\Exception\ForbiddenActionException;
 
 class BeforeCrudAdminGroupActionSubscriber implements EventSubscriberInterface
 {
+    protected $pms;
+
+    public function __construct(PermissionsAdmin $pms)
+    {
+        $this->pms = $pms;
+    }
+
     public function onBeforeGetOrEditOrDeleteEntity(BeforeCrudActionEvent $event)
     {
         $context = $event->getAdminContext();
@@ -23,11 +30,11 @@ class BeforeCrudAdminGroupActionSubscriber implements EventSubscriberInterface
         //DETAIL
         if ($context->getCrud()->getCurrentPage() === Crud::PAGE_DETAIL) {
 
-            if (PermissionsAdmin::checkAdmin($context->getUser())) {
+            if ($this->pms->isAdmin($context->getUser())) {
                 return;
             }
 
-            if (PermissionsAdmin::checkActions($context->getUser(), 'ADMIN_GROUP', 'DETAIL')) {
+            if ($this->pms->canUseActions($context->getUser(), 'ADMIN_GROUP', 'DETAIL')) {
                 foreach ($context->getEntity()->getInstance()->getAdmins() as $admin) {
                     if ($admin->getUuid()->toRfc4122() === $context->getUser()->getUuid()->toRfc4122()) {
                         return;
@@ -36,8 +43,8 @@ class BeforeCrudAdminGroupActionSubscriber implements EventSubscriberInterface
             }
 
             if (
-                PermissionsAdmin::checkOwners($context->getUser(), 'ADMIN_GROUP', 'DETAIL')
-                && PermissionsAdmin::checkActions($context->getUser(), 'ADMIN_GROUP', 'DETAIL')
+                $this->pms->canUseOwners($context->getUser(), 'ADMIN_GROUP', 'DETAIL')
+                && $this->pms->canUseActions($context->getUser(), 'ADMIN_GROUP', 'DETAIL')
             ) {
                 return;
             }
@@ -48,11 +55,11 @@ class BeforeCrudAdminGroupActionSubscriber implements EventSubscriberInterface
         //EDIT
         if ($context->getCrud()->getCurrentPage() === Crud::PAGE_EDIT) {
 
-            if (PermissionsAdmin::checkAdmin($context->getUser())) {
+            if ($this->pms->isAdmin($context->getUser())) {
                 return;
             }
 
-            if (PermissionsAdmin::checkActions($context->getUser(), 'ADMIN_GROUP', 'EDIT')) {
+            if ($this->pms->canUseActions($context->getUser(), 'ADMIN_GROUP', 'EDIT')) {
                 foreach ($context->getEntity()->getInstance()->getAdmins() as $admin) {
                     if ($admin->getUuid()->toRfc4122() === $context->getUser()->getUuid()->toRfc4122()) {
                         return;
@@ -61,8 +68,8 @@ class BeforeCrudAdminGroupActionSubscriber implements EventSubscriberInterface
             }
 
             if (
-                PermissionsAdmin::checkOwners($context->getUser(), 'ADMIN_GROUP', 'EDIT')
-                && PermissionsAdmin::checkActions($context->getUser(), 'ADMIN_GROUP', 'EDIT')
+                $this->pms->canUseOwners($context->getUser(), 'ADMIN_GROUP', 'EDIT')
+                && $this->pms->canUseActions($context->getUser(), 'ADMIN_GROUP', 'EDIT')
             ) {
                 return;
             }
@@ -73,11 +80,11 @@ class BeforeCrudAdminGroupActionSubscriber implements EventSubscriberInterface
         //DELETE
         if ($context->getCrud()->getCurrentAction() === Action::DELETE) {
 
-            if (PermissionsAdmin::checkAdmin($context->getUser())) {
+            if ($this->pms->isAdmin($context->getUser())) {
                 return;
             }
 
-            if (PermissionsAdmin::checkActions($context->getUser(), 'ADMIN_GROUP', 'DELETE')) {
+            if ($this->pms->canUseActions($context->getUser(), 'ADMIN_GROUP', 'DELETE')) {
                 foreach ($context->getEntity()->getInstance()->getAdmins() as $admin) {
                     if ($admin->getUuid()->toRfc4122() === $context->getUser()->getUuid()->toRfc4122()) {
                         return;
@@ -86,8 +93,8 @@ class BeforeCrudAdminGroupActionSubscriber implements EventSubscriberInterface
             }
 
             if (
-                PermissionsAdmin::checkOwners($context->getUser(), 'ADMIN_GROUP', 'DELETE')
-                && PermissionsAdmin::checkActions($context->getUser(), 'ADMIN_GROUP', 'DELETE')
+                $this->pms->canUseOwners($context->getUser(), 'ADMIN_GROUP', 'DELETE')
+                && $this->pms->canUseActions($context->getUser(), 'ADMIN_GROUP', 'DELETE')
             ) {
                 return;
             }

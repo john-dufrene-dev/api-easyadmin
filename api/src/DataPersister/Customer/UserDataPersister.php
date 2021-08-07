@@ -68,6 +68,7 @@ class UserDataPersister implements ContextAwareDataPersisterInterface
         $serializer = new Serializer($normalizers, $encoders);
 
         // route /api/users to update User informations
+        // @todo switch to custom Model for serializer
         $content = $serializer->deserialize(
             $this->request->getCurrentRequest()->getContent(),
             UserInfo::class,

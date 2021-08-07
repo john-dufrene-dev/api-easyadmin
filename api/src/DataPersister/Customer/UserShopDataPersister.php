@@ -56,6 +56,7 @@ class UserShopDataPersister implements ContextAwareDataPersisterInterface
             ], Response::HTTP_BAD_REQUEST);
         }
 
+        // @todo switch to custom Model for serializer
         $content = json_decode($this->request->getCurrentRequest()->getContent(), true);
         $shop_content = isset($content['shop']) ? $content['shop'] : null;
         $shop_uuid = u($shop_content)->after('/api/shops/')->toString();

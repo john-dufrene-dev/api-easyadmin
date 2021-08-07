@@ -4,42 +4,27 @@ namespace App\Controller\Admin\CRUD\Configuration;
 
 use Doctrine\ORM\QueryBuilder;
 use App\Entity\Configuration\Config;
-use App\Service\Admin\Actions\CustomizeActions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use App\Service\Admin\Builder\ConfigurationBuilder;
-use App\Service\Admin\Permissions\PermissionsAdmin;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
+use App\Controller\Admin\AbstractBaseCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
-use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FilterCollection;
-use EasyCorp\Bundle\EasyAdminBundle\Provider\AdminContextProvider;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
-class ConfigGeneralCrudController extends AbstractCrudController
+class ConfigGeneralCrudController extends AbstractBaseCrudController
 {
-    protected $actions;
-
-    protected $conf;
-
-    public function __construct(CustomizeActions $actions, ConfigurationBuilder $conf)
-    {
-        $this->actions = $actions;
-        $this->conf = $conf;
-    }
-
     public static function getEntityFqcn(): string
     {
         return Config::class;
@@ -54,6 +39,7 @@ class ConfigGeneralCrudController extends AbstractCrudController
             ->setPageTitle('detail', function (?Config $config) {
                 return $config ? $config->getName() : null;
             })
+            ->showEntityActionsInlined()
             ->setDefaultSort(['id' => 'ASC'])
             ->setDateFormat('full')
             ->setTimeFormat('full');
@@ -73,32 +59,32 @@ class ConfigGeneralCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
         // Actions adding by just for show and edit (limited)
-        $this->actions->limitedToEdit($actions);
-        $this->actions->limitedToEditCustomize($actions);
+        $this->adminCustomizeActions()->limitedToEdit($actions);
+        $this->adminCustomizeActions()->limitedToEditCustomize($actions);
 
         // // Default reorder actions
-        $this->actions->reorderForEdit($actions);
+        $this->adminCustomizeActions()->reorderForEdit($actions);
 
-        if ($this->isGranted(PermissionsAdmin::IS_ADMIN)) {
+        if ($this->isGranted($this->pms()->isAdmin)) {
             return $actions;
         }
 
-        $actions->setPermission(Action::EDIT, PermissionsAdmin::IS_ADMIN);
-        $actions->setPermission(Action::SAVE_AND_RETURN, PermissionsAdmin::IS_ADMIN);
-        $actions->setPermission(Action::SAVE_AND_CONTINUE, PermissionsAdmin::IS_ADMIN);
-        $actions->setPermission(Action::DETAIL, PermissionsAdmin::IS_ADMIN);
-        $actions->setPermission(Action::INDEX, PermissionsAdmin::IS_ADMIN);
+        $actions->setPermission(Action::EDIT, $this->pms()->isAdmin);
+        $actions->setPermission(Action::SAVE_AND_RETURN, $this->pms()->isAdmin);
+        $actions->setPermission(Action::SAVE_AND_CONTINUE, $this->pms()->isAdmin);
+        $actions->setPermission(Action::DETAIL, $this->pms()->isAdmin);
+        $actions->setPermission(Action::INDEX, $this->pms()->isAdmin);
 
         return $actions;
     }
 
     public function configureFields(string $pageName): iterable
     {
-        $c = $this->getContext()->getEntity();
+        $c = $this->currentAdminContext()->getEntity();
 
         // INDEX
         if (Crud::PAGE_INDEX === $pageName) {
-            if (PermissionsAdmin::checkAdmin($this->getUser())) {
+            if ($this->pms()->isAdmin($this->getUser())) {
                 yield IdField::new('id')->setLabel('admin.field.id');
             }
 
@@ -116,23 +102,23 @@ class ConfigGeneralCrudController extends AbstractCrudController
             yield TextareaField::new('description')->setLabel('admin.config.field.description');
             yield BooleanField::new('is_active')->setLabel('admin.config.field.is_active');
 
-            if ($this->conf->getType($c->getInstance()->getTyping()) === ConfigurationBuilder::TEXT_TYPE) {
+            if ($this->adminConfig()->getType($c->getInstance()->getTyping()) === $this->adminConfig()->textType) {
                 yield TextEditorField::new('value')->setLabel('admin.config.field.value');
             }
 
-            if ($this->conf->getType($c->getInstance()->getTyping()) === ConfigurationBuilder::TEXT_EDITOR_TYPE) {
+            if ($this->adminConfig()->getType($c->getInstance()->getTyping()) === $this->adminConfig()->textEditorType) {
                 yield TextEditorField::new('value')->setLabel('admin.config.field.value');
             }
 
-            if ($this->conf->getType($c->getInstance()->getTyping()) === ConfigurationBuilder::TEXTAREA_TYPE) {
+            if ($this->adminConfig()->getType($c->getInstance()->getTyping()) === $this->adminConfig()->textareaType) {
                 yield TextAreaField::new('value')->setLabel('admin.config.field.value');
             }
 
-            if ($this->conf->getType($c->getInstance()->getTyping()) === ConfigurationBuilder::INTEGER_TYPE) {
+            if ($this->adminConfig()->getType($c->getInstance()->getTyping()) === $this->adminConfig()->integerType) {
                 yield IntegerField::new('value')->setLabel('admin.config.field.value');
             }
 
-            if ($this->conf->getType($c->getInstance()->getTyping()) === ConfigurationBuilder::BOOLEAN_TYPE) {
+            if ($this->adminConfig()->getType($c->getInstance()->getTyping()) === $this->adminConfig()->booleanType) {
                 yield ChoiceField::new('value')
                     ->setLabel('admin.config.field.value')
                     ->setFormTypeOption('empty_data', 0)
@@ -160,23 +146,23 @@ class ConfigGeneralCrudController extends AbstractCrudController
             ])->setNumOfRows(2)->setLabel('admin.config.field.description');
             yield BooleanField::new('is_active')->setLabel('admin.config.field.is_active');
 
-            if ($this->conf->getType($c->getInstance()->getTyping()) === ConfigurationBuilder::TEXT_TYPE) {
+            if ($this->adminConfig()->getType($c->getInstance()->getTyping()) === $this->adminConfig()->textType) {
                 yield TextField::new('value')->setLabel('admin.config.field.value');
             }
 
-            if ($this->conf->getType($c->getInstance()->getTyping()) === ConfigurationBuilder::TEXT_EDITOR_TYPE) {
+            if ($this->adminConfig()->getType($c->getInstance()->getTyping()) === $this->adminConfig()->textEditorType) {
                 yield TextEditorField::new('value')->setLabel('admin.config.field.value');
             }
 
-            if ($this->conf->getType($c->getInstance()->getTyping()) === ConfigurationBuilder::TEXTAREA_TYPE) {
+            if ($this->adminConfig()->getType($c->getInstance()->getTyping()) === $this->adminConfig()->textareaType) {
                 yield TextAreaField::new('value')->setLabel('admin.config.field.value');
             }
 
-            if ($this->conf->getType($c->getInstance()->getTyping()) === ConfigurationBuilder::INTEGER_TYPE) {
+            if ($this->adminConfig()->getType($c->getInstance()->getTyping()) === $this->adminConfig()->integerType) {
                 yield IntegerField::new('value')->setLabel('admin.config.field.value');
             }
 
-            if ($this->conf->getType($c->getInstance()->getTyping()) === ConfigurationBuilder::BOOLEAN_TYPE) {
+            if ($this->adminConfig()->getType($c->getInstance()->getTyping()) === $this->adminConfig()->booleanType) {
                 yield ChoiceField::new('value')
                     ->setLabel('admin.config.field.value')
                     ->setFormTypeOption('empty_data', 0)
@@ -192,16 +178,6 @@ class ConfigGeneralCrudController extends AbstractCrudController
     {
         return parent::createIndexQueryBuilder($searchDto, $entityDto, $fields, $filters)
             ->andWhere('entity.name IN (:names)')
-            ->setParameter('names', $this->conf->getGeneralConfigValues());
-    }
-
-    /**
-     * getContext
-     *
-     * @return AdminContext
-     */
-    public function getContext(): ?AdminContext
-    {
-        return $this->get(AdminContextProvider::class)->getContext();
+            ->setParameter('names', $this->adminConfig()->getGeneralConfigValues());
     }
 }

@@ -24,10 +24,13 @@ class BeforeCrudUserActionSubscriber implements EventSubscriberInterface
 
     protected $adminUrlGenerator;
 
-    public function __construct(EntityManagerInterface $em, AdminUrlGenerator $adminUrlGenerator)
+    protected $pms;
+
+    public function __construct(EntityManagerInterface $em, AdminUrlGenerator $adminUrlGenerator, PermissionsAdmin $pms)
     {
         $this->em = $em;
         $this->adminUrlGenerator = $adminUrlGenerator;
+        $this->pms = $pms;
     }
 
     public function onBeforeGetOrEditOrDeleteEntity(BeforeCrudActionEvent $event)
@@ -41,11 +44,11 @@ class BeforeCrudUserActionSubscriber implements EventSubscriberInterface
         //DETAIL
         if ($context->getCrud()->getCurrentPage() === Crud::PAGE_DETAIL) {
 
-            if (PermissionsAdmin::checkAdmin($context->getUser())) {
+            if ($this->pms->isAdmin($context->getUser())) {
                 return;
             }
 
-            if (PermissionsAdmin::checkActions($context->getUser(), 'USER', 'DETAIL')) {
+            if ($this->pms->canUseActions($context->getUser(), 'USER', 'DETAIL')) {
                 //  verify if admin of the Shop is default Shop User
                 if (null !== $context->getEntity()->getInstance()->getShop()) {
                     foreach ($context->getEntity()->getInstance()->getShop()->getAdmins() as $admin) {
@@ -73,8 +76,8 @@ class BeforeCrudUserActionSubscriber implements EventSubscriberInterface
             }
 
             if (
-                PermissionsAdmin::checkOwners($context->getUser(), 'USER', 'DETAIL')
-                && PermissionsAdmin::checkActions($context->getUser(), 'USER', 'DETAIL')
+                $this->pms->canUseOwners($context->getUser(), 'USER', 'DETAIL')
+                && $this->pms->canUseActions($context->getUser(), 'USER', 'DETAIL')
             ) {
                 return;
             }
@@ -85,11 +88,11 @@ class BeforeCrudUserActionSubscriber implements EventSubscriberInterface
         //EDIT
         if ($context->getCrud()->getCurrentPage() === Crud::PAGE_EDIT) {
 
-            if (PermissionsAdmin::checkAdmin($context->getUser())) {
+            if ($this->pms->isAdmin($context->getUser())) {
                 return;
             }
 
-            if (PermissionsAdmin::checkActions($context->getUser(), 'USER', 'EDIT')) {
+            if ($this->pms->canUseActions($context->getUser(), 'USER', 'EDIT')) {
                 // Verify if admin of the Shop is default Shop User
                 if (null !== $context->getEntity()->getInstance()->getShop()) {
                     foreach ($context->getEntity()->getInstance()->getShop()->getAdmins() as $admin) {
@@ -123,8 +126,8 @@ class BeforeCrudUserActionSubscriber implements EventSubscriberInterface
             }
 
             if (
-                PermissionsAdmin::checkOwners($context->getUser(), 'USER', 'EDIT')
-                && PermissionsAdmin::checkActions($context->getUser(), 'USER', 'EDIT')
+                $this->pms->canUseOwners($context->getUser(), 'USER', 'EDIT')
+                && $this->pms->canUseActions($context->getUser(), 'USER', 'EDIT')
             ) {
                 return;
             }
@@ -135,11 +138,11 @@ class BeforeCrudUserActionSubscriber implements EventSubscriberInterface
         //DELETE
         if ($context->getCrud()->getCurrentAction() === Action::DELETE) {
 
-            if (PermissionsAdmin::checkAdmin($context->getUser())) {
+            if ($this->pms->isAdmin($context->getUser())) {
                 return;
             }
 
-            if (PermissionsAdmin::checkActions($context->getUser(), 'USER', 'DELETE')) {
+            if ($this->pms->canUseActions($context->getUser(), 'USER', 'DELETE')) {
                 if (null !== $context->getEntity()->getInstance()->getShop()) {
                     foreach ($context->getEntity()->getInstance()->getShop()->getAdmins() as $admin) {
                         if ($admin->getUuid()->toRfc4122() === $context->getUser()->getUuid()->toRfc4122()) {
@@ -172,8 +175,8 @@ class BeforeCrudUserActionSubscriber implements EventSubscriberInterface
             }
 
             if (
-                PermissionsAdmin::checkOwners($context->getUser(), 'USER', 'DELETE')
-                && PermissionsAdmin::checkActions($context->getUser(), 'USER', 'DELETE')
+                $this->pms->canUseOwners($context->getUser(), 'USER', 'DELETE')
+                && $this->pms->canUseActions($context->getUser(), 'USER', 'DELETE')
             ) {
                 return;
             }

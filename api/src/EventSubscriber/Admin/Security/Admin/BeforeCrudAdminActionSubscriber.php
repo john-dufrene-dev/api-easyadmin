@@ -18,9 +18,12 @@ class BeforeCrudAdminActionSubscriber implements EventSubscriberInterface
 
     protected $router;
 
-    public function __construct(RouterInterface $router)
+    protected $pms;
+
+    public function __construct(RouterInterface $router, PermissionsAdmin $pms)
     {
         $this->router = $router;
+        $this->pms = $pms;
     }
 
     public function onBeforeGetOrEditOrDeleteEntity(BeforeCrudActionEvent $event)
@@ -33,7 +36,7 @@ class BeforeCrudAdminActionSubscriber implements EventSubscriberInterface
 
         //INDEX
         if ($context->getCrud()->getCurrentPage() === Crud::PAGE_INDEX) {
-            if (!PermissionsAdmin::checkActions($context->getUser(), 'ADMIN', 'INDEX')) {
+            if (!$this->pms->canUseActions($context->getUser(), 'ADMIN', 'INDEX')) {
                 return $event->setResponse(new RedirectResponse($this->router->generate(self::REDIRECT_ADMIN_NO_INDEX)));
             }
         }
@@ -47,20 +50,20 @@ class BeforeCrudAdminActionSubscriber implements EventSubscriberInterface
                 }
             }
 
-            if (PermissionsAdmin::checkAdmin($context->getUser())) {
+            if ($this->pms->isAdmin($context->getUser())) {
                 return;
             }
 
             if (
-                PermissionsAdmin::checkActions($context->getUser(), 'ADMIN', 'DETAIL')
+                $this->pms->canUseActions($context->getUser(), 'ADMIN', 'DETAIL')
                 && $context->getEntity()->getInstance()->getUuid()->toRfc4122() === $context->getUser()->getUuid()->toRfc4122()
             ) {
                 return;
             }
 
             if (
-                PermissionsAdmin::checkOwners($context->getUser(), 'ADMIN', 'DETAIL')
-                && PermissionsAdmin::checkActions($context->getUser(), 'ADMIN', 'DETAIL')
+                $this->pms->canUseOwners($context->getUser(), 'ADMIN', 'DETAIL')
+                && $this->pms->canUseActions($context->getUser(), 'ADMIN', 'DETAIL')
             ) {
                 return;
             }
@@ -77,20 +80,20 @@ class BeforeCrudAdminActionSubscriber implements EventSubscriberInterface
                 }
             }
 
-            if (PermissionsAdmin::checkAdmin($context->getUser())) {
+            if ($this->pms->isAdmin($context->getUser())) {
                 return;
             }
 
             if (
-                PermissionsAdmin::checkActions($context->getUser(), 'ADMIN', 'EDIT')
+                $this->pms->canUseActions($context->getUser(), 'ADMIN', 'EDIT')
                 && $context->getEntity()->getInstance()->getUuid()->toRfc4122() === $context->getUser()->getUuid()->toRfc4122()
             ) {
                 return;
             }
 
             if (
-                PermissionsAdmin::checkOwners($context->getUser(), 'ADMIN', 'EDIT')
-                && PermissionsAdmin::checkActions($context->getUser(), 'ADMIN', 'EDIT')
+                $this->pms->canUseOwners($context->getUser(), 'ADMIN', 'EDIT')
+                && $this->pms->canUseActions($context->getUser(), 'ADMIN', 'EDIT')
             ) {
                 return;
             }
@@ -107,20 +110,20 @@ class BeforeCrudAdminActionSubscriber implements EventSubscriberInterface
                 }
             }
 
-            if (PermissionsAdmin::checkAdmin($context->getUser())) {
+            if ($this->pms->isAdmin($context->getUser())) {
                 return;
             }
 
             if (
-                PermissionsAdmin::checkActions($context->getUser(), 'ADMIN', 'DELETE')
+                $this->pms->canUseActions($context->getUser(), 'ADMIN', 'DELETE')
                 && $context->getEntity()->getInstance()->getUuid()->toRfc4122() === $context->getUser()->getUuid()->toRfc4122()
             ) {
                 return;
             }
 
             if (
-                PermissionsAdmin::checkOwners($context->getUser(), 'ADMIN', 'DELETE')
-                && PermissionsAdmin::checkActions($context->getUser(), 'ADMIN', 'EDIT')
+                $this->pms->canUseOwners($context->getUser(), 'ADMIN', 'DELETE')
+                && $this->pms->canUseActions($context->getUser(), 'ADMIN', 'DELETE')
             ) {
                 return;
             }

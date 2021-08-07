@@ -65,6 +65,7 @@ class UserPasswordDataPersister implements ContextAwareDataPersisterInterface
         $normalizers = [new ObjectNormalizer()];
         $serializer = new Serializer($normalizers, $encoders);
 
+        // @todo switch to custom Model for serializer
         $content = $serializer->deserialize($this->request->getCurrentRequest()->getContent(), User::class, 'json');
 
         // route /api/users/password to update User password

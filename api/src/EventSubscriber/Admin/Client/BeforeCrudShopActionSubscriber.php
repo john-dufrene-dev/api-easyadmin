@@ -12,6 +12,13 @@ use EasyCorp\Bundle\EasyAdminBundle\Exception\ForbiddenActionException;
 
 class BeforeCrudShopActionSubscriber implements EventSubscriberInterface
 {
+    protected $pms;
+
+    public function __construct(PermissionsAdmin $pms)
+    {
+        $this->pms = $pms;
+    }
+
     public function onBeforeGetOrEditOrDeleteEntity(BeforeCrudActionEvent $event)
     {
         $context = $event->getAdminContext();
@@ -23,11 +30,11 @@ class BeforeCrudShopActionSubscriber implements EventSubscriberInterface
         //DETAIL
         if ($context->getCrud()->getCurrentPage() === Crud::PAGE_DETAIL) {
 
-            if (PermissionsAdmin::checkAdmin($context->getUser())) {
+            if ($this->pms->isAdmin($context->getUser())) {
                 return;
             }
 
-            if (PermissionsAdmin::checkActions($context->getUser(), 'SHOP', 'DETAIL')) {
+            if ($this->pms->canUseActions($context->getUser(), 'SHOP', 'DETAIL')) {
                 foreach ($context->getEntity()->getInstance()->getAdmins() as $admin) {
                     if ($admin->getUuid()->toRfc4122() === $context->getUser()->getUuid()->toRfc4122()) {
                         return;
@@ -36,8 +43,8 @@ class BeforeCrudShopActionSubscriber implements EventSubscriberInterface
             }
 
             if (
-                PermissionsAdmin::checkOwners($context->getUser(), 'SHOP', 'DETAIL')
-                && PermissionsAdmin::checkActions($context->getUser(), 'SHOP', 'DETAIL')
+                $this->pms->canUseOwners($context->getUser(), 'SHOP', 'DETAIL')
+                && $this->pms->canUseActions($context->getUser(), 'SHOP', 'DETAIL')
             ) {
                 return;
             }
@@ -48,11 +55,11 @@ class BeforeCrudShopActionSubscriber implements EventSubscriberInterface
         //EDIT
         if ($context->getCrud()->getCurrentPage() === Crud::PAGE_EDIT) {
 
-            if (PermissionsAdmin::checkAdmin($context->getUser())) {
+            if ($this->pms->isAdmin($context->getUser())) {
                 return;
             }
 
-            if (PermissionsAdmin::checkActions($context->getUser(), 'SHOP', 'EDIT')) {
+            if ($this->pms->canUseActions($context->getUser(), 'SHOP', 'EDIT')) {
                 foreach ($context->getEntity()->getInstance()->getAdmins() as $admin) {
                     if ($admin->getUuid()->toRfc4122() === $context->getUser()->getUuid()->toRfc4122()) {
                         return;
@@ -61,8 +68,8 @@ class BeforeCrudShopActionSubscriber implements EventSubscriberInterface
             }
 
             if (
-                PermissionsAdmin::checkOwners($context->getUser(), 'SHOP', 'EDIT')
-                && PermissionsAdmin::checkActions($context->getUser(), 'SHOP', 'EDIT')
+                $this->pms->canUseOwners($context->getUser(), 'SHOP', 'EDIT')
+                && $this->pms->canUseActions($context->getUser(), 'SHOP', 'EDIT')
             ) {
                 return;
             }
@@ -73,11 +80,11 @@ class BeforeCrudShopActionSubscriber implements EventSubscriberInterface
         //DELETE
         if ($context->getCrud()->getCurrentAction() === Action::DELETE) {
 
-            if (PermissionsAdmin::checkAdmin($context->getUser())) {
+            if ($this->pms->isAdmin($context->getUser())) {
                 return;
             }
 
-            if (PermissionsAdmin::checkActions($context->getUser(), 'SHOP', 'DELETE')) {
+            if ($this->pms->canUseActions($context->getUser(), 'SHOP', 'DELETE')) {
                 foreach ($context->getEntity()->getInstance()->getAdmins() as $admin) {
                     if ($admin->getUuid()->toRfc4122() === $context->getUser()->getUuid()->toRfc4122()) {
                         return;
@@ -86,8 +93,8 @@ class BeforeCrudShopActionSubscriber implements EventSubscriberInterface
             }
 
             if (
-                PermissionsAdmin::checkOwners($context->getUser(), 'SHOP', 'DELETE')
-                && PermissionsAdmin::checkActions($context->getUser(), 'SHOP', 'DELETE')
+                $this->pms->canUseOwners($context->getUser(), 'SHOP', 'DELETE')
+                && $this->pms->canUseActions($context->getUser(), 'SHOP', 'DELETE')
             ) {
                 return;
             }

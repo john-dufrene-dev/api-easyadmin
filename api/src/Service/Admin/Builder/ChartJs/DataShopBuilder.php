@@ -16,10 +16,13 @@ class DataShopBuilder
 
     protected $translator;
 
+    protected $pms;
+
     public function __construct(
         EntityManagerInterface $em,
         Security $security,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        PermissionsAdmin $pms
     ) {
         $this->em = $em;
         $this->security = $security;
@@ -48,7 +51,7 @@ class DataShopBuilder
     {
         $repository = $this->em->getRepository(Shop::class);
 
-        if (PermissionsAdmin::checkAdmin($this->security->getUser())) {
+        if ($this->pms->isAdmin($this->security->getUser())) {
             return $repository->createQueryBuilder('s')
                 ->select('count(s.id)')
                 ->getQuery()
