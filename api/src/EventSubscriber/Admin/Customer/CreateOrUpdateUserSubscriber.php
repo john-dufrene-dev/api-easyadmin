@@ -87,6 +87,8 @@ class CreateOrUpdateUserSubscriber implements EventSubscriberInterface
         $entity->setUpdatedAt(new \DateTime());
     }
 
+    // @todo: remove user history linked shop if user is deleted
+
     public static function getSubscribedEvents()
     {
         return [

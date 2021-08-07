@@ -68,6 +68,7 @@ class UserCrudController extends AbstractCrudController
             ->setPageTitle('detail', function (?User $user) {
                 return $user ? $user->getUserIdentifier() : null;
             })
+            ->showEntityActionsInlined()
             ->setDefaultSort(['id' => 'ASC'])
             ->setDateFormat('full')
             ->setTimeFormat('full');

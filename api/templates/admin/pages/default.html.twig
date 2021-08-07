@@ -12,11 +12,11 @@
             <div id="header-logo"> <h4 class="logo">{{ 'pages.default.title'|trans }}</h4> </div>
         </header>
 
-        {% block flash_messages %}
-            {% include '/admin/includes/flash/default_flash_messages.html.twig' %}
-        {% endblock flash_messages %}
-
         <section class="content default-content">
+
+            {% block flash_messages %}
+                {% include '/admin/includes/flash/default_flash_messages.html.twig' %}
+            {% endblock flash_messages %}
 
             <div class="row">
                 <div class="col-md-6">

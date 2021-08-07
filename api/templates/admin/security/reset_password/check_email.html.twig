@@ -8,16 +8,17 @@
 {% block wrapper_wrapper %}
     <div class="login-wrapper">
         
-        <h6 class="mb-4"> {{ 'check.email.info_1'|trans }}
-            {{ 'check.email.info_2'|trans }} {{ tokenLifetime.expirationMessageKey|trans(tokenLifetime.expirationMessageData, 'ResetPasswordBundle') }} {{ 'check.email.hour'|trans }}
-        </h6>
-
-        <div class="alert alert-dark" role="alert">
-            {{ 'check.email.alert'|trans }}
-            <a href="{{ path('admin_forgot_password_request') }}">{{ 'check.email.try_again'|trans }}</a>
-        </div>
-
         <section class="content">
+            <h6 class="mb-4"> {{ 'check.email.info_1'|trans }}
+                {{ 'check.email.info_2'|trans }} {{ tokenLifetime.expirationMessageKey|trans(tokenLifetime.expirationMessageData, 'ResetPasswordBundle') }} {{ 'check.email.hour'|trans }}
+            </h6>
+
+            <div class="w-100 alert alert-dark rounded mb-3" role="alert">
+                <i class="fas fa-at"></i>
+                {{ 'check.email.alert'|trans }}
+                <a href="{{ path('admin_forgot_password_request') }}">{{ 'check.email.try_again'|trans }}</a>
+            </div>
+        
             <div class="form-group field-button d-grid gap-2">
                 <a class="btn btn-primary btn-lg btn-block" href="{{ path('admin_dashboard') }}">
                     {{'error.return'|trans}}

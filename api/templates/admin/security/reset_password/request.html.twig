@@ -12,22 +12,29 @@
             <div id="header-logo"> <h4 class="logo">{{ 'request.title.password'|trans }}</h4> </div>
         </header>
 
-        {% for flashError in app.flashes('reset_password_error') %}
-            <div class="alert alert-danger" role="alert">{{ flashError }}</div>
-        {% endfor %}
-
         <section class="content">
+            {% for flashError in app.flashes('reset_password_error') %}
+                <div class="w-100 alert alert-danger rounded mb-3">
+                    <i class="fas fa-times-circle mr-1"></i>
+                    {{ flashError }}
+                </div>
+            {% endfor %}
 
             {{ form_start(requestForm) }}
 
             {% if requestForm.vars.errors.form.getErrors(true)|length %}
                 {% for error in requestForm.vars.errors.form.getErrors(true) %}
-                    <div class="alert alert-danger" role="alert">{{ error.message }}</div>
+                    <div class="w-100 alert alert-danger rounded mb-3" role="alert">
+                        <i class="fas fa-times-circle mr-1"></i>
+                        {{ error.message }}
+                    </div>
                 {% endfor %}
             {% endif %}
 
-            <div class="form-group field-text">
-                {{ form_widget(requestForm.email, {'attr': {'class': 'form-control'}}) }}
+            <div class="form-group">
+                <div class="form-widget">
+                    {{ form_widget(requestForm.email, {'attr': {'class': 'form-control'}}) }}
+                </div>
             </div>
 
             <div>{{ 'request.text.password'|trans }}</div>
