@@ -96,6 +96,28 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  *             "openapi_context"={
  *                  "summary"="Update User password resource.",
  *                  "description"="Replaces the User password resource",
+ *                  "requestBody" = {
+ *                      "content"= {
+ *                          "application/ld+json"= {
+ *                              "schema" = {
+ *                                  "type": "object",
+ *                                  "properties": {
+ *                                      "password": {"type": "string", "example": "D8g8_#[dj58SSX_85"},
+ *                                      "plainPassword": {"type": "string", "example": "D8g8_#[dj58SSX_85"},
+ *                                  },
+ *                              }
+ *                          },
+ *                          "application/json"= {
+ *                              "schema" = {
+ *                                  "type": "object",
+ *                                  "properties": {
+ *                                      "password": {"type": "string", "example": "D8g8_#[dj58SSX_85"},
+ *                                      "plainPassword": {"type": "string", "example": "D8g8_#[dj58SSX_85"},
+ *                                  },
+ *                              }
+ *                          },
+ *                      },
+ *                  },
  *                  "responses" = {
  *                      "200" = {
  *                          "description" = "User password resource updated",

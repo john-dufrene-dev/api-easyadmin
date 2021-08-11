@@ -4,6 +4,7 @@ namespace App\DataPersister\Customer;
 
 use App\Entity\Customer\User;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Model\Customer\UserPasswordModel;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -66,7 +67,7 @@ class UserPasswordDataPersister implements ContextAwareDataPersisterInterface
         $serializer = new Serializer($normalizers, $encoders);
 
         // @todo switch to custom Model for serializer
-        $content = $serializer->deserialize($this->request->getCurrentRequest()->getContent(), User::class, 'json');
+        $content = $serializer->deserialize($this->request->getCurrentRequest()->getContent(), UserPasswordModel::class, 'json');
 
         // route /api/users/password to update User password
         $password = $content->getPassword() ? $content->getPassword() : null;
