@@ -116,6 +116,34 @@ abstract class AbstractBaseDashboardController extends AbstractDashboardControll
     }
 
     /**
+     * getDashboardTitle
+     *
+     * @return string
+     */
+    protected function getDashboardTitle(): ?string
+    {
+        if (null !== $this->getUser() && null !== $this->getUser()->getAdminConfig()->getDashboardTitle()) {
+            return $this->getUser()->getAdminConfig()->getDashboardTitle();
+        }
+
+        return $this->adminConfig()->get('CONF_DASHBOARD_TITLE') ?? '';
+    }
+
+    /**
+     * getPaginator
+     *
+     * @return int
+     */
+    protected function getPaginator(): ?int
+    {
+        if (null !== $this->getUser() && null !== $this->getUser()->getAdminConfig()->getCrudPaginator()) {
+            return $this->getUser()->getAdminConfig()->getCrudPaginator();
+        }
+
+        return $this->adminConfig()->get('CONF_DEFAULT_PAGINATOR') ?? $this->paginationPageSize;
+    }
+
+    /**
      * @return array<array-key, string>
      */
     public static function getSubscribedServices(): array

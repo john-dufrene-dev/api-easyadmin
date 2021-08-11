@@ -190,32 +190,4 @@ class DashboardController extends AbstractBaseDashboardController
                     ->setEntityId($this->getUser()->getUuid()->toRfc4122()),
             ]);
     }
-
-    /**
-     * getDashboardTitle
-     *
-     * @return string
-     */
-    public function getDashboardTitle(): ?string
-    {
-        if (null !== $this->getUser() && null !== $this->getUser()->getAdminConfig()->getDashboardTitle()) {
-            return $this->getUser()->getAdminConfig()->getDashboardTitle();
-        }
-
-        return $this->adminConfig()->get('CONF_DASHBOARD_TITLE') ?? '';
-    }
-
-    /**
-     * getPaginator
-     *
-     * @return int
-     */
-    public function getPaginator(): ?int
-    {
-        if (null !== $this->getUser() && null !== $this->getUser()->getAdminConfig()->getCrudPaginator()) {
-            return $this->getUser()->getAdminConfig()->getCrudPaginator();
-        }
-
-        return $this->adminConfig()->get('CONF_DEFAULT_PAGINATOR') ?? $this->paginationPageSize;
-    }
 }
