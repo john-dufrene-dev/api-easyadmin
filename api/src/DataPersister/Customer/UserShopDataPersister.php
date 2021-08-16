@@ -4,13 +4,17 @@ namespace App\DataPersister\Customer;
 
 use App\Entity\Client\Shop;
 use App\Entity\Customer\User;
+use App\Model\Customer\UserShopModel;
 use App\Entity\Customer\UserShopHistory;
 use Doctrine\ORM\EntityManagerInterface;
 use function Symfony\Component\String\u;
+use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
 
 class UserShopDataPersister implements ContextAwareDataPersisterInterface
@@ -56,9 +60,13 @@ class UserShopDataPersister implements ContextAwareDataPersisterInterface
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        // @todo switch to custom Model for serializer
-        $content = json_decode($this->request->getCurrentRequest()->getContent(), true);
-        $shop_content = isset($content['shop']) ? $content['shop'] : null;
+        $encoders = [new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer()];
+        $serializer = new Serializer($normalizers, $encoders);
+
+        $content = $serializer->deserialize($this->request->getCurrentRequest()->getContent(), UserShopModel::class, 'json');
+
+        $shop_content = $content->getShop() ? $content->getShop() : null;
         $shop_uuid = u($shop_content)->after('/api/shops/')->toString();
         $shop = $this->entityManager->getRepository(Shop::class)->findOneBy(['uuid' => $shop_uuid]);
         $user = $this->security->getUser();
@@ -80,12 +88,20 @@ class UserShopDataPersister implements ContextAwareDataPersisterInterface
         }
 
         $data->setUpdatedAt(new \Datetime());
+        $data->setShop($shop);
 
         // block update with previous data
-        $data->setPassword($context['previous_data']->getPassword());
+        if ($data->getPassword()) {
+            $data->setPassword($context['previous_data']->getPassword());
+        }
 
         $this->entityManager->persist($data);
         $this->entityManager->flush();
+
+        return new JsonResponse([
+            'code' => Response::HTTP_OK,
+            'message' => 'Success : User Shop successfully updated'
+        ], Response::HTTP_OK);
     }
 
     public function remove($data, array $context = [])

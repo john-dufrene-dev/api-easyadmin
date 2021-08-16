@@ -82,7 +82,40 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  *                                      "gender": {"type": "string", "enum": {"M", "F", "O"}, "example": "M"},
  *                                      "phone": {"type": "string", "example": "+33666666666"},
  *                                  },
- *                              }
+ *                              },
+ *                          },
+ *                      },
+ *                  },
+ *                  "responses" = {
+ *                      "200" = {
+ *                          "description" = "User resource updated",
+ *                          "content"= {
+ *                              "application/ld+json"= {
+ *                                  "schema" = {
+ *                                      "type": "object",
+ *                                      "properties": {
+ *                                          "code": {"type": "integer", "example": "200", "readonly": "true"},
+ *                                          "message": {
+ *                                              "type": "string", 
+ *                                              "example": "User successfully updated", 
+ *                                              "readonly": "true"
+ *                                          },
+ *                                      },
+ *                                  }
+ *                              },
+ *                              "application/json"= {
+ *                                  "schema" = {
+ *                                      "type": "object",
+ *                                      "properties": {
+ *                                          "code": {"type": "integer", "example": "200", "readonly": "true"},
+ *                                          "message": {
+ *                                              "type": "string", 
+ *                                              "example": "User successfully updated", 
+ *                                              "readonly": "true"
+ *                                          },
+ *                                      },
+ *                                  },
+ *                              },
  *                          },
  *                      },
  *                  },
@@ -146,9 +179,9 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  *                                              "readonly": "true"
  *                                          },
  *                                      },
- *                                  }
- *                              }
- *                          }
+ *                                  },
+ *                              },
+ *                          },
  *                      },
  *                  },
  *              },
@@ -177,7 +210,40 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
  *                                  "properties": {
  *                                      "shop": {"type": "string", "example": "/api/shops/3fa85f64-5717-4562-b3fc-2c963f66afa6"},
  *                                  },
- *                              }
+ *                              },
+ *                          },
+ *                      },
+ *                  },
+ *                  "responses" = {
+ *                      "200" = {
+ *                          "description" = "User Shop resource updated",
+ *                          "content"= {
+ *                              "application/ld+json"= {
+ *                                  "schema" = {
+ *                                      "type": "object",
+ *                                      "properties": {
+ *                                          "code": {"type": "integer", "example": "200", "readonly": "true"},
+ *                                          "message": {
+ *                                              "type": "string", 
+ *                                              "example": "User Shop successfully updated", 
+ *                                              "readonly": "true"
+ *                                          },
+ *                                      },
+ *                                  }
+ *                              },
+ *                              "application/json"= {
+ *                                  "schema" = {
+ *                                      "type": "object",
+ *                                      "properties": {
+ *                                          "code": {"type": "integer", "example": "200", "readonly": "true"},
+ *                                          "message": {
+ *                                              "type": "string", 
+ *                                              "example": "User Shop successfully updated", 
+ *                                              "readonly": "true"
+ *                                          },
+ *                                      },
+ *                                  },
+ *                              },
  *                          },
  *                      },
  *                  },
@@ -220,7 +286,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *      maxMessage = "asserts.entity.max_length"
      * )
      * 
-     * @Groups({"user:readOne"})
+     * @Groups({"user:readOne", "user:update"})
      */
     private $email;
 

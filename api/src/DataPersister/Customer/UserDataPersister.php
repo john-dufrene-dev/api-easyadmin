@@ -3,7 +3,8 @@
 namespace App\DataPersister\Customer;
 
 use App\Entity\Customer\User;
-use App\Entity\Customer\UserInfo;
+use App\Model\Customer\UserModel;
+use App\Entity\Customer\UserToken;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,7 +13,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use ApiPlatform\Core\DataPersister\ContextAwareDataPersisterInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -67,21 +67,14 @@ class UserDataPersister implements ContextAwareDataPersisterInterface
         $normalizers = [new ObjectNormalizer()];
         $serializer = new Serializer($normalizers, $encoders);
 
-        // route /api/users to update User informations
-        // @todo switch to custom Model for serializer
-        $content = $serializer->deserialize(
-            $this->request->getCurrentRequest()->getContent(),
-            UserInfo::class,
-            'json',
-            [AbstractNormalizer::IGNORED_ATTRIBUTES => ['birthday']]
-        );
-        $datetime = json_decode($this->request->getCurrentRequest()->getContent(), true);
-        $birthday_data = isset($datetime['birthday']) ? $datetime['birthday'] : null;
+        $content = $serializer->deserialize($this->request->getCurrentRequest()->getContent(), UserModel::class, 'json');
 
+        $email = $content->getEmail() ? $content->getEmail() : null;
         $firstname = $content->getFirstname() ? $content->getFirstname() : $context['previous_data']->getUserInfo()->getFirstname();
         $lastname = $content->getLastname() ? $content->getLastname() : $context['previous_data']->getUserInfo()->getLastname();
-        $birthday = (null !== $birthday_data)
-            ? new \DateTime($birthday_data)
+        // You can use this format : DD/MM/YYYY or YYYY-MM-DDT00:00:00+00:00
+        $birthday = (null !== $content->getBirthday())
+            ? new \DateTime($content->getBirthday())
             : $context['previous_data']->getUserInfo()->getBirthday();
         $gender = $content->getGender() ? $content->getGender() : $context['previous_data']->getUserInfo()->getGender();
         $phone = $content->getPhone() ? $content->getPhone() : $context['previous_data']->getUserInfo()->getPhone();
@@ -108,10 +101,35 @@ class UserDataPersister implements ContextAwareDataPersisterInterface
         $data->setUpdatedAt(new \Datetime());
 
         // block update with previous data
-        $data->setPassword($context['previous_data']->getPassword());
+        if ($data->getPassword()) {
+            $data->setPassword($context['previous_data']->getPassword());
+        }
+
+        // Update email, must create new jwt login check
+        if ($data->getEmail() && null !== $email) {
+            $data->setEmail($email);
+
+            $userToken = $this->entityManager->getRepository(UserToken::class);
+
+            // Remove all refresh token of the User when logout
+            if ($refreshs = count($userToken->getAllByUser($data)) !== 0) {
+                foreach ($userToken->getAllByUser($data) as $token) {
+                    $this->entityManager->remove($token);
+                }
+            }
+        }
+
+        $message = ($data->getEmail() && $email)
+            ? 'Success : User informations successfully updated, email is updated too, you must login with new email'
+            : 'Success : User informations successfully updated';
 
         $this->entityManager->persist($data);
         $this->entityManager->flush();
+
+        return new JsonResponse([
+            'code' => Response::HTTP_OK,
+            'message' => $message
+        ], Response::HTTP_OK);
     }
 
     public function remove($data, array $context = [])

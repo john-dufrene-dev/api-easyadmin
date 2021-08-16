@@ -66,7 +66,6 @@ class UserPasswordDataPersister implements ContextAwareDataPersisterInterface
         $normalizers = [new ObjectNormalizer()];
         $serializer = new Serializer($normalizers, $encoders);
 
-        // @todo switch to custom Model for serializer
         $content = $serializer->deserialize($this->request->getCurrentRequest()->getContent(), UserPasswordModel::class, 'json');
 
         // route /api/users/password to update User password
@@ -89,9 +88,9 @@ class UserPasswordDataPersister implements ContextAwareDataPersisterInterface
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        if ($data->getPlainPassword()) {
+        if ($data->getPlainPassword() && $plainPassword) {
             $data->setPassword(
-                $this->userPasswordEncoder->hashPassword($data, $data->getPlainPassword())
+                $this->userPasswordEncoder->hashPassword($data, $plainPassword)
             );
         }
 
@@ -102,7 +101,7 @@ class UserPasswordDataPersister implements ContextAwareDataPersisterInterface
 
         return new JsonResponse([
             'code' => Response::HTTP_OK,
-            'message' => 'Success : Password successfully updated'
+            'message' => 'Success : User Password successfully updated'
         ], Response::HTTP_OK);
     }
 
