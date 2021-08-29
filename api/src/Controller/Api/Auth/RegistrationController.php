@@ -182,18 +182,17 @@ class RegistrationController extends AbstractController
                 'token' => $JWTManager->create($user),
                 'refresh_token' => $refreshToken->getRefreshToken()
             ], Response::HTTP_OK);
-        } else {
-
-            $errs = [];
-            foreach ($errors_user as $error) {
-                $errs = array_merge($errs, [$error->getMessage()]);
-            }
-
-            foreach ($errors_token as $error) {
-                $errs = array_merge($errs, [$error->getMessage()]);
-            }
-
-            return $apiResponseBuilder->checkIfErrorsBadRequest($errs);
         }
+        
+        $errs = [];
+        foreach ($errors_user as $error) {
+            $errs = array_merge($errs, [$error->getMessage()]);
+        }
+
+        foreach ($errors_token as $error) {
+            $errs = array_merge($errs, [$error->getMessage()]);
+        }
+
+        return $apiResponseBuilder->checkIfErrorsBadRequest($errs);
     }
 }

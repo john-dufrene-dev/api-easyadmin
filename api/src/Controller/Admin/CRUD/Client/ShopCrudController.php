@@ -326,7 +326,7 @@ class ShopCrudController extends AbstractBaseCrudController
             throw $this->createAccessDeniedException();
         }
 
-        $entityManager = $this->getDoctrine()->getManagerForClass($batchActionDto->getEntityFqcn());
+        $entityManager = $this->adminManagerRegistry()->getManagerForClass($batchActionDto->getEntityFqcn());
 
         foreach ($batchActionDto->getEntityIds() as $uuid) {
             $shop = $entityManager->find($batchActionDto->getEntityFqcn(), $uuid);
@@ -356,7 +356,7 @@ class ShopCrudController extends AbstractBaseCrudController
             throw $this->createAccessDeniedException();
         }
 
-        $entityManager = $this->getDoctrine()->getManagerForClass($batchActionDto->getEntityFqcn());
+        $entityManager = $this->adminManagerRegistry()->getManagerForClass($batchActionDto->getEntityFqcn());
 
         foreach ($batchActionDto->getEntityIds() as $uuid) {
             $shop = $entityManager->find($batchActionDto->getEntityFqcn(), $uuid);

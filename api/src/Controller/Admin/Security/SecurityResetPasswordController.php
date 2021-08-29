@@ -4,6 +4,7 @@ namespace App\Controller\Admin\Security;
 
 use App\Entity\Security\Admin;
 use App\Service\Admin\Email\AdminMailer;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,14 +32,18 @@ class SecurityResetPasswordController extends AbstractController
 
     private $params;
 
+    private $managerRegistry;
+
     public function __construct(
         TranslatorInterface $translator,
         ParameterBagInterface $params,
-        ResetPasswordHelperInterface $resetPasswordHelper
+        ResetPasswordHelperInterface $resetPasswordHelper,
+        ManagerRegistry $managerRegistry
     ) {
         $this->translator = $translator;
         $this->resetPasswordHelper = $resetPasswordHelper;
         $this->params = $params;
+        $this->managerRegistry = $managerRegistry;
     }
 
     /**
@@ -127,7 +132,7 @@ class SecurityResetPasswordController extends AbstractController
             );
 
             $user->setPassword($encodedPassword);
-            $this->getDoctrine()->getManager()->flush();
+            $this->managerRegistry->getManager()->flush();
 
             // The session is cleaned up after the password has been changed.
             $this->cleanSessionAfterReset();
@@ -142,7 +147,7 @@ class SecurityResetPasswordController extends AbstractController
 
     private function processSendingPasswordResetEmail(string $emailFormData, AdminMailer $mailer): RedirectResponse
     {
-        $admin = $this->getDoctrine()->getRepository(Admin::class)->findOneBy([
+        $admin = $this->managerRegistry->getRepository(Admin::class)->findOneBy([
             'email' => $emailFormData,
         ]);
 

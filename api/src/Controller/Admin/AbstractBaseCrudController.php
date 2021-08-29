@@ -6,6 +6,7 @@ use RuntimeException;
 use App\Service\Utils\PaginatorFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use function Symfony\Component\String\u;
+use Doctrine\Persistence\ManagerRegistry;
 use App\Service\Admin\Builder\ExportBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -131,6 +132,16 @@ abstract class AbstractBaseCrudController extends AbstractCrudController
     }
 
     /**
+     * adminManagerRegistry
+     *
+     * @return ManagerRegistry
+     */
+    protected function adminManagerRegistry(): ManagerRegistry
+    {
+        return $this->get(ManagerRegistry::class);
+    }
+
+    /**
      * adminEntityManager
      *
      * @return EntityManagerInterface
@@ -176,6 +187,7 @@ abstract class AbstractBaseCrudController extends AbstractCrudController
                 ConfigurationBuilder::class => '?' . ConfigurationBuilder::class,
                 PaginatorFactory::class => '?' . PaginatorFactory::class,
                 EntityManagerInterface::class => '?' . EntityManagerInterface::class,
+                ManagerRegistry::class => '?' . ManagerRegistry::class,
             ]
         );
     }

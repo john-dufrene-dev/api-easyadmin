@@ -271,7 +271,7 @@ class UserCrudController extends AbstractBaseCrudController
                 || $this->pms()->canUseActions($this->getUser(), 'USER', 'EDIT')
             ) {
                 // Configuration variables
-                $shops = $this->getDoctrine()->getRepository(Shop::class);
+                $shops = $this->adminEm()->getRepository(Shop::class);
                 $choices = (count($shops->findByAdmin($this->getUser()->getUuid()->toBinary())) !== 0
                     && !$this->pms()->isAdmin($this->getUser())
                     && !$this->pms()->canUseOwners($this->getUser(), 'USER', 'EDIT'))
@@ -308,7 +308,7 @@ class UserCrudController extends AbstractBaseCrudController
             ) {
                 // Configuration variables
                 $required = true;
-                $shops = $this->getDoctrine()->getRepository(Shop::class);
+                $shops = $this->adminEm()->getRepository(Shop::class);
                 $choices = (count($shops->findByAdmin($this->getUser()->getUuid()->toBinary())) !== 0
                     && !$this->pms()->isAdmin($this->getUser())
                     && !$this->pms()->canUseOwners($this->getUser(), 'USER', 'NEW'))
