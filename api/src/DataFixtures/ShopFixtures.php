@@ -73,7 +73,7 @@ class ShopFixtures extends Fixture
         if ($this->params->get('admin.doctrine.faker.active') === true) {
             $faker = Faker\Factory::create();
 
-            for ($i = 0; $i < 1000; $i++) {
+            for ($i = 0; $i < 500; $i++) {
                 $shop = new Shop();
                 $shop_info = new ShopInfo();
 

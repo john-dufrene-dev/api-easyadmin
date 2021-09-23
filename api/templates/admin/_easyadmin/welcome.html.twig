@@ -1,7 +1,26 @@
 {% extends '@!EasyAdmin/page/content.html.twig' %}
 
-{% block page_title 'Welcome to EasyAdmin 3' %}
+{% block content_title 'Welcome to EasyAdmin 3' %}
 
-{% block page_content %}{# @todo : charjs system #}
-	{# {{ render_chart(chart) }} #}
-{% endblock %}
+  {% block page_actions %}
+    {# <a class="btn btn-primary" href="...">Action</a> #}
+  {% endblock %}
+
+  {% block main %}
+    {# @todo : charjs system #}
+    {# {{ render_chart(chart) }} #}
+    {# <table class="datagrid">
+      <thead>
+        <tr>
+          <td>Some Column 1</td>
+          <td>Some Column 2</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Column 1</td>
+          <td>Column 2</td>
+        </tr>
+      </tbody>
+    </table> #}
+  {% endblock %}

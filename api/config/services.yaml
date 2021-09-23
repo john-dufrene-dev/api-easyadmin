@@ -33,41 +33,49 @@ services:
     # Add Swagger components
     App\OpenApi\ComponentsOpenApiDecorator:
         decorates: "api_platform.openapi.factory"
+        arguments: ['@.inner'] 
         autoconfigure: false
 
     # Register new User and get JWT token
     App\OpenApi\Auth\RegisterOpenApiDecorator:
         decorates: "api_platform.openapi.factory"
+        arguments: ['@.inner'] 
         autoconfigure: false
 
     # Logout the current User
     App\OpenApi\Auth\LogoutOpenApiDecorator:
         decorates: "api_platform.openapi.factory"
+        arguments: ['@.inner'] 
         autoconfigure: false
 
     # Add JWT token User auth for api
     App\OpenApi\Auth\AuthenticationTokenOpenApiDecorator:
         decorates: "api_platform.openapi.factory"
+        arguments: ['@.inner'] 
         autoconfigure: false
 
     # Get Refresh JWT token User auth for api
     App\OpenApi\Auth\RefreshTokenOpenApiDecorator:
         decorates: "api_platform.openapi.factory"
+        arguments: ['@.inner'] 
         autoconfigure: false
 
     # Send request to get secret and token
     App\OpenApi\Auth\ResetPassword\SendResetPasswordOpenApiDecorator:
         decorates: "api_platform.openapi.factory"
+        arguments: ['@.inner'] 
         autoconfigure: false
     
     # Check secret and token for reset password
     App\OpenApi\Auth\ResetPassword\CheckResetPasswordOpenApiDecorator:
         decorates: "api_platform.openapi.factory"
+        arguments: ['@.inner'] 
         autoconfigure: false
     
     # Reset password with valid token auth
     App\OpenApi\Auth\ResetPassword\ResetPasswordOpenApiDecorator:
         decorates: "api_platform.openapi.factory"
+        arguments: ['@.inner'] 
         autoconfigure: false
 
 imports:
