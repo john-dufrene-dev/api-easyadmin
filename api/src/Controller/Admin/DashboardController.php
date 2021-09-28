@@ -21,14 +21,10 @@ use App\Controller\Admin\AbstractBaseDashboardController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\Controller\Admin\CRUD\Configuration\ConfigGeneralCrudController;
 
-/**
- * @IsGranted("ROLE_ADMIN")
- */
+#[IsGranted('ROLE_ADMIN')]
 class DashboardController extends AbstractBaseDashboardController
 {
-    /**
-     * @Route("%url_for_admin%", name="admin_dashboard")
-     */
+    #[Route("%url_for_admin%", name: 'admin_dashboard')]
     public function index(): Response
     {
         // @todo add chartJS system

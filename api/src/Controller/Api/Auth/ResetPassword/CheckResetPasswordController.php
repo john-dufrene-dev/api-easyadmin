@@ -13,9 +13,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
-/**
- * @Route("/api")
- */
+#[Route("/api")]
 class CheckResetPasswordController extends AbstractController
 {
     /**
@@ -36,11 +34,10 @@ class CheckResetPasswordController extends AbstractController
     }
 
     /**
-     * @Route("/auth/reset/check", name="api_reset_password_check")
-     * 
      * @param  mixed $request
      * @return JsonResponse
      */
+    #[Route("/auth/reset/check", name: 'api_reset_password_check')]
     public function checkResetPasswordSecretApi(
         Request $request,
         ApiResponseBuilder $apiResponseBuilder,

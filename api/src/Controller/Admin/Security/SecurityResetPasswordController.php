@@ -19,9 +19,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use SymfonyCasts\Bundle\ResetPassword\Controller\ResetPasswordControllerTrait;
 use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
 
-/**
- * @Route("%url_for_admin%/reset-password")
- */
+#[Route("%url_for_admin%/reset-password")]
 class SecurityResetPasswordController extends AbstractController
 {
     use ResetPasswordControllerTrait;
@@ -48,9 +46,8 @@ class SecurityResetPasswordController extends AbstractController
 
     /**
      * Display & process form to request a password reset.
-     *
-     * @Route("", name="admin_forgot_password_request")
      */
+    #[Route("", name: 'admin_forgot_password_request')]
     public function request(Request $request, AdminMailer $mailer): Response
     {
         $form = $this->createForm(ResetPasswordRequestFormType::class);
@@ -70,9 +67,8 @@ class SecurityResetPasswordController extends AbstractController
 
     /**
      * Confirmation page after a user has requested a password reset.
-     *
-     * @Route("/check-email", name="admin_check_email")
      */
+    #[Route("/check-email", name: 'admin_check_email')]
     public function checkEmail(): Response
     {
         // We prevent users from directly accessing this page
@@ -87,9 +83,8 @@ class SecurityResetPasswordController extends AbstractController
 
     /**
      * Validates and process the reset URL that the user clicked in their email.
-     *
-     * @Route("/reset/{token}", name="admin_reset_password")
      */
+    #[Route("/reset/{token}", name: 'admin_reset_password')]
     public function reset(Request $request, UserPasswordHasherInterface $passwordEncoder, string $token = null): Response
     {
         if ($token) {

@@ -22,9 +22,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-/**
- * @Route("/api")
- */
+#[Route("/api")]
 class RegistrationController extends AbstractController
 {
     /**
@@ -73,11 +71,10 @@ class RegistrationController extends AbstractController
     }
 
     /**
-     * @Route("/auth/register", name="api_register")
-     * 
      * @param  void
      * @return JsonResponse
      */
+    #[Route("/auth/register", name: 'api_register')]
     public function registerApi(
         Request $request,
         UserPasswordHasherInterface $passwordEncoder,

@@ -20,9 +20,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-/**
- * @Route("/api")
- */
+#[Route("/api")]
 class ResetPasswordController extends AbstractController
 {
     /**
@@ -51,13 +49,11 @@ class ResetPasswordController extends AbstractController
     }
 
     /**
-     * @Route("/auth/reset/password", name="api_reset_password")
-     * 
-     * @IsGranted("ROLE__USER")
-     * 
      * @param  mixed $request
      * @return JsonResponse
      */
+    #[IsGranted('ROLE__USER')]
+    #[Route("/auth/reset/password", name: 'api_reset_password')]
     public function ResetPasswordSecretApi(
         Request $request,
         ApiResponseBuilder $apiResponseBuilder,

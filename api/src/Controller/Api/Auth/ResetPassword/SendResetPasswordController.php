@@ -16,9 +16,7 @@ use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @Route("/api")
- */
+#[Route("/api")]
 class SendResetPasswordController extends AbstractController
 {
     /**
@@ -47,11 +45,10 @@ class SendResetPasswordController extends AbstractController
     }
 
     /**
-     * @Route("/auth/reset/send", name="api_reset_password_send")
-     * 
      * @param  mixed $request
      * @return JsonResponse
      */
+    #[Route("/auth/reset/send", name: 'api_reset_password_send')]
     public function sendResetPasswordSecretApi(Request $request, ApiResponseBuilder $apiResponseBuilder): JsonResponse
     {
         $encoders = [new JsonEncoder()];

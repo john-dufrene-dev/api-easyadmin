@@ -11,9 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/**
- * @Route("/api")
- */
+#[Route("/api")]
 class LogoutController extends AbstractController
 {
     /**
@@ -34,11 +32,10 @@ class LogoutController extends AbstractController
     }
 
     /**
-     * @Route("/auth/logout", name="api_logout")
-     * 
      * @param  mixed $request
      * @return JsonResponse
      */
+    #[Route("/auth/logout", name: 'api_logout')]
     public function logoutApi(Request $request, ApiResponseBuilder $apiResponseBuilder): JsonResponse
     {
         // Check if POST Method

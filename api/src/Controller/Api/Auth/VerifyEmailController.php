@@ -17,9 +17,7 @@ use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-/**
- * @Route("/api")
- */
+#[Route("/api")]
 class VerifyEmailController extends AbstractController
 {
     public const CONTENT_TYPE = ['application/json', 'application/ld+json'];
@@ -61,11 +59,10 @@ class VerifyEmailController extends AbstractController
     }
 
     /**
-     * @Route("/auth/verify/email", name="api_verify_email")
-     * 
      * @param  mixed $request
      * @return JsonResponse
      */
+    #[Route("/auth/verify/email", name: 'api_verify_email')]
     public function verifyUserEmailApi(Request $request, JWTTokenManagerInterface $JWTManager): Response
     {
         // @Todo : Add JWT Token to auth with query parameter

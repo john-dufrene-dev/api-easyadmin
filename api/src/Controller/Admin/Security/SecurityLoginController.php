@@ -8,9 +8,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-/**
- * @Route("%url_for_admin%")
- */
+#[Route("%url_for_admin%")]
 class SecurityLoginController extends AbstractController
 {
     protected $translator;
@@ -20,9 +18,7 @@ class SecurityLoginController extends AbstractController
         $this->translator = $translator;
     }
 
-    /**
-     * @Route("/login", name="admin_login")
-     */
+    #[Route("/login", name: 'admin_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if ($this->getUser()) {
