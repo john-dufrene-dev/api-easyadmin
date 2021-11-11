@@ -8,6 +8,9 @@ doctrine_migrations:
     # Connection to use for the migrations
     # connection: default
 
+    # Whether or not to wrap migrations in a single transaction.
+    transactional: false
+
     storage:
         # Default (SQL table) metadata storage configuration
         table_storage:

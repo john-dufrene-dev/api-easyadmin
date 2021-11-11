@@ -29,4 +29,9 @@ final class Version20210501185043 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('DROP TABLE admin_config');
     }
+
+    public function isTransactional(): bool
+    {
+        return false;
+    }
 }

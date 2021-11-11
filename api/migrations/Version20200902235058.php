@@ -36,4 +36,9 @@ final class Version20200902235058 extends AbstractMigration
         $this->addSql('DROP TABLE admin_admin_group');
         $this->addSql('DROP TABLE admin_group');
     }
+
+    public function isTransactional(): bool
+    {
+        return false;
+    }
 }

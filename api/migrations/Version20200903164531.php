@@ -29,4 +29,9 @@ final class Version20200903164531 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('DROP TABLE admin_reset_password');
     }
+
+    public function isTransactional(): bool
+    {
+        return false;
+    }
 }

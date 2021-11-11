@@ -33,4 +33,9 @@ final class Version20200920215704 extends AbstractMigration
         $this->addSql('DROP TABLE shop');
         $this->addSql('DROP TABLE shop_admin');
     }
+
+    public function isTransactional(): bool
+    {
+        return false;
+    }
 }

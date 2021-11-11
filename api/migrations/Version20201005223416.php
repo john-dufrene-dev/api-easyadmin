@@ -30,4 +30,9 @@ final class Version20201005223416 extends AbstractMigration
         $this->addSql('ALTER TABLE shop_info DROP FOREIGN KEY FK_A7BD72C4D16C4DD');
         $this->addSql('DROP TABLE shop_info');
     }
+
+    public function isTransactional(): bool
+    {
+        return false;
+    }
 }
