@@ -22,8 +22,14 @@ class CreateOrUpdateUserSubscriber implements EventSubscriberInterface
         $this->encoder = $encoder;
         $this->em = $em;
     }
-
-    public function onBeforeEntityPersistedEvent(BeforeEntityPersistedEvent $event)
+    
+    /**
+     * onBeforeEntityPersistedEvent
+     *
+     * @param  mixed $event
+     * @return void
+     */
+    public function onBeforeEntityPersistedEvent(BeforeEntityPersistedEvent $event): void
     {
         $entity = $event->getEntityInstance();
 
@@ -52,7 +58,13 @@ class CreateOrUpdateUserSubscriber implements EventSubscriberInterface
         $entity->setCreatedAt(new \DateTime());
         $entity->setUpdatedAt(new \DateTime());
     }
-
+    
+    /**
+     * onBeforeEntityUpdatedEvent
+     *
+     * @param  mixed $event
+     * @return void
+     */
     public function onBeforeEntityUpdatedEvent(BeforeEntityUpdatedEvent $event)
     {
         $entity = $event->getEntityInstance();
@@ -88,8 +100,13 @@ class CreateOrUpdateUserSubscriber implements EventSubscriberInterface
     }
 
     // @todo: remove user history linked shop if user is deleted
-
-    public static function getSubscribedEvents()
+    
+    /**
+     * getSubscribedEvents
+     *
+     * @return array
+     */
+    public static function getSubscribedEvents(): array
     {
         return [
             BeforeEntityPersistedEvent::class => 'onBeforeEntityPersistedEvent',

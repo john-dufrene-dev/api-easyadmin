@@ -37,7 +37,14 @@ class UserDataPersister implements ContextAwareDataPersisterInterface
         $this->userPasswordEncoder = $userPasswordEncoder;
         $this->validator = $validator;
     }
-
+    
+    /**
+     * supports
+     *
+     * @param  mixed $data
+     * @param  mixed $context
+     * @return bool
+     */
     public function supports($data, array $context = []): bool
     {
         if ($context['item_operation_name'] !== 'user_put_uuid') {
@@ -46,13 +53,20 @@ class UserDataPersister implements ContextAwareDataPersisterInterface
 
         return $data instanceof User;
     }
-
-    public function persist($data, array $context = [])
+    
+    /**
+     * persist
+     *
+     * @param  mixed $data
+     * @param  mixed $context
+     * @return Response
+     */
+    public function persist($data, array $context = []): ?Response
     {
         if (
             !$this->request->getCurrentRequest()->attributes->getBoolean('_api_persist', true)
         ) {
-            return;
+            return null;
         }
 
         // Check if content is empty

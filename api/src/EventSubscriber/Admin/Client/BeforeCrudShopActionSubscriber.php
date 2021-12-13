@@ -18,8 +18,14 @@ class BeforeCrudShopActionSubscriber implements EventSubscriberInterface
     {
         $this->pms = $pms;
     }
-
-    public function onBeforeGetOrEditOrDeleteEntity(BeforeCrudActionEvent $event)
+    
+    /**
+     * onBeforeGetOrEditOrDeleteEntity
+     *
+     * @param  mixed $event
+     * @return void
+     */
+    public function onBeforeGetOrEditOrDeleteEntity(BeforeCrudActionEvent $event): void
     {
         $context = $event->getAdminContext();
 
@@ -102,8 +108,13 @@ class BeforeCrudShopActionSubscriber implements EventSubscriberInterface
             throw new ForbiddenActionException($context);
         }
     }
-
-    public static function getSubscribedEvents()
+    
+    /**
+     * getSubscribedEvents
+     *
+     * @return array
+     */
+    public static function getSubscribedEvents(): array
     {
         return [
             BeforeCrudActionEvent::class => 'onBeforeGetOrEditOrDeleteEntity',

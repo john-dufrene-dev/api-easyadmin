@@ -12,8 +12,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityPersistedEvent;
 class CreateOrUpdateShopSubscriber implements EventSubscriberInterface
 {
     use ShopHourTrait;
-
-    public function onBeforeEntityPersistedEvent(BeforeEntityPersistedEvent $event)
+    
+    /**
+     * onBeforeEntityPersistedEvent
+     *
+     * @param  mixed $event
+     * @return void
+     */
+    public function onBeforeEntityPersistedEvent(BeforeEntityPersistedEvent $event): void
     {
         $entity = $event->getEntityInstance();
 
@@ -29,8 +35,14 @@ class CreateOrUpdateShopSubscriber implements EventSubscriberInterface
         $entity->setCreatedAt(new \DateTime());
         $entity->setUpdatedAt(new \DateTime());
     }
-
-    public function onBeforeEntityUpdatedEvent(BeforeEntityUpdatedEvent $event)
+    
+    /**
+     * onBeforeEntityUpdatedEvent
+     *
+     * @param  mixed $event
+     * @return void
+     */
+    public function onBeforeEntityUpdatedEvent(BeforeEntityUpdatedEvent $event): void
     {
         $entity = $event->getEntityInstance();
 
@@ -42,8 +54,13 @@ class CreateOrUpdateShopSubscriber implements EventSubscriberInterface
     }
 
     // @todo : add user_shop_history table to have all latest shop of the User
-
-    public static function getSubscribedEvents()
+    
+    /**
+     * getSubscribedEvents
+     *
+     * @return array
+     */
+    public static function getSubscribedEvents(): array
     {
         return [
             BeforeEntityPersistedEvent::class => 'onBeforeEntityPersistedEvent',

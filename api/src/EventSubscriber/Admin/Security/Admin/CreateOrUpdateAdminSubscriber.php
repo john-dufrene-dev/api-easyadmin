@@ -17,8 +17,14 @@ class CreateOrUpdateAdminSubscriber implements EventSubscriberInterface
     {
         $this->encoder = $encoder;
     }
-
-    public function onBeforeEntityPersistedEvent(BeforeEntityPersistedEvent $event)
+    
+    /**
+     * onBeforeEntityPersistedEvent
+     *
+     * @param  mixed $event
+     * @return void
+     */
+    public function onBeforeEntityPersistedEvent(BeforeEntityPersistedEvent $event): void
     {
         $entity = $event->getEntityInstance();
 
@@ -38,8 +44,14 @@ class CreateOrUpdateAdminSubscriber implements EventSubscriberInterface
         $entity->setCreatedAt(new \DateTime());
         $entity->setUpdatedAt(new \DateTime());
     }
-
-    public function onBeforeEntityUpdatedEvent(BeforeEntityUpdatedEvent $event)
+    
+    /**
+     * onBeforeEntityUpdatedEvent
+     *
+     * @param  mixed $event
+     * @return void
+     */
+    public function onBeforeEntityUpdatedEvent(BeforeEntityUpdatedEvent $event): void
     {
         $entity = $event->getEntityInstance();
 
@@ -54,8 +66,13 @@ class CreateOrUpdateAdminSubscriber implements EventSubscriberInterface
 
         $entity->setUpdatedAt(new \DateTime());
     }
-
-    public static function getSubscribedEvents()
+    
+    /**
+     * getSubscribedEvents
+     *
+     * @return array
+     */
+    public static function getSubscribedEvents(): array
     {
         return [
             BeforeEntityPersistedEvent::class => 'onBeforeEntityPersistedEvent',

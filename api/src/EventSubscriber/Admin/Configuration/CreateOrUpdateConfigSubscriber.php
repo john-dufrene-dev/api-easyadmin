@@ -7,8 +7,14 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Event\BeforeEntityUpdatedEvent;
 
 class CreateOrUpdateConfigSubscriber implements EventSubscriberInterface
-{
-    public function onBeforeEntityUpdatedEvent(BeforeEntityUpdatedEvent $event)
+{    
+    /**
+     * onBeforeEntityUpdatedEvent
+     *
+     * @param  mixed $event
+     * @return void
+     */
+    public function onBeforeEntityUpdatedEvent(BeforeEntityUpdatedEvent $event): void
     {
         $entity = $event->getEntityInstance();
 
@@ -18,8 +24,13 @@ class CreateOrUpdateConfigSubscriber implements EventSubscriberInterface
 
         $entity->setUpdatedAt(new \DateTime());
     }
-
-    public static function getSubscribedEvents()
+    
+    /**
+     * getSubscribedEvents
+     *
+     * @return array
+     */
+    public static function getSubscribedEvents(): array
     {
         return [
             BeforeEntityUpdatedEvent::class => 'onBeforeEntityUpdatedEvent',

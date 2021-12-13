@@ -25,13 +25,19 @@ class BeforeCrudAdminActionSubscriber implements EventSubscriberInterface
         $this->router = $router;
         $this->pms = $pms;
     }
-
-    public function onBeforeGetOrEditOrDeleteEntity(BeforeCrudActionEvent $event)
+    
+    /**
+     * onBeforeGetOrEditOrDeleteEntity
+     *
+     * @param  mixed $event
+     * @return mixed
+     */
+    public function onBeforeGetOrEditOrDeleteEntity(BeforeCrudActionEvent $event): mixed
     {
         $context = $event->getAdminContext();
 
         if (!($context->getEntity()->getInstance() instanceof Admin)) {
-            return;
+            return null;
         }
 
         //INDEX
@@ -51,21 +57,21 @@ class BeforeCrudAdminActionSubscriber implements EventSubscriberInterface
             }
 
             if ($this->pms->isAdmin($context->getUser())) {
-                return;
+                return null;
             }
 
             if (
                 $this->pms->canUseActions($context->getUser(), 'ADMIN', 'DETAIL')
                 && $context->getEntity()->getInstance()->getUuid()->toRfc4122() === $context->getUser()->getUuid()->toRfc4122()
             ) {
-                return;
+                return null;
             }
 
             if (
                 $this->pms->canUseOwners($context->getUser(), 'ADMIN', 'DETAIL')
                 && $this->pms->canUseActions($context->getUser(), 'ADMIN', 'DETAIL')
             ) {
-                return;
+                return null;
             }
 
             throw new ForbiddenActionException($context);
@@ -81,21 +87,21 @@ class BeforeCrudAdminActionSubscriber implements EventSubscriberInterface
             }
 
             if ($this->pms->isAdmin($context->getUser())) {
-                return;
+                return null;
             }
 
             if (
                 $this->pms->canUseActions($context->getUser(), 'ADMIN', 'EDIT')
                 && $context->getEntity()->getInstance()->getUuid()->toRfc4122() === $context->getUser()->getUuid()->toRfc4122()
             ) {
-                return;
+                return null;
             }
 
             if (
                 $this->pms->canUseOwners($context->getUser(), 'ADMIN', 'EDIT')
                 && $this->pms->canUseActions($context->getUser(), 'ADMIN', 'EDIT')
             ) {
-                return;
+                return null;
             }
 
             throw new ForbiddenActionException($context);
@@ -111,28 +117,33 @@ class BeforeCrudAdminActionSubscriber implements EventSubscriberInterface
             }
 
             if ($this->pms->isAdmin($context->getUser())) {
-                return;
+                return null;
             }
 
             if (
                 $this->pms->canUseActions($context->getUser(), 'ADMIN', 'DELETE')
                 && $context->getEntity()->getInstance()->getUuid()->toRfc4122() === $context->getUser()->getUuid()->toRfc4122()
             ) {
-                return;
+                return null;
             }
 
             if (
                 $this->pms->canUseOwners($context->getUser(), 'ADMIN', 'DELETE')
                 && $this->pms->canUseActions($context->getUser(), 'ADMIN', 'DELETE')
             ) {
-                return;
+                return null;
             }
 
             throw new ForbiddenActionException($context);
         }
     }
-
-    public static function getSubscribedEvents()
+    
+    /**
+     * getSubscribedEvents
+     *
+     * @return array
+     */
+    public static function getSubscribedEvents(): array
     {
         return [
             BeforeCrudActionEvent::class => 'onBeforeGetOrEditOrDeleteEntity',

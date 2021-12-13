@@ -30,8 +30,14 @@ class BeforeCrudConfigActionSubscriber implements EventSubscriberInterface
     {
         $this->conf = $conf;
     }
-
-    public function onBeforeGetOrEditOrDeleteEntity(BeforeCrudActionEvent $event)
+    
+    /**
+     * onBeforeGetOrEditOrDeleteEntity
+     *
+     * @param  mixed $event
+     * @return void
+     */
+    public function onBeforeGetOrEditOrDeleteEntity(BeforeCrudActionEvent $event): void
     {
         $context = $event->getAdminContext();
 
@@ -54,8 +60,13 @@ class BeforeCrudConfigActionSubscriber implements EventSubscriberInterface
 
         throw new ForbiddenActionException($context);
     }
-
-    public static function getSubscribedEvents()
+    
+    /**
+     * getSubscribedEvents
+     *
+     * @return array
+     */
+    public static function getSubscribedEvents(): array
     {
         return [
             BeforeCrudActionEvent::class => 'onBeforeGetOrEditOrDeleteEntity',

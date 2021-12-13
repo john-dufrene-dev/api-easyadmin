@@ -31,8 +31,14 @@ class ShopActionLoggerSubscriber implements EventSubscriberInterface
         $this->logger = $adminLogger;
         $this->params = $params;
     }
-
-    public function onAfterEntityPersistedEvent(AfterEntityPersistedEvent $event)
+    
+    /**
+     * onAfterEntityPersistedEvent
+     *
+     * @param  mixed $event
+     * @return void
+     */
+    public function onAfterEntityPersistedEvent(AfterEntityPersistedEvent $event): void
     {
         $entity = $event->getEntityInstance();
 
@@ -48,8 +54,14 @@ class ShopActionLoggerSubscriber implements EventSubscriberInterface
 
         return;
     }
-
-    public function onAfterEntityUpdatedEvent(AfterEntityUpdatedEvent $event)
+    
+    /**
+     * onAfterEntityUpdatedEvent
+     *
+     * @param  mixed $event
+     * @return void
+     */
+    public function onAfterEntityUpdatedEvent(AfterEntityUpdatedEvent $event): void
     {
         $entity = $event->getEntityInstance();
 
@@ -65,8 +77,14 @@ class ShopActionLoggerSubscriber implements EventSubscriberInterface
 
         return;
     }
-
-    public function onAfterEntityDeletedEvent(AfterEntityDeletedEvent $event)
+    
+    /**
+     * onAfterEntityDeletedEvent
+     *
+     * @param  mixed $event
+     * @return void
+     */
+    public function onAfterEntityDeletedEvent(AfterEntityDeletedEvent $event): void
     {
         $entity = $event->getEntityInstance();
 
@@ -82,8 +100,13 @@ class ShopActionLoggerSubscriber implements EventSubscriberInterface
 
         return;
     }
-
-    public static function getSubscribedEvents()
+    
+    /**
+     * getSubscribedEvents
+     *
+     * @return array
+     */
+    public static function getSubscribedEvents(): array
     {
         return [
             AfterEntityPersistedEvent::class => 'onAfterEntityPersistedEvent',

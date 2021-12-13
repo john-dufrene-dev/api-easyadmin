@@ -16,8 +16,14 @@ class DeleteShopSubscriber implements EventSubscriberInterface
     {
         $this->em = $em;
     }
-
-    public function onBeforeEntityDeletedEvent(BeforeEntityDeletedEvent $event)
+    
+    /**
+     * onBeforeEntityDeletedEvent
+     *
+     * @param  mixed $event
+     * @return void
+     */
+    public function onBeforeEntityDeletedEvent(BeforeEntityDeletedEvent $event): void
     {
         $entity = $event->getEntityInstance();
 
@@ -45,8 +51,13 @@ class DeleteShopSubscriber implements EventSubscriberInterface
             $this->em->flush();
         }
     }
-
-    public static function getSubscribedEvents()
+    
+    /**
+     * getSubscribedEvents
+     *
+     * @return array
+     */
+    public static function getSubscribedEvents(): array
     {
         return [
             BeforeEntityDeletedEvent::class => 'onBeforeEntityDeletedEvent',
