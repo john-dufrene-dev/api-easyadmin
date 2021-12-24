@@ -3,10 +3,19 @@ vich_uploader:
     storage: flysystem
 
     mappings:
+        # Default uploads
+        default_upload:
+            uri_prefix: /uploads
+            upload_destination: oneup_flysystem.shop_filesystem_filesystem
+            namer: app.service.upload.client_unique_namer
+            directory_namer: app.service.upload.client_unique_directory_namer
+            inject_on_load: false
+            delete_on_update: true
+            delete_on_remove: true
         # Uploads for shop
         shop_upload:
             uri_prefix: /uploads/clients/shop
-            upload_destination: shop_image_fs
+            upload_destination: oneup_flysystem.shop_filesystem_filesystem
             namer: app.service.upload.client_unique_namer
             directory_namer: app.service.upload.client_unique_directory_namer
             inject_on_load: false

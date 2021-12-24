@@ -76,8 +76,9 @@ final class ResolveShopFileContentUrlSubscriber implements EventSubscriberInterf
                     continue;
                 }
 
+                // @todo: no protection url for the moment, need auth system
                 // Resolve ShopFile entity URL with shop_upload storage
-                $shopfile->setImageName($this->storage->resolveUri($shopfile, 'image_file'));
+                $shopfile->setImageName("/api" . $this->storage->resolveUri($shopfile, 'image_file'));
             }
         }
     }

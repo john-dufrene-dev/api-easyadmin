@@ -19,7 +19,7 @@
         "gesdinet/jwt-refresh-token-bundle": "^0.12",
         "lexik/jwt-authentication-bundle": "^2.8",
         "nelmio/cors-bundle": "^1.5 || ^2.0",
-        "oneup/flysystem-bundle": "^3.5",
+        "oneup/flysystem-bundle": "^4.2",
         "phpdocumentor/reflection-docblock": "^5.3",
         "sensio/framework-extra-bundle": "^6.1",
         "symfony/apache-pack": "^1.0",
@@ -40,13 +40,13 @@
         "symfony/security-bundle": "5.3.*",
         "symfony/sendgrid-mailer": "5.3.*",
         "symfony/twig-bundle": "5.3.*",
-        "symfony/ux-chartjs": "^1.2",
+        "symfony/ux-chartjs": "^2.0",
         "symfony/validator": "5.3.*",
         "symfony/webpack-encore-bundle": "^1.9",
         "symfony/yaml": "5.3.*",
         "symfonycasts/reset-password-bundle": "^1.1",
         "symfonycasts/verify-email-bundle": "^1.0",
-        "vich/uploader-bundle": "^1.15"
+        "vich/uploader-bundle": "^1.18"
     },
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.3",

@@ -196,4 +196,12 @@ class ApiResponseBuilder
             "message" => 'Bad Request : Invalid Ulid',
         ], Response::HTTP_BAD_REQUEST);
     }
+
+    public function CheckIfFileExist()
+    {
+        return new JsonResponse([
+            "code" => Response::HTTP_NOT_FOUND,
+            "message" => 'File doesn\'t exist'
+        ], Response::HTTP_NOT_FOUND);
+    }
 }

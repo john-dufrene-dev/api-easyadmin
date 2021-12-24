@@ -78,5 +78,12 @@ services:
         arguments: ['@.inner'] 
         autoconfigure: false
 
+    # @todo : upgrade api-platform with 2.7 version
+    # App\Filter\Api\OrSearchFilter:
+    #     arguments: [ '@doctrine', '@request_stack', ~ ]
+
+    # App\Filter\Api\FullTextSearchFilter:
+    #     arguments: [ '@doctrine', '@request_stack', ~ ]
+
 imports:
     - { resource: "services_custom.yaml" } # Custom services
