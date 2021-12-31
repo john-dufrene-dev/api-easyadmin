@@ -7,6 +7,7 @@ security:
             algorithm: auto
         App\Entity\Customer\User:
             algorithm: auto
+        Symfony\Component\Security\Core\User\InMemoryUser: auto
 
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:

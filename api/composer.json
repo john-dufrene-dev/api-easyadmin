@@ -23,27 +23,27 @@
         "phpdocumentor/reflection-docblock": "^5.3",
         "sensio/framework-extra-bundle": "^6.1",
         "symfony/apache-pack": "^1.0",
-        "symfony/asset": "5.3.*",
-        "symfony/console": "5.3.*",
-        "symfony/doctrine-messenger": "5.3.*",
-        "symfony/dotenv": "5.3.*",
-        "symfony/expression-language": "5.3.*",
+        "symfony/asset": "5.4.*",
+        "symfony/console": "5.4.*",
+        "symfony/doctrine-messenger": "5.4.*",
+        "symfony/dotenv": "5.4.*",
+        "symfony/expression-language": "5.4.*",
         "symfony/flex": "^1.17|^2",
-        "symfony/framework-bundle": "5.3.*",
-        "symfony/google-mailer": "5.3.*",
-        "symfony/http-client": "5.3.*",
-        "symfony/mailer": "5.3.*",
-        "symfony/messenger": "5.3.*",
+        "symfony/framework-bundle": "5.4.*",
+        "symfony/google-mailer": "5.4.*",
+        "symfony/http-client": "5.4.*",
+        "symfony/mailer": "5.4.*",
+        "symfony/messenger": "5.4.*",
         "symfony/monolog-bundle": "^3.5",
-        "symfony/notifier": "5.3.*",
-        "symfony/runtime": "5.3.*",
-        "symfony/security-bundle": "5.3.*",
-        "symfony/sendgrid-mailer": "5.3.*",
-        "symfony/twig-bundle": "5.3.*",
+        "symfony/notifier": "5.4.*",
+        "symfony/runtime": "5.4.*",
+        "symfony/security-bundle": "5.4.*",
+        "symfony/sendgrid-mailer": "5.4.*",
+        "symfony/twig-bundle": "5.4.*",
         "symfony/ux-chartjs": "^2.0",
-        "symfony/validator": "5.3.*",
+        "symfony/validator": "5.4.*",
         "symfony/webpack-encore-bundle": "^1.9",
-        "symfony/yaml": "5.3.*",
+        "symfony/yaml": "5.4.*",
         "symfonycasts/reset-password-bundle": "^1.1",
         "symfonycasts/verify-email-bundle": "^1.0",
         "vich/uploader-bundle": "^1.18"
@@ -52,8 +52,8 @@
         "doctrine/doctrine-fixtures-bundle": "^3.3",
         "fzaninotto/faker": "^1.9",
         "symfony/maker-bundle": "^1.20",
-        "symfony/stopwatch": "^5.3",
-        "symfony/web-profiler-bundle": "^5.3"
+        "symfony/stopwatch": "^5.4",
+        "symfony/web-profiler-bundle": "^5.4"
     },
     "config": {
         "optimize-autoloader": true,
@@ -99,7 +99,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
-            "require": "5.3.*"
+            "require": "5.4.*"
         }
     }
 }

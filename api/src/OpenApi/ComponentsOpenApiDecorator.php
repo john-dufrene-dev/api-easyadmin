@@ -146,6 +146,23 @@ final class ComponentsOpenApiDecorator implements OpenApiFactoryInterface
             ],
         ]);
 
+        // Component Response multiples search filters for shop with https://github.com/metaclass-nl/filter-bundle
+        // $schemas['Shop-collection-MultipleSearchFilter'] = new \ArrayObject([
+        //     'type' => 'object',
+        //     'properties' => [
+        //         'Search filters' => [
+        //             'type' => 'string',
+        //             'model' => '/api/shops?page=1&and[name]=XX&and[or][][email]=XXX@XXX.com&and[or][][shop_]=cotton',
+        //             'example_1' => '/api/shops?page=1&and[name]=XXX&or[shop_info.city]=XXX',
+        //             'example_2' => '/api/shops?page=1&and[name]=XXX&and[shop_info.city]=XXX',
+        //             'example_3' => '/api/shops?page=1&or[name]=XXX&or[shop_info.city]=XXX',
+        //             'example_4' => '/api/shops?page=1&or[name]=XXX&not[shop_info.city]=XXX',
+        //             'example_5' => '/api/shops?page=1&not[name]=XXX&not[shop_info.city]=XXX',
+        //             'readOnly' => true,
+        //         ],
+        //     ],
+        // ]);
+
         return $openApi;
     }
 }
