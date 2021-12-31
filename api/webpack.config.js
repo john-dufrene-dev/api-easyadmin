@@ -87,14 +87,14 @@ Encore
     .enableIntegrityHashes(Encore.isProduction())
 
     // Provide the location of your controllers.json file
-    .enableStimulusBridge('./assets/js/admin/controllers.json');
+    .enableStimulusBridge('./assets/js/admin/controllers.json')
 
-// uncomment if you're having problems with a jQuery plugin
-//.autoProvidejQuery()
+    // uncomment if you're having problems with a jQuery plugin
+    //.autoProvidejQuery()
 
-// uncomment if you use API Platform Admin (composer req api-admin)
-//.enableReactPreset()
-//.addEntry('admin', './assets/admin.js')
+    // uncomment if you use API Platform Admin (composer req api-admin)
+    .enableReactPreset()
+    //.addEntry('admin', './assets/admin.js')
 ;
 
 let config = Encore.getWebpackConfig();
