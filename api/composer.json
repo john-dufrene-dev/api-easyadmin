@@ -15,7 +15,7 @@
         "doctrine/doctrine-bundle": "^2.5",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.10",
-        "easycorp/easyadmin-bundle": "^3.5",
+        "easycorp/easyadmin-bundle": "^4.0",
         "gesdinet/jwt-refresh-token-bundle": "^0.12",
         "lexik/jwt-authentication-bundle": "^2.8",
         "nelmio/cors-bundle": "^1.5 || ^2.0",
