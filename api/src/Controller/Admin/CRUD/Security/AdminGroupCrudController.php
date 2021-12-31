@@ -83,6 +83,7 @@ class AdminGroupCrudController extends AbstractBaseCrudController
         $actions->setPermission(Action::SAVE_AND_RETURN, $this->pms()->getAction('ADMIN_GROUP', 'EDIT'));
         $actions->setPermission(Action::SAVE_AND_CONTINUE, $this->pms()->getAction('ADMIN_GROUP', 'EDIT'));
         $actions->setPermission(Action::DELETE, $this->pms()->getAction('ADMIN_GROUP', 'DELETE'));
+        $actions->setPermission(Action::BATCH_DELETE, $this->pms()->getAction('ADMIN_GROUP', 'DELETE'));
         $actions->setPermission(Action::DETAIL, $this->pms()->getAction('ADMIN_GROUP', 'DETAIL'));
         $actions->setPermission(Action::INDEX, $this->pms()->getAction('ADMIN_GROUP', 'INDEX'));
 

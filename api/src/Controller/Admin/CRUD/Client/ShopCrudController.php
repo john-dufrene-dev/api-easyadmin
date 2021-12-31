@@ -90,12 +90,14 @@ class ShopCrudController extends AbstractBaseCrudController
             $export = $this->adminCustomizeActions()->export('exportCsv', 'csv');
             $actions->add(Crud::PAGE_INDEX, $export);
         }
-
-        // Action Enable/disable
-        $enable = $this->adminCustomizeActions()->batchToggleActive('enableShops', true);
-        $disable = $this->adminCustomizeActions()->batchToggleActive('disableShops', false);
-        $actions->addBatchAction($enable);
-        $actions->addBatchAction($disable);
+        
+        if ($this->pms()->isAdmin($this->getUser())) {
+            // Action Enable/disable
+            $enable = $this->adminCustomizeActions()->batchToggleActive('enableShops', true);
+            $disable = $this->adminCustomizeActions()->batchToggleActive('disableShops', false);
+            $actions->addBatchAction($enable);
+            $actions->addBatchAction($disable);
+        }
 
         // Default customize actions
         $this->adminCustomizeActions()->customize($actions);
@@ -117,6 +119,7 @@ class ShopCrudController extends AbstractBaseCrudController
         $actions->setPermission(Action::SAVE_AND_RETURN, $this->pms()->getAction('SHOP', 'EDIT'));
         $actions->setPermission(Action::SAVE_AND_CONTINUE, $this->pms()->getAction('SHOP', 'EDIT'));
         $actions->setPermission(Action::DELETE, $this->pms()->getAction('SHOP', 'DELETE'));
+        $actions->setPermission(Action::BATCH_DELETE, $this->pms()->getAction('SHOP', 'DELETE'));
         $actions->setPermission(Action::DETAIL, $this->pms()->getAction('SHOP', 'DETAIL'));
         $actions->setPermission(Action::INDEX, $this->pms()->getAction('SHOP', 'INDEX'));
 
